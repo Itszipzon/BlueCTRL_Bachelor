@@ -9,7 +9,6 @@ import java.util.Optional;
 import no.itszipzon.Logger;
 import no.itszipzon.Tools;
 import no.itszipzon.config.JwtUtil;
-import no.itszipzon.dto.UserDto;
 import no.itszipzon.repo.UserRepo;
 import no.itszipzon.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,7 @@ public class UserApi {
       if (claims == null) {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
       }
-      Optional<UserDto> user = userRepo.getUserLevelAndXp(claims.getSubject());
+      Optional<User> user = userRepo.findUserByUsername(claims.getSubject());
       if (user.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
