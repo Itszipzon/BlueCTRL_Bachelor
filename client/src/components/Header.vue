@@ -1,6 +1,6 @@
 <template>
   <div class="header-container">
-    <div class="topbar"></div>
+<!--     <div class="topbar"></div> -->
     <div class="sidebar"></div>
   </div>
 </template>
@@ -9,7 +9,7 @@
 </script>
 
 <style scoped>
-.topbar {
+/* .topbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,7 +17,7 @@
   height: 75px;
   background-color: #114155;
   z-index: 1001;
-}
+} */
 
 .sidebar {
   position: fixed;
