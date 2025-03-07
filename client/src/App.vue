@@ -27,6 +27,7 @@ import Header from './components/Header.vue';
   background-color: #E8EFF2;
 }
 
+
 @media (min-width: 1024px) {
   
 }
