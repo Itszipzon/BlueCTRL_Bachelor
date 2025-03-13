@@ -4,29 +4,15 @@ import IconShip from '@/components/icons/IconEcosystem.vue';
 import IconUser from '@/components/icons/IconCommunity.vue';
 import IconGroup from '@/components/icons/IconSupport.vue';
 import IconDownload from '@/components/icons/IconTooling.vue';
+import HamburgerMenu from './icons/HamburgerMenu.vue';
 </script>
 
 <template>
   <div class="header-container">
     <div class="sidebar">
-      <div class="logo">
-        <div class="logo-icon"></div>
-      </div>
       <div class="nav-items">
         <div class="nav-item active">
-          <IconDocument />
-        </div>
-        <div class="nav-item">
-          <IconShip />
-        </div>
-        <div class="nav-item">
-          <IconUser />
-        </div>
-        <div class="nav-item">
-          <IconGroup />
-        </div>
-        <div class="nav-item">
-          <IconDownload />
+          <HamburgerMenu />
         </div>
       </div>
     </div>
@@ -87,6 +73,7 @@ import IconDownload from '@/components/icons/IconTooling.vue';
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .nav-item {
