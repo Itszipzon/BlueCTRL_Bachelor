@@ -1,32 +1,24 @@
 <script setup>
-import IconDocument from '@/components/icons/IconDocumentation.vue';
-import IconShip from '@/components/icons/IconEcosystem.vue';
-import IconUser from '@/components/icons/IconCommunity.vue';
-import IconGroup from '@/components/icons/IconSupport.vue';
-import IconDownload from '@/components/icons/IconTooling.vue';
+import { ref } from 'vue';
+import HamburgerMenu from './icons/HamburgerMenu.vue';
+import IconCommunity from './icons/IconCommunity.vue';
+
+const isSidebarOpen = ref(false);
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
 </script>
 
 <template>
   <div class="header-container">
-    <div class="sidebar">
-      <div class="logo">
-        <div class="logo-icon"></div>
-      </div>
+    <div :class="['sidebar', { 'sidebar-open': isSidebarOpen }]">
       <div class="nav-items">
-        <div class="nav-item active">
-          <IconDocument />
+        <div class="nav-item" @click="toggleSidebar">
+          <HamburgerMenu class="icon"/>
         </div>
-        <div class="nav-item">
-          <IconShip />
-        </div>
-        <div class="nav-item">
-          <IconUser />
-        </div>
-        <div class="nav-item">
-          <IconGroup />
-        </div>
-        <div class="nav-item">
-          <IconDownload />
+        <div class="nav-item" >
+         <IconCommunity class="icon"/>
         </div>
       </div>
     </div>
@@ -54,6 +46,11 @@ import IconDownload from '@/components/icons/IconTooling.vue';
   height: 100vh;
   background-color: #114155;
   z-index: 1001;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar-open {
+  width: 325px;
 }
 
 /*
@@ -64,39 +61,31 @@ import IconDownload from '@/components/icons/IconTooling.vue';
 }
   */
 
-.logo {
-  width: 40px;
-  height: 40px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-icon {
-  width: 24px;
-  height: 24px;
-  background-color: #0a3d62;
-  border-radius: 4px;
-}
 
 .nav-items {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  margin-top: 20px;
+  position: relative;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 40px;
-  color: #b3c6d1;
+  
   cursor: pointer;
   position: relative;
+  height: 40px;
+  padding-left: 23px;
+  
+}
+
+.icon {
+  fill: white;
+  width: 30px;
+  height: 30px;
 }
 
 .nav-item.active {

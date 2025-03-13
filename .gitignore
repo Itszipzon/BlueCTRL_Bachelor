@@ -30,3 +30,4 @@ dist-ssr
 /private
 
 /target
+server/target/
