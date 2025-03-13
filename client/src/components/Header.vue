@@ -113,7 +113,7 @@ const selectBoat = (boat) => {
 }
 
 .boat-item.active {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .boat-flag {
@@ -121,7 +121,7 @@ const selectBoat = (boat) => {
 }
 
 .boat-name {
-  font-size: 16px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
