@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import HamburgerMenu from './icons/HamburgerMenu.vue';
+import IconCommunity from './icons/IconCommunity.vue';
 
 const isSidebarOpen = ref(false);
 
@@ -14,7 +15,10 @@ const toggleSidebar = () => {
     <div :class="['sidebar', { 'sidebar-open': isSidebarOpen }]">
       <div class="nav-items">
         <div class="nav-item" @click="toggleSidebar">
-          <HamburgerMenu />
+          <HamburgerMenu class="icon"/>
+        </div>
+        <div class="nav-item" >
+         <IconCommunity class="icon"/>
         </div>
       </div>
     </div>
@@ -57,23 +61,6 @@ const toggleSidebar = () => {
 }
   */
 
-.logo {
-  width: 40px;
-  height: 40px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-icon {
-  width: 24px;
-  height: 24px;
-  background-color: #0a3d62;
-  border-radius: 4px;
-}
 
 .nav-items {
   display: flex;
@@ -81,16 +68,24 @@ const toggleSidebar = () => {
   gap: 20px;
   width: 100%;
   margin-top: 20px;
+  position: relative;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 40px;
-  color: #b3c6d1;
+  
   cursor: pointer;
   position: relative;
+  height: 40px;
+  padding-left: 23px;
+  
+}
+
+.icon {
+  fill: white;
+  width: 30px;
+  height: 30px;
 }
 
 .nav-item.active {
