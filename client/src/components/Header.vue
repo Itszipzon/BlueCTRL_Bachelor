@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import HamburgerMenu from './icons/HamburgerMenu.vue';
-import IconCommunity from './icons/IconCommunity.vue';
+import BoatIcon from './icons/BoatIcon.vue';
 
 const isSidebarOpen = ref(false);
 
@@ -17,9 +17,10 @@ const toggleSidebar = () => {
         <div class="nav-item" @click="toggleSidebar">
           <HamburgerMenu class="icon"/>
         </div>
-        <div class="nav-item" >
-         <IconCommunity class="icon"/>
+        <div class="nav-item" @click="toggleSidebar">
+          <BoatIcon class="icon"/>
         </div>
+       
       </div>
     </div>
   </div>
