@@ -1,17 +1,19 @@
 <script setup>
-import IconDocument from '@/components/icons/IconDocumentation.vue';
-import IconShip from '@/components/icons/IconEcosystem.vue';
-import IconUser from '@/components/icons/IconCommunity.vue';
-import IconGroup from '@/components/icons/IconSupport.vue';
-import IconDownload from '@/components/icons/IconTooling.vue';
+import { ref } from 'vue';
 import HamburgerMenu from './icons/HamburgerMenu.vue';
+
+const isSidebarOpen = ref(false);
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value;
+};
 </script>
 
 <template>
   <div class="header-container">
-    <div class="sidebar">
+    <div :class="['sidebar', { 'sidebar-open': isSidebarOpen }]">
       <div class="nav-items">
-        <div class="nav-item active">
+        <div class="nav-item" @click="toggleSidebar">
           <HamburgerMenu />
         </div>
       </div>
@@ -40,6 +42,11 @@ import HamburgerMenu from './icons/HamburgerMenu.vue';
   height: 100vh;
   background-color: #114155;
   z-index: 1001;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar-open {
+  width: 325px;
 }
 
 /*
