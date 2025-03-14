@@ -24,6 +24,21 @@ public class BlueCtrlApi {
         this.webClient = webClientBuilder.baseUrl(baseUrl).build();
     }
 
+     /** 
+     * This method extracts the dynamic path from the request, forwards the request to
+     * the external API using WebClient, and returns the response as JSON. So forexample
+     * if you have a endpoint with /api/get-fuel-info the endpoint will forward get-fuel-info 
+     * endpoint
+     *
+     * @param request             The HttpServletRequest object containing request details.
+     * @param authorizationHeader The Authorization header for authentication. 
+     * requires a valid login for xconnect, that will be forwarded to the external API.
+     * @return A ResponseEntity containing the JSON response from the external API.
+     *         - Returns 200 OK if successful.
+     *         - Returns 400 Bad Request if the path is invalid.
+     *         - Returns 500 Internal Server Error if the external API request fails.
+     */
+
     @GetMapping("/**")
     public ResponseEntity<JsonNode> getData(
             HttpServletRequest request,
