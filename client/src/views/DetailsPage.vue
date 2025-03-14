@@ -2,8 +2,8 @@
 
 <template>
   <div class="page-container">
-    <h1 class="header">🇳🇴 Boat name</h1>
     <div class="content-container">
+      <h1 class="header">🇳🇴 Boat name</h1>
       <div class="top-container">
         <div class="boat-tilt"></div>
         <div class="boat-slope"></div>
