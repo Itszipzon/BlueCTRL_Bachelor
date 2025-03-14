@@ -1,5 +1,5 @@
 <script setup>
-import Header from './components/Header.vue';
+import Header from "./components/Header.vue";
 </script>
 
 <template>
@@ -12,7 +12,6 @@ import Header from './components/Header.vue';
 </template>
 
 <style scoped>
-
 #app {
   padding: 0;
   margin: 0;
@@ -24,11 +23,10 @@ import Header from './components/Header.vue';
   width: calc(100dvw - 75px);
   /* margin-top: 75px; */
   margin-left: 75px;
-  background-color: #E8EFF2;
+  background-color: #e8eff2;
+  overflow-y: auto;
 }
 
-
 @media (min-width: 1024px) {
-  
 }
 </style>
