@@ -27,7 +27,7 @@ const selectBoat = (boat) => {
 
 <template>
   <div class="header-container">
-    <div :class="['sidebar', { 'sidebar-open': isSidebarOpen }]">
+    <div :class="['sidebar', { 'open': isSidebarOpen }]">
       <div class="sidebar-content">
         <!-- Navigation Icons -->
         <div class="nav-items">
@@ -40,11 +40,11 @@ const selectBoat = (boat) => {
         </div>
 
         <!-- Boat List (Visible When Sidebar is Open) -->
-        <ul v-if="isSidebarOpen" class="boat-list">
+        <ul :class="['boat-list', { closed: !isSidebarOpen }]">
           <li
             v-for="boat in boats"
             :key="boat.id"
-            :class="{ 'boat-item': true, active: selectedBoat === boat.id }"
+            :class="['boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
             @click="selectBoat(boat)"
           >
             <span class="boat-flag">{{ boat.flag }}</span>
@@ -70,7 +70,7 @@ const selectBoat = (boat) => {
   flex-direction: column;
 }
 
-.sidebar-open {
+.sidebar.open {
   width: 325px;
 }
 
@@ -93,9 +93,13 @@ const selectBoat = (boat) => {
   flex-grow: 1;
   list-style: none;
   padding: 0;
-  margin-left: 10px;
-  margin-right: 20px;
   padding-top: 10px;
+  overflow: hidden;
+  background-color: red;
+}
+
+.boat-list.closed {
+  width: 0;
 }
 
 .boat-item {
@@ -106,6 +110,13 @@ const selectBoat = (boat) => {
   border-radius: 8px;
   color: white;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.boat-item.closed {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .boat-item:hover {
