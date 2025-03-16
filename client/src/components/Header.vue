@@ -95,7 +95,6 @@ const selectBoat = (boat) => {
   padding: 0;
   padding-top: 10px;
   overflow: hidden;
-  background-color: red;
 }
 
 .boat-list.closed {
