@@ -14,7 +14,7 @@
 import { LMap, LTileLayer, LMarker, LPopup } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import MapMarker from '../assets/icons/boatmarker.svg';
+import MapMarker from '../assets/icons/boatmarker.vue';
 
 export default {
   props: {
