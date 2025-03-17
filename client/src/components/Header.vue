@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
-import HamburgerMenu from "./icons/HamburgerMenu.vue";
+//import HamburgerMenu from "./icons/HamburgerMenu.vue";
+import hamburgerMenu from "../assets/icons/hamburger-menu.vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
@@ -32,7 +33,8 @@ const selectBoat = (boat) => {
         <!-- Navigation Icons -->
         <div class="nav-items">
           <div class="nav-item" @click="toggleSidebar">
-            <HamburgerMenu class="icon" />
+            <!-- <HamburgerMenu class="icon" /> -->
+          <hamburgerMenu :active="isSidebarOpen" :width="'30px'" :height="'25px'" />
           </div>
           <div class="nav-item">
             <BoatIcon class="icon" />
@@ -110,6 +112,7 @@ const selectBoat = (boat) => {
   color: white;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .boat-item.closed {
