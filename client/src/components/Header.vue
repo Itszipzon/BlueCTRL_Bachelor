@@ -5,6 +5,7 @@ import hamburgerMenu from "../assets/icons/hamburger-menu.vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
+const listType = ref("boats");
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -44,7 +45,7 @@ const selectBoat = (boat) => {
         <!-- Boat List (Visible When Sidebar is Open) -->
       </div>
       <div class="sidebar-list">
-        <ul :class="['boat-list', { closed: !isSidebarOpen }]">
+        <ul v-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
           <li
             v-for="boat in boats"
             :key="boat.id"
