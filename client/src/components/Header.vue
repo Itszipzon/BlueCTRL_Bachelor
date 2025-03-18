@@ -127,15 +127,9 @@ document.addEventListener("click", (e) => {
 
 .boat-item.closed {
   width: 0;
-  padding-left: 0;
-  padding-right: 0;
 }
 
-.boat-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.boat-item.active {
+.boat-item:hover, .boat-item.active {
   background: rgba(255, 255, 255, 0.2);
 }
 
