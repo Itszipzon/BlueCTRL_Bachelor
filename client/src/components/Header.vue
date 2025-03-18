@@ -25,6 +25,12 @@ const selectedBoat = ref(null);
 const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
+
+document.addEventListener("click", (e) => {
+  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
+    isSidebarOpen.value = false;
+  }
+});
 </script>
 
 <template>
