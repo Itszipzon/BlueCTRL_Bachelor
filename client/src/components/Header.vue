@@ -42,6 +42,8 @@ const selectBoat = (boat) => {
         </div>
 
         <!-- Boat List (Visible When Sidebar is Open) -->
+      </div>
+      <div class="sidebar-list">
         <ul :class="['boat-list', { closed: !isSidebarOpen }]">
           <li
             v-for="boat in boats"
@@ -59,6 +61,7 @@ const selectBoat = (boat) => {
 </template>
 
 <style scoped>
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -69,11 +72,10 @@ const selectBoat = (boat) => {
   z-index: 1001;
   transition: width 0.3s ease-in-out;
   display: flex;
-  flex-direction: column;
 }
 
 .sidebar.open {
-  width: 325px;
+  width: calc(325px - 75px);
 }
 
 .sidebar-content {
@@ -111,6 +113,7 @@ const selectBoat = (boat) => {
   border-radius: 8px;
   color: white;
   cursor: pointer;
+  width: 100%;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
 }
