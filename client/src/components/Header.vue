@@ -12,12 +12,12 @@ const toggleSidebar = () => {
 };
 
 const boats = [
-  { id: 1, name: "Boat Name 1", flag: "🇳🇴" },
-  { id: 2, name: "Boat Name 2", flag: "🇦🇺" },
-  { id: 3, name: "Boat Name 3", flag: "🇪🇸" },
-  { id: 4, name: "Boat Name 4", flag: "🇸🇪" },
-  { id: 5, name: "Boat Name 5", flag: "🇿🇦" },
-  { id: 6, name: "Boat Name 6", flag: "🇺🇸" },
+  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
+  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
+  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
+  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
+  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
+  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
 ];
 
 const selectedBoat = ref(null);
@@ -58,8 +58,8 @@ document.addEventListener("click", (e) => {
             :class="['boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
             @click="selectBoat(boat)"
           >
-            <span class="boat-flag">{{ boat.flag }}</span>
-            <span class="boat-name">{{ boat.name }}</span>
+          <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode}.png`" />
+            <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
       </div>
@@ -140,7 +140,7 @@ document.addEventListener("click", (e) => {
 }
 
 .boat-flag {
-  font-size: 24px;
+  width: 35px;
 }
 
 .boat-name {
