@@ -8,7 +8,6 @@ const listType = ref("boats");
 const boats = ref([]); // Store API boats here
 const selectedBoat = ref(null);
 
-
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
@@ -20,25 +19,27 @@ const selectBoat = (boat) => {
 // Fetch boats from API
 const fetchBoats = async () => {
   try {
-    const username = "username";  //endre brukernavn og passord til ditt for å teste
-    const password = "password";  //HUSK Å IKKE PUSHE BRUKERNAVNET OG PASSORDET DITT
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
     //Dette skal byttes til info fra log-in
     const credentials = btoa(`${username}:${password}`); // Encode as Base64
 
     const response = await fetch("/api/bluebox-vessels-minimal", {
       method: "GET",
       headers: {
-        "Authorization": `Basic ${credentials}`,
+        Authorization: `Basic ${credentials}`,
         "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `HTTP error! Status: ${response.status} - ${response.statusText}`
+      );
     }
 
     const data = await response.json();
-    boats.value = data.map(vessel => ({
+    boats.value = data.map((vessel) => ({
       id: vessel.id,
       vesselName: vessel.vesselName,
       countryCode: vessel.countryCode || "unknown",
@@ -50,14 +51,13 @@ const fetchBoats = async () => {
   }
 };
 
-
 // Fetch boats when component loads
 onMounted(fetchBoats);
 </script>
 
 <template>
   <div class="header-container">
-    <div :class="['sidebar', { 'open': isSidebarOpen }]">
+    <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
         <!-- Navigation Icons -->
         <div class="nav-items">
@@ -72,14 +72,23 @@ onMounted(fetchBoats);
 
       <!-- Boat List (Visible When Sidebar is Open) -->
       <div class="sidebar-list">
-        <ul v-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
+        <ul
+          v-if="listType === 'boats'"
+          :class="['boat-list', { closed: !isSidebarOpen }]"
+        >
           <li
             v-for="boat in boats"
             :key="boat.id"
-            :class="['boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
+            :class="[
+              'boat-item',
+              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
+            ]"
             @click="selectBoat(boat)"
           >
-            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
+            <img
+              class="boat-flag"
+              :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
+            />
             <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
@@ -149,7 +158,8 @@ onMounted(fetchBoats);
   width: 0;
 }
 
-.boat-item:hover, .boat-item.active {
+.boat-item:hover,
+.boat-item.active {
   background: rgba(255, 255, 255, 0.2);
 }
 
