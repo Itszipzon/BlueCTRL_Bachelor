@@ -1,37 +1,58 @@
 <script setup>
-import { ref } from "vue";
-//import HamburgerMenu from "./icons/HamburgerMenu.vue";
+import { ref, onMounted } from "vue";
 import hamburgerMenu from "../assets/icons/hamburger-menu.vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
+const boats = ref([]); // Store API boats here
+const selectedBoat = ref(null);
+
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 
-const boats = [
-  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
-  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
-  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
-  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
-  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
-  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
-];
-
-const selectedBoat = ref(null);
-
 const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
 
-document.addEventListener("mousedown", (e) => {
-  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
-    isSidebarOpen.value = false;
-    window.dispatchEvent(new CustomEvent("testEvent", { detail: { message: "Sidebar Closed" } }));
+// Fetch boats from API
+const fetchBoats = async () => {
+  try {
+    const username = "username";  //endre brukernavn og passord til ditt for å teste
+    const password = "password";  //HUSK Å IKKE PUSHE BRUKERNAVNET OG PASSORDET DITT
+    //Dette skal byttes til info fra log-in
+    const credentials = btoa(`${username}:${password}`); // Encode as Base64
+
+    const response = await fetch("/api/bluebox-vessels-minimal", {
+      method: "GET",
+      headers: {
+        "Authorization": `Basic ${credentials}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    boats.value = data.map(vessel => ({
+      id: vessel.id,
+      vesselName: vessel.vesselName,
+      countryCode: vessel.countryCode || "unknown",
+    }));
+
+    console.log("Boats fetched successfully:", boats.value); // Debugging
+  } catch (error) {
+    console.error("Error fetching boats:", error);
   }
-});
+};
+
+
+// Fetch boats when component loads
+onMounted(fetchBoats);
 </script>
 
 <template>
@@ -58,7 +79,7 @@ document.addEventListener("mousedown", (e) => {
             :class="['boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
             @click="selectBoat(boat)"
           >
-            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode}.png`" />
+            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
             <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
