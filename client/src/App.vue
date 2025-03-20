@@ -1,5 +1,9 @@
 <script setup>
 import Header from "./components/Header.vue";
+
+window.addEventListener("testEvent", (e) => {
+  console.log("Test event run: " + e.detail.message);
+});
 </script>
 
 <template>

@@ -26,9 +26,10 @@ const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
 
-document.addEventListener("click", (e) => {
+document.addEventListener("mousedown", (e) => {
   if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
     isSidebarOpen.value = false;
+    window.dispatchEvent(new CustomEvent("testEvent", { detail: { message: "Sidebar Closed" } }));
   }
 });
 </script>
