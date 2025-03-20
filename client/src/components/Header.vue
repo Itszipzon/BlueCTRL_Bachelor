@@ -40,17 +40,16 @@ document.addEventListener("mousedown", (e) => {
       <div class="sidebar-content">
         <!-- Navigation Icons -->
         <div class="nav-items">
-          <div class="nav-item" @click="toggleSidebar">
-            <!-- <HamburgerMenu class="icon" /> -->
-          <hamburgerMenu :active="isSidebarOpen" :width="'30px'" :height="'25px'" />
-          </div>
           <div class="nav-item">
+            <hamburgerMenu :width="'30px'" :height="'25px'" />
+          </div>
+          <div class="nav-item" @click="toggleSidebar">
             <BoatIcon class="icon" />
           </div>
         </div>
-
-        <!-- Boat List (Visible When Sidebar is Open) -->
       </div>
+
+      <!-- Boat List (Visible When Sidebar is Open) -->
       <div class="sidebar-list">
         <ul v-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
           <li
@@ -59,7 +58,7 @@ document.addEventListener("mousedown", (e) => {
             :class="['boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
             @click="selectBoat(boat)"
           >
-          <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode}.png`" />
+            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode}.png`" />
             <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
@@ -69,7 +68,6 @@ document.addEventListener("mousedown", (e) => {
 </template>
 
 <style scoped>
-
 .sidebar {
   position: fixed;
   top: 0;
