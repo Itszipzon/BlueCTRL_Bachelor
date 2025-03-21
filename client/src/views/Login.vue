@@ -106,11 +106,7 @@ const handleLogin = async () => {
 };
 
 const logout = () => {
-  localStorage.removeItem("username");
-  localStorage.removeItem("password");
-  isLoggedIn.value = false;
-
-  window.location.reload();
+  localStorage.removeItem("SESSION");
 };
 </script>
 
@@ -123,6 +119,7 @@ const logout = () => {
   justify-content: center;
   min-height: 100vh;
   background-color: #f5f5f5;
+  width: 100%;
 }
 
 .login-form {

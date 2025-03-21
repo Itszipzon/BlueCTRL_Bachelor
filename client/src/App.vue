@@ -1,16 +1,32 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import Header from "./components/Header.vue";
+import Login from "./views/Login.vue";
 
-window.addEventListener("testEvent", (e) => {
-  console.log("Test event run: " + e.detail.message);
+const isLoggedIn = ref(false);
+
+onMounted(() => {
+  if (localStorage.getItem("SESSION")) {
+    isLoggedIn.value = true;
+  }
+});
+
+window.addEventListener("logout", () => {
+  localStorage.removeItem("SESSION");
+  isLoggedIn.value = false;
 });
 </script>
 
 <template>
   <div id="app" class="app">
-    <Header />
-    <div class="mainPage">
-      <router-view />
+    <div v-if="isLoggedIn">
+      <Header />
+      <div class="mainPage">
+        <router-view />
+      </div>
+    </div>
+    <div v-else class="login">
+      <Login />
     </div>
   </div>
 </template>
@@ -31,6 +47,12 @@ window.addEventListener("testEvent", (e) => {
   overflow-y: auto;
 }
 
-@media (min-width: 1024px) {
+.login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e8eff2;
 }
 </style>
