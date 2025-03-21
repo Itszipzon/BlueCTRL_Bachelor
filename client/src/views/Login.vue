@@ -90,6 +90,8 @@ const handleLogin = async () => {
       localStorage.setItem("username", username.value);
       localStorage.setItem("password", password.value);
 
+      localStorage.setItem("SESSION", response.value);
+
       isLoggedIn.value = true;
 
       window.location.reload();
