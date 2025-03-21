@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import hamburgerMenu from "../assets/icons/hamburger-menu.vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
@@ -16,8 +15,15 @@ const boats = ref([
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
 
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value;
+const toggleSidebar = (element) => {
+  if (!element) {
+    isSidebarOpen.value = !isSidebarOpen.value;
+  } else if (element === listType.value) {
+    isSidebarOpen.value = !isSidebarOpen.value;
+  } else {
+    listType.value = element;
+    isSidebarOpen.value = true;
+  }
 };
 
 const selectBoat = (boat) => {
@@ -68,6 +74,12 @@ const selectBoat = (boat) => {
     fetchBoats();
   }
 }); */
+
+document.addEventListener("mousedown", (e) => {
+  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
+    isSidebarOpen.value = false;
+  }
+});
 </script>
 
 <template>
@@ -75,11 +87,18 @@ const selectBoat = (boat) => {
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
         <div class="nav-items">
+<!--           <div class="nav-item">
+            <div @click="() => toggleSidebar('')" style="cursor: pointer;">
+              <hamburgerMenu :width="'30px'" :height="'25px'" :active="isSidebarOpen" />
+            </div>
+          </div> -->
           <div class="nav-item">
-            <hamburgerMenu :width="'30px'" :height="'25px'" />
-          </div>
-          <div class="nav-item" @click="toggleSidebar">
-            <BoatIcon class="icon" />
+            <div class="icon-container">
+              <div :class="['active-icon-bar', { active: listType === 'boats' }]" />
+              <div class="icon" @click="() => toggleSidebar('boats')">
+                <BoatIcon :active="listType === 'boats'" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -188,16 +207,38 @@ const selectBoat = (boat) => {
 
 .nav-item {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   height: 40px;
+  width: 100%;
+  justify-content: center;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.active-icon-bar {
+  height: 0;
+  background-color: white;
+  width: 3px;
+  margin-right: auto;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: height 0.3s;
+}
+
+.active-icon-bar.active {
+  height: 20px;
 }
 
 .icon {
-  fill: white;
   width: 30px;
   height: 30px;
+  display: flex;
+  cursor: pointer;
+  margin-right: 20px;
 }
 
 .login-message {
