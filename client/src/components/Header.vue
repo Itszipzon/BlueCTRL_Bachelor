@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import BoatIcon from "./icons/BoatIcon.vue";
+import LogOut from "../assets/icons/LogOut.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
@@ -28,6 +29,10 @@ const toggleSidebar = (element) => {
 
 const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
+};
+
+const logout = () => {
+  window.dispatchEvent(new Event("logout"));
 };
 
 /* const fetchBoats = async () => {
@@ -97,6 +102,15 @@ document.addEventListener("mousedown", (e) => {
               <div :class="['active-icon-bar', { active: listType === 'boats' }]" />
               <div class="icon" @click="() => toggleSidebar('boats')">
                 <BoatIcon :active="listType === 'boats'" />
+              </div>
+            </div>
+          </div>
+          
+          <div class="nav-item">
+            <div class="icon-container">
+              <div :class="['active-icon-bar']" />     
+              <div class="icon" @click="logout">
+                <LogOut />
               </div>
             </div>
           </div>
