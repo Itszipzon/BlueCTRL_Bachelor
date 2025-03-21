@@ -23,8 +23,7 @@
 .page-container {
   display: flex;
   justify-content: center;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 10px;
 }
 
 .header {
@@ -36,7 +35,7 @@
   flex-direction: column;
   justify-content: center;
   width: 1256px;
-  height: 1000px;
+  height: 100%;
   gap: 26px;
 }
 
@@ -80,6 +79,12 @@
 
 
 @media (max-width: 1280px) {
-  
+  .content-container {
+    max-width: 100%;
+  }
+  .top-container {
+    display: grid;
+    justify-content: center;
+  }
 }
 </style>
