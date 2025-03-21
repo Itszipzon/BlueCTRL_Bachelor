@@ -77,8 +77,25 @@
 }
 
 
+@media (max-width: 1280px){
+  .content-container {
+    max-width: 100%;
+  }
+}
 
-@media (max-width: 1280px) {
+.top-containter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.data-box,
+.tankdata-box {
+  height: 200px; 
+}
+
+
+@media (max-width: 900px) {
   .content-container {
     max-width: 100%;
   }
@@ -87,4 +104,6 @@
     justify-content: center;
   }
 }
+
+
 </style>
