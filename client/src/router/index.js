@@ -19,12 +19,7 @@ const router = new VueRouter({
       path: "/details",
       name: "details",
       component: Details,
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login,
-    },
+    }
   ],
 });
 
