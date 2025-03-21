@@ -69,6 +69,19 @@ public class BlueCtrlApi {
         return ResponseEntity.ok(data);
     }
 
+    /**
+     * This endpoint localhost:8080/api/login
+     *
+     * @param request             none
+     *                           
+     * @param authorizationHeader Basic auth with name and password
+     * 
+     * @return A ResponseEntity containing the JSON response from the external API.
+     *         - Returns 200 OK if successful and login is valid.
+     *         - Returns 500 if login is invalid
+     *         fails.
+     */
+
     @PostMapping("/**")
     public ResponseEntity<String> getDataForPost(
             HttpServletRequest request,
