@@ -5,9 +5,16 @@ import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
-const boats = ref([]);
+const boats = ref([
+  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
+  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
+  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
+  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
+  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
+  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
+]);
 const selectedBoat = ref(null);
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(true);
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -17,7 +24,7 @@ const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
 
-const fetchBoats = async () => {
+/* const fetchBoats = async () => {
   try {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -50,17 +57,17 @@ const fetchBoats = async () => {
   } catch (error) {
     console.error("Error fetching boats:", error);
   }
-};
+}; */
 
 // Check login status when component loads
-onMounted(() => {
+/* onMounted(() => {
   const storedUsername = localStorage.getItem("username");
   const storedPassword = localStorage.getItem("password");
   if (storedUsername && storedPassword) {
     isLoggedIn.value = true;
     fetchBoats();
   }
-});
+}); */
 </script>
 
 <template>
