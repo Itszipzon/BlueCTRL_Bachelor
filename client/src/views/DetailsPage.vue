@@ -5,9 +5,9 @@
     <div class="content-container">
       <h1 class="header">🇳🇴 Boat name</h1>
       <div class="top-container">
-        <div class="boat-tilt"></div>
-        <div class="boat-slope"></div>
-        <div class="mini-map"></div>
+        <div class="top-container-element"></div>
+        <div class="top-container-element"></div>
+        <div class="top-container-element"></div>
       </div>
       <div class="middle-container">
         <div class="data-box"></div>
@@ -21,64 +21,70 @@
 
 <style scoped>
 .page-container {
-  padding-bottom: 20px;
-  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 }
 
 .header {
   font-size: x-large;
   color: #000;
-  margin-left: 70px;
 }
 .content-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 10px;
+  width: 1256px;
+  height: 100%;
+  gap: 26px;
 }
 
 .top-container {
   display: flex;
   justify-content: center;
-  gap: 26px;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
 }
+.top-container-element {
+  background-color: #ffffff;
+  width: calc(1064px - 225px * 3);
+  height: calc(1064px - 250px * 3);
+}
+
 .middle-container {
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+
+.data-box {
+  background-color: #ffffff;
+  width: 100%;
+  height: 262px;
 }
 
 .bottom-container {
   display: flex;
   justify-content: center;
-}
-
-.boat-tilt {
-  background-color: #ffffff;
-  width: 400px;
-  height: 287px;
-}
-.boat-slope {
-  background-color: #ffffff;
-  width: 400px;
-  height: 287px;
-}
-.mini-map {
-  background-color: #ffffff;
-  width: 400px;
-  height: 287px;
-}
-
-.data-box {
-  width: 1251px;
-  height: 287px;
-  background-color: #ffffff;
-  margin-top: 26px;
+  width: 100%;
 }
 
 .tankdata-box {
-  width: 1251px;
-  height: 287px;
   background-color: #ffffff;
-  margin-top: 26px;
+  width: 100%;
+  height: 262px;
+}
+
+
+
+@media (max-width: 1280px) {
+  .content-container {
+    max-width: 100%;
+  }
+  .top-container {
+    display: grid;
+    justify-content: center;
+  }
 }
 </style>

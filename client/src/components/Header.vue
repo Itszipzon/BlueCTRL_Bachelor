@@ -5,8 +5,16 @@ import BoatIcon from "./icons/BoatIcon.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
-const boats = ref([]); // Store API boats here
+const boats = ref([
+  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
+  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
+  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
+  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
+  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
+  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
+]);
 const selectedBoat = ref(null);
+const isLoggedIn = ref(true);
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -16,14 +24,14 @@ const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
 
-// Fetch boats from API
-const fetchBoats = async () => {
+/* const fetchBoats = async () => {
   try {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
-    //Dette skal byttes til info fra log-in
-    const credentials = btoa(`${username}:${password}`); // Encode as Base64
 
+    if (!username || !password) return;
+
+    const credentials = btoa(`${username}:${password}`);
     const response = await fetch("/api/bluebox-vessels-minimal", {
       method: "GET",
       headers: {
@@ -45,21 +53,27 @@ const fetchBoats = async () => {
       countryCode: vessel.countryCode || "unknown",
     }));
 
-    console.log("Boats fetched successfully:", boats.value); // Debugging
+    console.log("Boats fetched successfully:", boats.value);
   } catch (error) {
     console.error("Error fetching boats:", error);
   }
-};
+}; */
 
-// Fetch boats when component loads
-onMounted(fetchBoats);
+// Check login status when component loads
+/* onMounted(() => {
+  const storedUsername = localStorage.getItem("username");
+  const storedPassword = localStorage.getItem("password");
+  if (storedUsername && storedPassword) {
+    isLoggedIn.value = true;
+    fetchBoats();
+  }
+}); */
 </script>
 
 <template>
   <div class="header-container">
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
-        <!-- Navigation Icons -->
         <div class="nav-items">
           <div class="nav-item">
             <hamburgerMenu :width="'30px'" :height="'25px'" />
@@ -70,19 +84,19 @@ onMounted(fetchBoats);
         </div>
       </div>
 
-      <!-- Boat List (Visible When Sidebar is Open) -->
       <div class="sidebar-list">
+        <div v-if="!isLoggedIn && isSidebarOpen" class="login-message">
+          Log in first to view the boats
+        </div>
+
         <ul
-          v-if="listType === 'boats'"
+          v-else-if="listType === 'boats'"
           :class="['boat-list', { closed: !isSidebarOpen }]"
         >
           <li
             v-for="boat in boats"
             :key="boat.id"
-            :class="[
-              'boat-item',
-              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
-            ]"
+            :class="[ 'boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
             @click="selectBoat(boat)"
           >
             <img
@@ -184,5 +198,12 @@ onMounted(fetchBoats);
   fill: white;
   width: 30px;
   height: 30px;
+}
+
+.login-message {
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  padding: 20px;
 }
 </style>
