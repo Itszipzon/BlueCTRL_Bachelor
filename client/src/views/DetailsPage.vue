@@ -23,6 +23,8 @@
 .page-container {
   display: flex;
   justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .header {
@@ -43,6 +45,7 @@
   justify-content: center;
   width: 100%;
   justify-content: space-between;
+  gap: 10px;
 }
 .top-container-element {
   background-color: #ffffff;
@@ -76,26 +79,7 @@
 
 
 
-@media (max-width: 1064px) {
-  .content-container {
-    background-color: aqua;
-  }
-  .top-container {
-    flex-direction: column;
-    align-items: center;
-    max-width: 100%;
-  }
-
-  .boat-tilt {
-    max-width: 100%;
-  }
-  .boat-slope {
-    max-width: 100%;
-  }
-  .mini-map {
-    background-color: #ffffff;
-    width: 400px;
-    height: 287px;
-  }
+@media (max-width: 1280px) {
+  
 }
 </style>
