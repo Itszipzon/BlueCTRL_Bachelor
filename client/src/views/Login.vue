@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isLoggedIn" class="login-container">
     <form @submit.prevent="handleLogin" class="login-form">
-      <h2>Login</h2>
+      <h2>X-connect Login</h2>
 
       <div class="form-group">
         <label for="username">Username</label>
