@@ -108,7 +108,10 @@ const handleLogin = async () => {
 };
 
 const logout = () => {
+  localStorage.setItem("username", username.value);
+  localStorage.setItem("password", password.value);
   localStorage.removeItem("SESSION");
+  isLoggedIn.value = false;
 };
 </script>
 
