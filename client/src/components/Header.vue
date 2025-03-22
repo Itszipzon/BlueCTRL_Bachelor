@@ -1,23 +1,41 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import hamburgerMenu from "../assets/icons/hamburger-menu.vue";
 import BoatIcon from "./icons/BoatIcon.vue";
+import LogOut from "../assets/icons/LogOut.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
-const boats = ref([]);
+const boats = ref([
+  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
+  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
+  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
+  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
+  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
+  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
+]);
 const selectedBoat = ref(null);
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(true);
 
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value;
+const toggleSidebar = (element) => {
+  if (!element) {
+    isSidebarOpen.value = !isSidebarOpen.value;
+  } else if (element === listType.value) {
+    isSidebarOpen.value = !isSidebarOpen.value;
+  } else {
+    listType.value = element;
+    isSidebarOpen.value = true;
+  }
 };
 
 const selectBoat = (boat) => {
   selectedBoat.value = boat.id;
 };
 
-const fetchBoats = async () => {
+const logout = () => {
+  window.dispatchEvent(new Event("logout"));
+};
+
+/* const fetchBoats = async () => {
   try {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -50,15 +68,21 @@ const fetchBoats = async () => {
   } catch (error) {
     console.error("Error fetching boats:", error);
   }
-};
+}; */
 
 // Check login status when component loads
-onMounted(() => {
+/* onMounted(() => {
   const storedUsername = localStorage.getItem("username");
   const storedPassword = localStorage.getItem("password");
   if (storedUsername && storedPassword) {
     isLoggedIn.value = true;
     fetchBoats();
+  }
+}); */
+
+document.addEventListener("mousedown", (e) => {
+  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
+    isSidebarOpen.value = false;
   }
 });
 </script>
@@ -68,11 +92,27 @@ onMounted(() => {
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
         <div class="nav-items">
+<!--           <div class="nav-item">
+            <div @click="() => toggleSidebar('')" style="cursor: pointer;">
+              <hamburgerMenu :width="'30px'" :height="'25px'" :active="isSidebarOpen" />
+            </div>
+          </div> -->
           <div class="nav-item">
-            <hamburgerMenu :width="'30px'" :height="'25px'" />
+            <div class="icon-container">
+              <div :class="['active-icon-bar', { active: listType === 'boats' }]" />
+              <div class="icon" @click="() => toggleSidebar('boats')">
+                <BoatIcon :active="listType === 'boats'" />
+              </div>
+            </div>
           </div>
-          <div class="nav-item" @click="toggleSidebar">
-            <BoatIcon class="icon" />
+          
+          <div class="nav-item">
+            <div class="icon-container">
+              <div :class="['active-icon-bar']" />     
+              <div class="icon" @click="logout">
+                <LogOut />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -181,16 +221,38 @@ onMounted(() => {
 
 .nav-item {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   height: 40px;
+  width: 100%;
+  justify-content: center;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.active-icon-bar {
+  height: 0;
+  background-color: white;
+  width: 3px;
+  margin-right: auto;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: height 0.3s;
+}
+
+.active-icon-bar.active {
+  height: 20px;
 }
 
 .icon {
-  fill: white;
   width: 30px;
   height: 30px;
+  display: flex;
+  cursor: pointer;
+  margin-right: 20px;
 }
 
 .login-message {

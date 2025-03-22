@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isLoggedIn" class="login-container">
+  <div class="login-container">
     <form @submit.prevent="handleLogin" class="login-form">
       <h2>X-connect Login</h2>
 
@@ -38,28 +38,16 @@
       </button>
     </form>
   </div>
-
-
-  <div v-else class="logged-in-container">
-    <h2>You are logged in!</h2>
-    <button @click="logout">Logout</button>
-  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 
-const isLoggedIn = ref(false);
-const username = ref("");
-const password = ref("");
 const isLoading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 
-
 onMounted(() => {
-  const storedUsername = localStorage.getItem("username");
-  const storedPassword = localStorage.getItem("password");
   if (storedUsername && storedPassword) {
     isLoggedIn.value = true;
   }
@@ -87,10 +75,7 @@ const handleLogin = async () => {
     } else if (response.status === 200) {
       successMessage.value = "Login successful!";
 
-      localStorage.setItem("username", username.value);
-      localStorage.setItem("password", password.value);
-
-      isLoggedIn.value = true;
+      localStorage.setItem("SESSION", response.value);
 
       window.location.reload();
     } else {
@@ -104,14 +89,6 @@ const handleLogin = async () => {
     isLoading.value = false;
   }
 };
-
-const logout = () => {
-  localStorage.removeItem("username");
-  localStorage.removeItem("password");
-  isLoggedIn.value = false;
-
-  window.location.reload();
-};
 </script>
 
 <style scoped>
@@ -123,6 +100,7 @@ const logout = () => {
   justify-content: center;
   min-height: 100vh;
   background-color: #f5f5f5;
+  width: 100%;
 }
 
 .login-form {
