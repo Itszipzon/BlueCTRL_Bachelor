@@ -91,21 +91,21 @@ document.addEventListener("mousedown", (e) => {
 <template>
   <div class="header-container">
     <div class="header">
+      <div class="header-item">
+        <div @click="() => toggleSidebar('')" style="cursor: pointer">
+          <hamburgerMenu
+            :width="'30px'"
+            :height="'30px'"
+            :active="isSidebarOpen"
+          />
+        </div>
+      </div>
       <h1>X-connect</h1>
     </div>
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
         <div class="nav-items">
           <div class="top-items">
-            <div class="nav-item">
-              <div @click="() => toggleSidebar('')" style="cursor: pointer">
-                <hamburgerMenu
-                  :width="'30px'"
-                  :height="'30px'"
-                  :active="isSidebarOpen"
-                />
-              </div>
-            </div>
             <div class="nav-item">
               <div class="icon-container">
                 <div
@@ -160,15 +160,25 @@ document.addEventListener("mousedown", (e) => {
 </template>
 
 <style scoped>
+.header-container {
+  display: flex;
+  flex-direction: column;
+}
 .header {
   background-color: #114155;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   width: 75px;
-  height: 100vh;
+  height: calc(100vh - 50px);
   background-color: #114155;
   z-index: 1001;
   transition: width 0.3s ease-in-out;
@@ -202,7 +212,6 @@ document.addEventListener("mousedown", (e) => {
   width: 100%;
   gap: 5px;
 }
-
 
 .boat-list {
   flex-grow: 1;
