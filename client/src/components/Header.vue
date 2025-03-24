@@ -200,7 +200,7 @@ document.addEventListener("mousedown", (e) => {
   flex-direction: column;
   width: 75px;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 20px;
   justify-content: space-between;
 }

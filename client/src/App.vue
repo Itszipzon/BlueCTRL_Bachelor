@@ -38,8 +38,7 @@ window.addEventListener("logout", () => {
 }
 
 .mainPage {
-  /* height: calc(100dvh - 75px); */
-  height: 100dvh;
+  height: calc(100dvh - 50px);
   width: calc(100dvw - 75px);
   /* margin-top: 75px; */
   margin-left: 75px;
