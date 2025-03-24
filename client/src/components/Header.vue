@@ -91,16 +91,21 @@ document.addEventListener("mousedown", (e) => {
 <template>
   <div class="header-container">
     <div class="header">
-      <div class="header-item">
-        <div @click="() => toggleSidebar('')" style="cursor: pointer">
-          <hamburgerMenu
-            :width="'30px'"
-            :height="'30px'"
-            :active="isSidebarOpen"
-          />
+      <div class="header-content">
+        <div class="header-item-1">
+          <div @click="() => toggleSidebar('')" style="cursor: pointer">
+            <hamburgerMenu
+              :width="'30px'"
+              :height="'30px'"
+              :active="isSidebarOpen"
+            />
+          </div>
         </div>
+        <div class="header-item-2">
+          <h1>X-connect</h1>
+        </div>
+       
       </div>
-      <h1>X-connect</h1>
     </div>
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
@@ -166,13 +171,18 @@ document.addEventListener("mousedown", (e) => {
 }
 .header {
   background-color: #114155;
-  display: flex;
   height: 50px;
-  align-items: center;
-  gap: 20px;
   padding: 0 20px;
   box-sizing: border-box;
 }
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: 3px;
+}
+
 .sidebar {
   position: fixed;
   top: 50px;
@@ -261,6 +271,21 @@ document.addEventListener("mousedown", (e) => {
   height: 40px;
   width: 100%;
   justify-content: center;
+}
+
+.header-item-1 {
+  display: flex;
+ 
+  align-items: end;
+  height: 40px;
+}
+
+.header-item-2 {
+  display: flex;
+ 
+  align-items: end;
+  height: 40px;
+  margin-top: 5px;
 }
 
 .icon-container {
