@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import Map from "../components/Map.vue";
+</script>
 
 <template>
   <div class="page-container">
@@ -7,7 +9,9 @@
       <div class="top-container">
         <div class="top-container-element"></div>
         <div class="top-container-element"></div>
-        <div class="top-container-element"></div>
+        <div class="top-container-element">
+          <Map :center="{ lat: 63.4305, lng: 10.3951 }" :markers="[]" />
+        </div>
       </div>
       <div class="middle-container">
         <div class="data-box"></div>
