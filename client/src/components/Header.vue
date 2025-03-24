@@ -174,6 +174,8 @@ document.addEventListener("mousedown", (e) => {
   width: 75px;
   align-items: center;
   padding-top: 20px;
+  padding-bottom: 20px;
+  justify-content: space-between;
 }
 
 .boat-list {
