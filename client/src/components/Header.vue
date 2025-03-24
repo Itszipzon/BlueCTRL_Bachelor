@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
+import hamburgerMenu from "./icons/hamburgerMenu.vue";
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
@@ -89,26 +90,37 @@ document.addEventListener("mousedown", (e) => {
 
 <template>
   <div class="header-container">
+    <div class="header">
+      <h1>X-connect</h1>
+    </div>
     <div :class="['sidebar', { open: isSidebarOpen }]">
       <div class="sidebar-content">
         <div class="nav-items">
-<!--           <div class="nav-item">
-            <div @click="() => toggleSidebar('')" style="cursor: pointer;">
-              <hamburgerMenu :width="'30px'" :height="'25px'" :active="isSidebarOpen" />
+          <div class="top-items">
+            <div class="nav-item">
+              <div @click="() => toggleSidebar('')" style="cursor: pointer">
+                <hamburgerMenu
+                  :width="'30px'"
+                  :height="'30px'"
+                  :active="isSidebarOpen"
+                />
+              </div>
             </div>
-          </div> -->
-          <div class="nav-item">
-            <div class="icon-container">
-              <div :class="['active-icon-bar', { active: listType === 'boats' }]" />
-              <div class="icon" @click="() => toggleSidebar('boats')">
-                <BoatIcon :active="listType === 'boats'" />
+            <div class="nav-item">
+              <div class="icon-container">
+                <div
+                  :class="['active-icon-bar', { active: listType === 'boats' }]"
+                />
+                <div class="icon" @click="() => toggleSidebar('boats')">
+                  <BoatIcon :active="listType === 'boats'" />
+                </div>
               </div>
             </div>
           </div>
-          
+
           <div class="nav-item">
             <div class="icon-container">
-              <div :class="['active-icon-bar']" />     
+              <div :class="['active-icon-bar']" />
               <div class="icon" @click="logout">
                 <LogOut />
               </div>
@@ -129,7 +141,10 @@ document.addEventListener("mousedown", (e) => {
           <li
             v-for="boat in boats"
             :key="boat.id"
-            :class="[ 'boat-item', { active: selectedBoat === boat.id, closed: !isSidebarOpen }]"
+            :class="[
+              'boat-item',
+              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
+            ]"
             @click="selectBoat(boat)"
           >
             <img
@@ -145,6 +160,9 @@ document.addEventListener("mousedown", (e) => {
 </template>
 
 <style scoped>
+.header {
+  background-color: #114155;
+}
 .sidebar {
   position: fixed;
   top: 0;
@@ -170,13 +188,21 @@ document.addEventListener("mousedown", (e) => {
 .nav-items {
   display: flex;
   flex-direction: column;
-  gap: 20px;
   width: 75px;
   align-items: center;
   padding-top: 20px;
   padding-bottom: 20px;
   justify-content: space-between;
 }
+
+.top-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
 
 .boat-list {
   flex-grow: 1;
