@@ -24,8 +24,8 @@ public class Ship {
   @Column(name = "vesselName")
   private String vesselName;
 
-  @Column(name = "hostAddress")
-  private String hostAddress;
+  @Column(name = "countryCode")
+  private String countryCode;
 
   @Column(name = "vesselCode")
   private String vesselCode;
@@ -57,13 +57,13 @@ public class Ship {
   public void setVesselName(String vesselName) {
     this.vesselName = vesselName;
   }
-
-  public String getHostAddress() {
-    return hostAddress;
+  
+  public String getCountryCode() {
+    return countryCode;
   }
 
-  public void setHostAddress(String hostAddress) {
-    this.hostAddress = hostAddress;
+  public void setCountryCode(String countryCode) {
+    this.countryCode = countryCode;
   }
 
   public String getVesselCode() {
