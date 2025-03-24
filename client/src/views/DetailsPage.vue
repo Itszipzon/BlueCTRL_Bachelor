@@ -10,7 +10,7 @@ import Map from "../components/Map.vue";
         <div class="top-container-element"></div>
         <div class="top-container-element"></div>
         <div class="top-container-element">
-          <Map :center="{ lat: 63.4305, lng: 10.3951 }" :markers="[]" />
+          <Map :center="{ lat: 62.4722, lng: 6.1495 }" :markers="[]" />
         </div>
       </div>
       <div class="middle-container">
@@ -80,8 +80,7 @@ import Map from "../components/Map.vue";
   height: 262px;
 }
 
-
-@media (max-width: 1280px){
+@media (max-width: 1280px) {
   .content-container {
     max-width: 100%;
   }
@@ -95,9 +94,8 @@ import Map from "../components/Map.vue";
 
 .data-box,
 .tankdata-box {
-  height: 200px; 
+  height: 200px;
 }
-
 
 @media (max-width: 900px) {
   .content-container {
@@ -108,6 +106,4 @@ import Map from "../components/Map.vue";
     justify-content: center;
   }
 }
-
-
 </style>
