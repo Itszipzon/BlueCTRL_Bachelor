@@ -36,7 +36,7 @@
   justify-content: center;
   width: 1256px;
   height: 100%;
-  gap: 26px;
+  gap: 20px;
 }
 
 .top-container {
@@ -44,11 +44,11 @@
   justify-content: center;
   width: 100%;
   justify-content: space-between;
-  gap: 10px;
+  margin-top: -10px;
 }
 .top-container-element {
   background-color: #ffffff;
-  width: calc(1064px - 225px * 3);
+  width: calc(1064px - 222px * 3);
   height: calc(1064px - 250px * 3);
 }
 
