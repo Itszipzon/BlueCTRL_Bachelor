@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,8 +84,7 @@ public class BlueCtrlApi {
     @PostMapping("/**")
     public ResponseEntity<String> getDataForPost(
             HttpServletRequest request,
-            @RequestHeader("Authorization") String authorizationHeader,
-            @RequestBody(required = false) JsonNode requestBody) {
+            @RequestHeader("Authorization") String authorizationHeader) {
 
         String path =  request.getRequestURI().replaceFirst("/login", "/fuel-types");
         if (path.isEmpty()) {
