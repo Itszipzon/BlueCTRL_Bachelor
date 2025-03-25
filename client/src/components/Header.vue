@@ -91,7 +91,7 @@ document.addEventListener("mousedown", (e) => {
 <template>
   <div class="header-container">
     <div class="header">
-      <div class="header-content">
+      <div class="header-content-left">
         <div class="header-item-1">
           <div @click="() => toggleSidebar('')" style="cursor: pointer">
             <hamburgerMenu
@@ -104,7 +104,18 @@ document.addEventListener("mousedown", (e) => {
         <div class="header-item-2">
           <h1>X-connect</h1>
         </div>
-       
+      </div>
+
+      <div class="header-content-right">
+        <div class="header-item-3">
+          <input
+            type="text"
+            v-model="searchQuery"
+            @input="searchBoats"
+            placeholder="Search boats.."
+            class="search-bar"
+          />
+        </div>
       </div>
     </div>
     <div :class="['sidebar', { open: isSidebarOpen }]">
@@ -168,19 +179,35 @@ document.addEventListener("mousedown", (e) => {
 .header-container {
   display: flex;
   flex-direction: column;
+  z-index: 1001;
 }
 .header {
   background-color: #114155;
   height: 50px;
   padding: 0 20px;
   box-sizing: border-box;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-.header-content {
+.header-content-left {
   display: flex;
   align-items: center;
   gap: 20px;
   margin-left: 3px;
+  width: 100%;
+}
+
+.header-content-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: 3px;
+  width: 100%;
 }
 
 .sidebar {
@@ -275,17 +302,21 @@ document.addEventListener("mousedown", (e) => {
 
 .header-item-1 {
   display: flex;
- 
   align-items: end;
   height: 40px;
 }
 
 .header-item-2 {
   display: flex;
- 
   align-items: end;
   height: 40px;
   margin-top: 5px;
+}
+
+.header-item-3 {
+  display: flex;
+  align-items: end;
+  height: 40px;
 }
 
 .icon-container {
