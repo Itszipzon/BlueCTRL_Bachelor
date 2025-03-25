@@ -16,6 +16,7 @@ const boats = ref([
 ]);
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
+const searchQuery = ref("");
 
 const toggleSidebar = (element) => {
   if (!element) {
@@ -109,11 +110,7 @@ document.addEventListener("mousedown", (e) => {
           </div>
         </div>
         <div class="header-item-3">
-          <input
-            type="text"
-            placeholder="Search boats.."
-            class="search-bar"
-          />
+          <input type="text" placeholder="Search boats.." class="search-bar" />
         </div>
         <div class="header-right"></div>
       </div>
@@ -207,7 +204,6 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   gap: 20px;
   width: 100%;
-  
 }
 
 .header-right {
@@ -215,7 +211,6 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   background-color: bisque;
   width: 100%;
-  
 }
 
 .sidebar {
@@ -324,7 +319,7 @@ document.addEventListener("mousedown", (e) => {
 .header-item-3 {
   display: flex;
   align-items: end;
-  height: 36px;
+  height: 32px;
   width: 100%;
 }
 
@@ -333,7 +328,7 @@ document.addEventListener("mousedown", (e) => {
   width: 100%;
   border-radius: 6px;
   padding: 10px;
-
+  border: none;
 }
 
 .icon-container {
@@ -341,7 +336,6 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   padding: 10px 0;
   width: 100%;
-  
 }
 
 .active-icon-bar {
