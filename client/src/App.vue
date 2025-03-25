@@ -42,6 +42,7 @@ window.addEventListener("logout", () => {
   width: calc(100dvw - 75px);
   /* margin-top: 75px; */
   margin-left: 75px;
+  margin-top: 50px;
   background-color: #e8eff2;
   overflow-y: auto;
 }
