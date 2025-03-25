@@ -1,6 +1,27 @@
 <script setup>
+import { onMounted, ref, nextTick } from "vue";
 import Map from "../components/Map.vue";
+
+const isMapFullscreen = ref(false);
+const center = { lat: 62.4722, lng: 6.1495 };
+const markers = [{ gpsPosition: { latitude: 62.4722, longitude: 6.1495 } }];
+
+const leafletMapRef = ref(null);
+
+const toggleMapFullscreen = async () => {
+
+  console.log(leafletMapRef);
+  isMapFullscreen.value = !isMapFullscreen.value;
+
+  await nextTick();
+  if (leafletMapRef.value?.leafletObject) {
+    leafletMapRef.value.leafletObject.mapObject.invalidateSize();
+  }
+};
+
+
 </script>
+
 
 <template>
   <div class="page-container">
@@ -9,8 +30,15 @@ import Map from "../components/Map.vue";
       <div class="top-container">
         <div class="top-container-element"></div>
         <div class="top-container-element"></div>
-        <div class="top-container-element">
-          <Map :center="{ lat: 62.4722, lng: 6.1495 }" :markers="[]" />
+
+        <div :class="['top-container-element', { fullscreen: isMapFullscreen }]">
+          <!-- Toggle Button -->
+          <button class="fullscreen-btn" @click="toggleMapFullscreen">
+            {{ isMapFullscreen ? 'Exit Fullscreen' : 'Fullscreen' }}
+          </button>
+
+          <!-- Map Component -->
+          <Map ref="leafletMapRef" :center="center" :markers="markers" :large="isMapFullscreen" :resize="toggleMapFullscreen" />
         </div>
       </div>
       <div class="middle-container">
@@ -80,7 +108,41 @@ import Map from "../components/Map.vue";
   height: 262px;
 }
 
-@media (max-width: 1280px) {
+
+.top-container-element.fullscreen {
+  position: fixed;
+  top: 50px;
+  left: 75px;
+  z-index: 2000;
+  width: calc(100vw - 75px);
+  height: calc(100vh - 50px);
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-container-element.fullscreen .leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+.fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2100;
+  background-color: #114155;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+@media (max-width: 1341px) {
   .content-container {
     max-width: 100%;
   }
