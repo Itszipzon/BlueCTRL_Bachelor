@@ -91,22 +91,21 @@ document.addEventListener("mousedown", (e) => {
 <template>
   <div class="header-container">
     <div class="header">
-      <div class="header-content-left">
-        <div class="header-item-1">
-          <div @click="() => toggleSidebar('')" style="cursor: pointer">
-            <hamburgerMenu
-              :width="'30px'"
-              :height="'30px'"
-              :active="isSidebarOpen"
-            />
+      <div class="header-content">
+        <div class="header-left">
+          <div class="header-item-1">
+            <div @click="() => toggleSidebar('')" style="cursor: pointer">
+              <hamburgerMenu
+                :width="'30px'"
+                :height="'30px'"
+                :active="isSidebarOpen"
+              />
+            </div>
+          </div>
+          <div class="header-item-2">
+            <h1>X-connect</h1>
           </div>
         </div>
-        <div class="header-item-2">
-          <h1>X-connect</h1>
-        </div>
-      </div>
-
-      <div class="header-content-right">
         <div class="header-item-3">
           <input
             type="text"
@@ -116,6 +115,7 @@ document.addEventListener("mousedown", (e) => {
             class="search-bar"
           />
         </div>
+        <div class="header-right"></div>
       </div>
     </div>
     <div :class="['sidebar', { open: isSidebarOpen }]">
@@ -194,7 +194,7 @@ document.addEventListener("mousedown", (e) => {
   justify-content: space-between;
 }
 
-.header-content-left {
+.header-content {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -202,12 +202,20 @@ document.addEventListener("mousedown", (e) => {
   width: 100%;
 }
 
-.header-content-right {
+.header-left {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-left: 3px;
   width: 100%;
+  
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  background-color: bisque;
+  width: 100%;
+  
 }
 
 .sidebar {
