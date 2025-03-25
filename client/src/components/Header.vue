@@ -16,6 +16,7 @@ const boats = ref([
 ]);
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
+const searchQuery = ref("");
 
 const toggleSidebar = (element) => {
   if (!element) {
@@ -26,6 +27,8 @@ const toggleSidebar = (element) => {
     listType.value = element;
     isSidebarOpen.value = true;
   }
+
+  console.log(!element);
 };
 
 const selectBoat = (boat) => {
@@ -82,7 +85,7 @@ const logout = () => {
 }); */
 
 document.addEventListener("mousedown", (e) => {
-  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
+  if (isSidebarOpen.value && !e.target.closest(".header-container")) {
     isSidebarOpen.value = false;
   }
 });
@@ -107,13 +110,7 @@ document.addEventListener("mousedown", (e) => {
           </div>
         </div>
         <div class="header-item-3">
-          <input
-            type="text"
-            v-model="searchQuery"
-            @input="searchBoats"
-            placeholder="Search boats.."
-            class="search-bar"
-          />
+          <input type="text" placeholder="Search boats.." class="search-bar" />
         </div>
         <div class="header-right"></div>
       </div>
@@ -207,7 +204,6 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   gap: 20px;
   width: 100%;
-  
 }
 
 .header-right {
@@ -215,7 +211,6 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   background-color: bisque;
   width: 100%;
-  
 }
 
 .sidebar {
@@ -324,7 +319,16 @@ document.addEventListener("mousedown", (e) => {
 .header-item-3 {
   display: flex;
   align-items: end;
-  height: 40px;
+  height: 32px;
+  width: 100%;
+}
+
+.header-item-3 input {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px;
+  border: none;
 }
 
 .icon-container {
