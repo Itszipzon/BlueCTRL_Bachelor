@@ -26,6 +26,8 @@ const toggleSidebar = (element) => {
     listType.value = element;
     isSidebarOpen.value = true;
   }
+
+  console.log(!element);
 };
 
 const selectBoat = (boat) => {
@@ -82,7 +84,7 @@ const logout = () => {
 }); */
 
 document.addEventListener("mousedown", (e) => {
-  if (isSidebarOpen.value && !e.target.closest(".sidebar")) {
+  if (isSidebarOpen.value && !e.target.closest(".header-container")) {
     isSidebarOpen.value = false;
   }
 });
@@ -109,8 +111,6 @@ document.addEventListener("mousedown", (e) => {
         <div class="header-item-3">
           <input
             type="text"
-            v-model="searchQuery"
-            @input="searchBoats"
             placeholder="Search boats.."
             class="search-bar"
           />
@@ -324,7 +324,16 @@ document.addEventListener("mousedown", (e) => {
 .header-item-3 {
   display: flex;
   align-items: end;
-  height: 40px;
+  height: 36px;
+  width: 100%;
+}
+
+.header-item-3 input {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px;
+
 }
 
 .icon-container {
@@ -332,6 +341,7 @@ document.addEventListener("mousedown", (e) => {
   align-items: center;
   padding: 10px 0;
   width: 100%;
+  
 }
 
 .active-icon-bar {
