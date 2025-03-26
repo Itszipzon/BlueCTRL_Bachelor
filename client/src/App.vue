@@ -23,12 +23,21 @@ window.addEventListener("login", () => {
 const toggleLogin = () => {
   isLoggedIn.value = !isLoggedIn.value;
 }
+
+const boats = ref([
+  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
+  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
+  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
+  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
+  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
+  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
+]);
 </script>
 
 <template>
   <div id="app" class="app">
     <div v-if="isLoggedIn">
-      <Header />
+      <Header :boats="boats" />
       <div class="mainPage">
         <router-view />
       </div>

@@ -2,18 +2,13 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
-import hamburgerMenu from "./icons/hamburgerMenu.vue";
+
+const props = defineProps({
+  boats: Array,
+});
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
-const boats = ref([
-  { id: 1, vesselName: "Boat Name 1", countryCode: "no" },
-  { id: 2, vesselName: "Boat Name 2", countryCode: "au" },
-  { id: 3, vesselName: "Boat Name 3", countryCode: "es" },
-  { id: 4, vesselName: "Boat Name 4", countryCode: "se" },
-  { id: 5, vesselName: "Boat Name 5", countryCode: "za" },
-  { id: 6, vesselName: "Boat Name 6", countryCode: "us" },
-]);
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
 let input = ref("");
@@ -41,7 +36,7 @@ const logout = () => {
 };
 
 function filteredBoats() {
-  return boats.value.filter((boat) =>
+  return props.boats?.value.filter((boat) =>
     boat.vesselName.toLowerCase().includes(input.value.toLowerCase())
   );
 }
@@ -176,7 +171,7 @@ onBeforeUnmount(() => {
           :class="['boat-list', { closed: !isSidebarOpen }]"
         >
           <li
-            v-for="boat in boats"
+            v-for="boat in props.boats"
             :key="boat.id"
             :class="[
               'boat-item',
