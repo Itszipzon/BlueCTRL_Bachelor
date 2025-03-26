@@ -40,6 +40,7 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 
 const props = defineProps({
   doLogin: Function,
@@ -53,36 +54,31 @@ const handleLogin = async () => {
   isLoading.value = true;
   errorMessage.value = "";
   successMessage.value = "";
+  const credentials = btoa(`${username.value}:${password.value}`);
 
-  try {
-    const credentials = btoa(`${username.value}:${password.value}`);
+  const url = "http://localhost:8080/api/login";
 
-    const response = await fetch("/api/bluebox-vessels-minimal", {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 401) {
-      errorMessage.value = "Username or password is wrong. Please try again.";
-    } else if (response.status === 200) {
-      successMessage.value = "Login successful!";
-
-      localStorage.setItem("SESSION", response.value);
-      props.doLogin();
-    } else {
-      const statusText = response.statusText || "Unknown error";
-      errorMessage.value = `Login failed with status: ${response.status} - ${statusText}`;
+  axios.post(url, {}, {
+    headers: {
+      Authorization: `Basic ${credentials}`,
     }
-  } catch (err) {
-    errorMessage.value = "An unexpected error occurred. Please try again.";
-    console.error("Login error:", err);
-  } finally {
-    isLoading.value = false;
-  }
+  })
+  .then((r) => {
+    if (r.status === 200) {
+      localStorage.setItem("SESSION", credentials);
+      props.doLogin();
+      successMessage.value = "Login successful!";
+    }
+  })
+  .catch((e) => {
+    console.log(e);
+    errorMessage.value = "Login failed. Please try again.";
+  });
+
+  isLoading.value = false;
+
 };
+
 </script>
 
 <style scoped>
