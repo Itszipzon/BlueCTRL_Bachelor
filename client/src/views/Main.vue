@@ -90,7 +90,7 @@ onUnmounted(() => {
       </div>
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
-      <VesselData :selectMarker="selectedMarker" />
+      <VesselData :selectedMarker="selectedMarker" />
     </div>
   </div>
 </template>

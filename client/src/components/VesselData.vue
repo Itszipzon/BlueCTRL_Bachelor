@@ -1,21 +1,16 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 
-/* const props = defineProps({
-  selectMarker: Object
+const props = defineProps({
+  selectedMarker: Object
 });
 
-const selectedMarker = computed(() => {
-  props.selectMarker;
-}); */
-
-const selectedMarker = { id: 1, vesselName: "Boat Name 1", countryCode: "no", gpsPosition: { latitude: 62.4722, longitude: 6.1495 } }
 </script>
 
 <template>
   <div class="vessel-data-hero">
     <div class="vessel-data-header">
-      <img :src="`https://flagcdn.com/h40/${selectedMarker?.countryCode}.png`" />
+      <img :src="`${selectedMarker.countryCode ? `https://flagcdn.com/h40/${selectedMarker?.countryCode}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
       <h2>{{ selectedMarker?.vesselName }}</h2>
     </div>
     <div class="vessel-data-container">
