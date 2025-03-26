@@ -1,5 +1,4 @@
-<template>
-  <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M24.9351 52.965L30.1407 58.5927L35.0649 52.965C31.6705 52.691 28.7768 52.4525 24.9351 52.965Z"
       fill="#005380" fill-opacity="0.941176" stroke="#002A40" stroke-width="1.10678" stroke-linejoin="round" />
     <path
@@ -12,4 +11,3 @@
       fill="#006398" fill-opacity="0.941176" />
     <path d="M29.3583 19.2408H12.6655V24.6998H29.3583V19.2408Z" fill="#004267" fill-opacity="0.941176" />
   </svg>
-</template>

@@ -41,6 +41,10 @@
 <script setup>
 import { ref } from "vue";
 
+const props = defineProps({
+  doLogin: Function,
+});
+
 const isLoading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
@@ -67,8 +71,7 @@ const handleLogin = async () => {
       successMessage.value = "Login successful!";
 
       localStorage.setItem("SESSION", response.value);
-
-      window.location.reload();
+      props.doLogin();
     } else {
       const statusText = response.statusText || "Unknown error";
       errorMessage.value = `Login failed with status: ${response.status} - ${statusText}`;
