@@ -16,7 +16,7 @@ const boats = ref([
 ]);
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
-const searchQuery = ref("");
+let input = ref("");
 
 const toggleSidebar = (element) => {
   if (!element) {
@@ -38,6 +38,12 @@ const selectBoat = (boat) => {
 const logout = () => {
   window.dispatchEvent(new Event("logout"));
 };
+
+function filteredBoats() {
+  return boats.value.filter((boat) =>
+    boat.vesselName.toLowerCase().includes(input.value.toLowerCase())
+  );
+}
 
 /* const fetchBoats = async () => {
   try {
@@ -110,7 +116,19 @@ document.addEventListener("mousedown", (e) => {
           </div>
         </div>
         <div class="header-item-3">
-          <input type="text" placeholder="Search boats.." class="search-bar" />
+          <input type="text" v-model="input" placeholder="Search boats.." />
+          <div class="search-results" v-if="input">
+            <div
+              class="boatresult"
+              v-for="boat in filteredBoats()"
+              :key="boat.id"
+            >
+              <p>{{ boat.vesselName }}</p>
+            </div>
+            <div class="item error" v-if="!filteredBoats().length">
+              <p>No results found!</p>
+            </div>
+          </div>
         </div>
         <div class="header-right"></div>
       </div>
@@ -173,6 +191,8 @@ document.addEventListener("mousedown", (e) => {
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
 .header-container {
   display: flex;
   flex-direction: column;
@@ -321,6 +341,33 @@ document.addEventListener("mousedown", (e) => {
   align-items: end;
   height: 32px;
   width: 100%;
+  position: relative;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  color: #000;
+  border: 1px solid #ccc;
+  border-top: none;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1002;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 6px 6px;
+}
+
+.boatresult {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.boatresult:hover {
+  background-color: #f0f0f0;
 }
 
 .header-item-3 input {
