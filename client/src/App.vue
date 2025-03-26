@@ -15,6 +15,10 @@ window.addEventListener("logout", () => {
   localStorage.removeItem("SESSION");
   isLoggedIn.value = false;
 });
+
+const toggleLogin = () => {
+  isLoggedIn.value = !isLoggedIn.value;
+}
 </script>
 
 <template>
@@ -26,7 +30,7 @@ window.addEventListener("logout", () => {
       </div>
     </div>
     <div v-else class="login">
-      <Login />
+      <Login :doLogin="toggleLogin" />
     </div>
   </div>
 </template>
