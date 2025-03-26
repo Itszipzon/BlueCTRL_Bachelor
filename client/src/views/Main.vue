@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted, onUnmounted  } from 'vue';
+import { ref, onMounted, onUnmounted, inject } from 'vue';
 import Map from '../components/Map.vue';
+import VesselData from '../components/VesselData.vue';
 
-const markers = ref([]);
+const markers = inject('boats');
 const selectedMarker = ref({});
 
 const largeMap = ref(true);
@@ -17,7 +18,7 @@ const resizeStyle = ref(getResizeStyle());
 
 function getResizeStyle() {
   return window.innerWidth < 1615 && !largeMap.value
-    ? { right: (window.innerWidth / 2) - 75 - (750/2 - 15/2 - 35) + "px" }
+    ? { right: (window.innerWidth / 2) - 75 - (750 / 2 - 15 / 2 - 35) + "px" }
     : {};
 }
 
@@ -37,7 +38,6 @@ function toggleMapSize() {
 
 function onMapReady(map) {
   mapObject = map;
-  console.log(mapObject.getBounds());
 }
 
 function setCenter(lat, lng) {
@@ -57,7 +57,7 @@ function setValues(values) {
 }
 
 function handleResize() {
-  resizeStyle.value = getResizeStyle();
+  //resizeStyle.value = getResizeStyle();
 }
 
 onMounted(() => {
@@ -71,14 +71,120 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container">
-    <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="markers" :center="center"
-    @map-ready="onMapReady" />
+    <div v-if="selectedMarker.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle" @click="toggleMapSize">
+      fullscreen
+    </div>
+    <div :class="['top-container', { large: largeMap }]">
+      <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
+        :style="selectedMarker.vesselName ? {} : { height: '0px', padding: '0px', margin: '0px' }">
+        <div class="marker-vessel-tilt">
+          <canvas class="vessel-side"></canvas>
+        </div>
+        <div class="marker-vessel-tilt">
+          <canvas class="vessel-front"></canvas>
+        </div>
+      </div>
+      <div :class="['map', { small: !largeMap }]">
+        <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="markers" :center="center"
+          @map-ready="onMapReady" />
+      </div>
+    </div>
+    <div :class="['vessel-data-container', { small: !largeMap }]">
+      <VesselData :selectMarker="selectedMarker" />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+}
+
+.resize-button {
+  position: absolute;
+  top: calc(15px);
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  transition: top 0.5s ease, right 0.5s ease;
+  color: black;
+  padding: 5px 10px;
+}
+
+.top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.marker-vessel-tilt-container {
+  background: #ffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  box-sizing: border-box;
+  transition: width 0.5s ease, margin 0.5s ease, padding 0.5s ease;
+  overflow: hidden;
+  width: 0;
+}
+
+.marker-vessel-tilt-container.small {
+  margin: 20px 20px 0 20px;
+  width: calc(50% - 10px);
+  height: calc((50vw - 75px - 20px)/2 - 10px);
+  padding: 20px;
+}
+
+.marker-vessel-tilt {
+  width: calc(50% - 10px);
+  height: 100%;
+  background: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map {
+  transition: all 0.5s ease;
+  background-color: #f0f0f0;
+  box-sizing: border-box;
   height: calc(100dvh - 50px);
-  width: 100%;
+  width: calc(100dvw - 75px);
+}
+
+.map.small {
+  margin: 20px 20px 0 0;
+  height: calc((50vw - 75px - 20px) / 2 - 10px);
+  width: calc(50% - 10px);
+}
+
+.vessel-data-container {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: height 0.5s ease, margin 0.5s ease, padding 0.5s ease;
+  overflow: hidden;
+  text-wrap: none;
+}
+
+.vessel-data-container.small {
+  margin: 20px;
+  padding: 20px;
+  height: fit-content;
 }
 </style>
