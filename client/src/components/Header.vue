@@ -28,7 +28,8 @@ const toggleSidebar = (element) => {
 };
 
 const selectBoat = (boat) => {
-  selectedBoat.value = boat.id;
+  isSidebarOpen.value = false;
+  window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
 };
 
 const logout = () => {

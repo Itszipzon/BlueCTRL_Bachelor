@@ -17,6 +17,11 @@ import L from 'leaflet';
 import MapMarker from '../assets/icons/boatmarker.svg';
 
 export default {
+  mounted() {
+    window.addEventListener('selectBoat', (e) => {
+      this.onMarkerClick(e.detail);
+    });
+  },
   props: {
     large: Boolean,
     markers: Array,
