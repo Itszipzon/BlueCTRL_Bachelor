@@ -19,6 +19,10 @@ window.addEventListener("logout", () => {
 window.addEventListener("login", () => {
   isLoggedIn.value = true;
 });
+
+const toggleLogin = () => {
+  isLoggedIn.value = !isLoggedIn.value;
+}
 </script>
 
 <template>
