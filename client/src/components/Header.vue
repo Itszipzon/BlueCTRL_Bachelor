@@ -42,51 +42,6 @@ function filteredBoats() {
   );
 }
 
-/* const fetchBoats = async () => {
-  try {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-
-    if (!username || !password) return;
-
-    const credentials = btoa(`${username}:${password}`);
-    const response = await fetch("/api/bluebox-vessels-minimal", {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP error! Status: ${response.status} - ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    boats.value = data.map((vessel) => ({
-      id: vessel.id,
-      vesselName: vessel.vesselName,
-      countryCode: vessel.countryCode || "unknown",
-    }));
-
-    console.log("Boats fetched successfully:", boats.value);
-  } catch (error) {
-    console.error("Error fetching boats:", error);
-  }
-}; */
-
-// Check login status when component loads
-/* onMounted(() => {
-  const storedUsername = localStorage.getItem("username");
-  const storedPassword = localStorage.getItem("password");
-  if (storedUsername && storedPassword) {
-    isLoggedIn.value = true;
-    fetchBoats();
-  }
-}); */
-
 document.addEventListener("mousedown", (e) => {
   if (isSidebarOpen.value && !e.target.closest(".header-container")) {
     isSidebarOpen.value = false;
