@@ -66,7 +66,7 @@ const handleLogin = async () => {
   try {
     const credentials = btoa(`${username.value}:${password.value}`);
 
-    const response = await fetch("/api/bluebox-vessels-minimal", {
+    const response = await fetch("https://portal.x-connect.io/login", {
       method: "GET",
       headers: {
         Authorization: `Basic ${credentials}`,
@@ -81,6 +81,8 @@ const handleLogin = async () => {
 
       localStorage.setItem("SESSION", response.value);
       props.doLogin();
+      //window.dispatchEvent(new Event("login"));
+      /* localStorage.setItem("SESSION", credentials); */
     } else {
       const statusText = response.statusText || "Unknown error";
       errorMessage.value = `Login failed with status: ${response.status} - ${statusText}`;
