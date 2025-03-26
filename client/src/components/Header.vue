@@ -97,7 +97,6 @@ document.addEventListener("mousedown", (e) => {
   }
 });
 
-
 const handleClickOutside = (event) => {
   if (searchRef.value && !searchRef.value.contains(event.target)) {
     input.value = "";
@@ -118,15 +117,6 @@ onBeforeUnmount(() => {
     <div class="header">
       <div class="header-content">
         <div class="header-left">
-          <div class="header-item-1">
-            <div @click="() => toggleSidebar('')" style="cursor: pointer">
-              <hamburgerMenu
-                :width="'30px'"
-                :height="'30px'"
-                :active="isSidebarOpen"
-              />
-            </div>
-          </div>
           <div class="header-item-2">
             <h1>X-connect</h1>
           </div>
@@ -225,6 +215,7 @@ onBeforeUnmount(() => {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
 }
 
 .header-content {
@@ -306,7 +297,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 15px;
   padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: 6px;
   color: white;
   cursor: pointer;
   width: 100%;
@@ -350,6 +341,7 @@ onBeforeUnmount(() => {
   align-items: end;
   height: 40px;
   margin-top: 5px;
+  cursor: pointer;
 }
 
 .header-item-3 {
