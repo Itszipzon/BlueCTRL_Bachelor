@@ -8,7 +8,6 @@
         <input
           type="text"
           id="username"
-          v-model="username"
           placeholder="Enter username"
           required
         />
@@ -19,7 +18,6 @@
         <input
           type="password"
           id="password"
-          v-model="password"
           placeholder="Enter password"
           required
         />
@@ -41,18 +39,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const isLoading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
-
-onMounted(() => {
-  if (storedUsername && storedPassword) {
-    isLoggedIn.value = true;
-  }
-});
-
 
 const handleLogin = async () => {
   isLoading.value = true;
