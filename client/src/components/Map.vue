@@ -7,7 +7,8 @@ import MapMarker from '../assets/icons/boatmarker.svg';
 
 const props = defineProps({
   center: Object,
-  markers: Array
+  markers: Array,
+  markerClick: Function,
 });
 
 const leafletMap = ref(null);
@@ -27,6 +28,10 @@ const createCustomIcon = () => {
     popupAnchor: [0, -20],
   });
 };
+
+const onMarkerClick = (marker) => {
+  props.markerClick(marker);
+};
 </script>
 
 <template>
@@ -45,6 +50,7 @@ const createCustomIcon = () => {
       :key="index"
       :lat-lng="[marker.gpsPosition.latitude, marker.gpsPosition.longitude]"
       :icon="createCustomIcon()"
+      @click="onMarkerClick(marker)"
     />
   </l-map>
 </template>
