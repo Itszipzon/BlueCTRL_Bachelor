@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import BoatIcon from "./icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
 import hamburgerMenu from "./icons/hamburgerMenu.vue";
@@ -17,6 +17,7 @@ const boats = ref([
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
 let input = ref("");
+const searchRef = ref(null);
 
 const toggleSidebar = (element) => {
   if (!element) {
@@ -95,6 +96,21 @@ document.addEventListener("mousedown", (e) => {
     isSidebarOpen.value = false;
   }
 });
+
+
+const handleClickOutside = (event) => {
+  if (searchRef.value && !searchRef.value.contains(event.target)) {
+    input.value = "";
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("mousedown", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("mousedown", handleClickOutside);
+});
 </script>
 
 <template>
@@ -115,7 +131,7 @@ document.addEventListener("mousedown", (e) => {
             <h1>X-connect</h1>
           </div>
         </div>
-        <div class="header-item-3">
+        <div class="header-item-3" ref="searchRef">
           <input type="text" v-model="input" placeholder="Search boats.." />
           <div class="search-results" v-if="input">
             <div
