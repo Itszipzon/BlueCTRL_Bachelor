@@ -3,7 +3,7 @@ import { onMounted, provide, ref } from "vue";
 import Header from "./components/Header.vue";
 import Login from "./views/Login.vue";
 
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(true);
 
 onMounted(() => {
   if (localStorage.getItem("SESSION")) {
