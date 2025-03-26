@@ -340,6 +340,9 @@ onBeforeUnmount(() => {
   text-decoration: none;
 }
 
+.header-item-2 h1 {
+  color: white;
+}
 
 .router-link-active,
 .router-link-exact-active {
