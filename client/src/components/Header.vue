@@ -112,9 +112,9 @@ onBeforeUnmount(() => {
     <div class="header">
       <div class="header-content">
         <div class="header-left">
-          <div class="header-item-2">
+          <router-link to="/" class="header-item-2">
             <h1>X-connect</h1>
-          </div>
+          </router-link>
         </div>
         <div class="header-item-3" ref="searchRef">
           <input type="text" v-model="input" placeholder="Search boats.." />
@@ -337,6 +337,19 @@ onBeforeUnmount(() => {
   height: 40px;
   margin-top: 5px;
   cursor: pointer;
+  text-decoration: none;
+}
+
+
+.router-link-active,
+.router-link-exact-active {
+  color: inherit;
+  text-decoration: none;
+}
+
+.header-item-2:hover {
+  text-decoration: none;
+  background-color: #114155;
 }
 
 .header-item-3 {
