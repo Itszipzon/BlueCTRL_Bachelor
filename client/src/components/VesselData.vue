@@ -13,7 +13,7 @@ const selectedMarker = { id: 1, vesselName: "Boat Name 1", countryCode: "no", gp
 </script>
 
 <template>
-  <div class="vessel-data-container-sub">
+  <div class="vessel-data-hero">
     <div class="vessel-data-header">
       <img :src="`https://flagcdn.com/h40/${selectedMarker?.countryCode}.png`" />
       <h2>{{ selectedMarker?.vesselName }}</h2>
@@ -40,7 +40,7 @@ const selectedMarker = { id: 1, vesselName: "Boat Name 1", countryCode: "no", gp
 
 <style scoped>
 
-.vessel-data-container-sub {
+.vessel-data-hero {
   width: 100%;
   display: flex;
   flex-direction: column;
