@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, inject } from 'vue';
 import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
+import TankData from '../components/TankData.vue';
 
 const markers = inject('boats');
 const selectedMarker = ref({});
@@ -95,6 +96,9 @@ window.addEventListener("selectBoat", (e) => {
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
       <VesselData :selectedMarker="selectedMarker" />
+    </div>
+    <div  :class="['vessel-data-container', { small: !largeMap }]">
+      <TankData />
     </div>
   </div>
 </template>
