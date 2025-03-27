@@ -69,9 +69,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
 
-window.addEventListener("selectBoat", (e) => {
-  setValues(e.detail);
-});
 </script>
 
 <template>
