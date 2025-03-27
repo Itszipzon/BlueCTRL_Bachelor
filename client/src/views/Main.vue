@@ -191,8 +191,12 @@ window.addEventListener("selectBoat", (e) => {
 }
 
 .vessel-data-container.small {
-  margin: 20px;
+  margin: 20px 20px 0 20px;
   padding: 20px;
   height: fit-content;
+}
+
+.vessel-data-container.small:last-child {
+  margin-bottom: 20px;
 }
 </style>
