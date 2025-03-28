@@ -85,12 +85,12 @@ onBeforeUnmount(() => {
         <div class="header-item-3" ref="searchRef">
           <input type="text" v-model="input" placeholder="Search boats.." />
           <div class="search-results" v-if="input">
-            <div
-              class="boatresult"
-              v-for="boat in filteredBoats()"
-              :key="boat.id"
-            >
-              <p>{{ boat.vesselName }}</p>
+            <div class="boatresult" v-for="boat in filteredBoats()" @click="() => {
+              selectBoat(boat);
+              input = '';
+              }" :key="boat.id">
+              <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
+              <span class="boat-name">{{ boat.vesselName }}</span>
             </div>
             <div class="item error" v-if="!filteredBoats().length">
               <p>No results found!</p>
@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="icon">
                   <router-link to="/compare" class="link">
-                  <BoatCompare />
+                    <BoatCompare />
                   </router-link>
                 </div>
               </div>
@@ -134,23 +134,12 @@ onBeforeUnmount(() => {
           Log in first to view the boats
         </div>
 
-        <ul
-          v-else-if="listType === 'boats'"
-          :class="['boat-list', { closed: !isSidebarOpen }]"
-        >
-          <li
-            v-for="boat in props.boats"
-            :key="boat.id"
-            :class="[
-              'boat-item',
-              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
-            ]"
-            @click="selectBoat(boat)"
-          >
-            <img
-              class="boat-flag"
-              :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
-            />
+        <ul v-else-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
+          <li v-for="boat in props.boats" :key="boat.id" :class="[
+            'boat-item',
+            { active: selectedBoat === boat.id, closed: !isSidebarOpen },
+          ]" @click="selectBoat(boat)">
+            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
             <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
@@ -171,6 +160,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   z-index: 1001;
 }
+
 .header {
   background-color: #114155;
   height: 50px;
@@ -355,6 +345,8 @@ onBeforeUnmount(() => {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 10px;
 }
 
 .boatresult:hover {
