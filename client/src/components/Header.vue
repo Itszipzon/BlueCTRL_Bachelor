@@ -47,7 +47,7 @@ const logout = () => {
 };
 
 function filteredBoats() {
-  return props.boats?.value.filter((boat) =>
+  return props.boats?.filter((boat) =>
     boat.vesselName.toLowerCase().includes(input.value.toLowerCase())
   );
 }
