@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import BoatIcon from "../assets/icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
 import BoatCompare from "../assets/icons/BoatCompare.vue";
+import router from "../router";
 
 const props = defineProps({
   boats: Array,
@@ -30,7 +31,15 @@ const toggleSidebar = (element) => {
 
 const selectBoat = (boat) => {
   isSidebarOpen.value = false;
-  window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
+  if (window.location.pathname !== "/") {
+    router.push("/");
+    console.log("redirecting");
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
+    }, 250);
+  } else {
+    window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
+  }
 };
 
 const logout = () => {
@@ -69,7 +78,7 @@ onBeforeUnmount(() => {
     <div class="header">
       <div class="header-content">
         <div class="header-left">
-          <router-link to="/" class="header-item-2">
+          <router-link to="/" class="header-item-2 link">
             <h1>X-connect</h1>
           </router-link>
         </div>
@@ -101,7 +110,9 @@ onBeforeUnmount(() => {
                   <BoatIcon :active="listType === 'boats'" />
                 </div>
                 <div class="icon">
+                  <router-link to="/compare" class="link">
                   <BoatCompare />
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -150,6 +161,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+.link {
+  background-color: transparent;
+}
 
 .header-container {
   display: flex;
