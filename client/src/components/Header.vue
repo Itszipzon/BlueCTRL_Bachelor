@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import BoatIcon from "./icons/BoatIcon.vue";
+import BoatIcon from "../assets/icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
 
 const props = defineProps({
