@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
 import Details from "../views/DetailsPage.vue";
-import Login from "../views/Login.vue";
+import Compare from "../views/Compare.vue";
 
 Vue.use(VueRouter);
 
@@ -19,6 +19,11 @@ const router = new VueRouter({
       path: "/details",
       name: "details",
       component: Details,
+    },
+    {
+      path: "/compare",
+      name: "compare",
+      component: Compare,
     }
   ],
 });
