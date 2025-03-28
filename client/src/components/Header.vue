@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import BoatIcon from "../assets/icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
+import BoatCompare from "../assets/icons/BoatCompare.vue";
 
 const props = defineProps({
   boats: Array,
@@ -96,11 +97,11 @@ onBeforeUnmount(() => {
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
-                <div
-                  :class="['active-icon-bar', { active: listType === 'boats' }]"
-                />
                 <div class="icon" @click="() => toggleSidebar('boats')">
                   <BoatIcon :active="listType === 'boats'" />
+                </div>
+                <div class="icon">
+                  <BoatCompare />
                 </div>
               </div>
             </div>
@@ -218,7 +219,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   width: 75px;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 20px;
   padding-bottom: 20px;
   justify-content: space-between;
 }
@@ -355,9 +356,12 @@ onBeforeUnmount(() => {
 
 .icon-container {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
   align-items: center;
-  padding: 10px 0;
   width: 100%;
+  padding-left: 20px;
 }
 
 .active-icon-bar {
