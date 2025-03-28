@@ -3,8 +3,7 @@ import { ref, onMounted, onUnmounted, inject } from 'vue';
 import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
 import TankData from '../components/TankData.vue';
-import BoatTiltFront from '../components/BoatTiltFront.vue';
-import BoatTiltSide from '../components/BoatTiltSide.vue';
+import BoatTilt from '../components/BoatTilt.vue';
 
 const markers = inject('boats');
 const selectedMarker = ref({});
@@ -82,10 +81,10 @@ onUnmounted(() => {
       <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
         :style="selectedMarker.vesselName ? {} : { height: '0px', padding: '0px', margin: '0px' }">
         <div class="marker-vessel-tilt">
-          <BoatTiltFront />
+          <BoatTilt type="roll" :vesselId="1" />
         </div>
         <div class="marker-vessel-tilt">
-          <BoatTiltSide />
+          <BoatTilt type="pitch" :vesselId="1" />
         </div>
       </div>
       <div :class="['map', { small: !largeMap }]">
