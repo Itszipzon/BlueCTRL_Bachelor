@@ -74,7 +74,7 @@ onUnmounted(() => {
 <template>
   <div class="main-container">
     <div v-if="selectedMarker.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle" @click="toggleMapSize">
-      fullscreen
+      {{ largeMap ? 'Exit Fullscreen' : 'Fullscreen' }}
     </div>
     <div :class="['top-container', { large: largeMap }]">
       <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
@@ -111,7 +111,7 @@ onUnmounted(() => {
   position: absolute;
   top: calc(15px);
   right: 15px;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   background-color: white;
   border-radius: 8px;
