@@ -103,8 +103,8 @@ export default {
     },
     getTimePickerDayStyle() {
       return {
-        width: `calc(100% / 7)`,
-        height: `calc(100% / ${Math.ceil(this.getArrayOfDays().length / 7)})`,
+        width: `calc((100% / 7) - 4.3px)`,
+        height: `calc(100% / ${Math.ceil(this.getArrayOfDays().length / 7)} - 5px)`,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -136,7 +136,7 @@ export default {
       <button cla @click="() => setDisplayType('days')">
         <ArrowLeft />
       </button>
-      <h1 >{{ getDay() }} {{ getMonthName(startTime.month) }} {{ getYear() }}</h1>
+      <h1>{{ getDay() }} {{ getMonthName(startTime.month) }} {{ getYear() }}</h1>
       <div style="width: 30px;">
       </div>
     </div>
@@ -145,24 +145,28 @@ export default {
       <button cla @click="prevYear()">
         <ArrowLeft />
       </button>
-      <h1 >{{ getYear() }}</h1>
+      <h1>{{ getYear() }}</h1>
       <button @click="nextYear()">
         <ArrowRight />
       </button>
     </div>
     <div class="date-time-picker__body">
-      <div class="date-time-picker__days" v-if="displayType === 'days'">
-        <div class="date-time-picker__dates__day-name">Mon</div>
-        <div class="date-time-picker__dates__day-name">Tue</div>
-        <div class="date-time-picker__dates__day-name">Wed</div>
-        <div class="date-time-picker__dates__day-name">Thu</div>
-        <div class="date-time-picker__dates__day-name">Fri</div>
-        <div class="date-time-picker__dates__day-name">Sat</div>
-        <div class="date-time-picker__dates__day-name">Sun</div>
+      <div class="date-time-picker__days-container" v-if="displayType === 'days'">
+        <div class="date-time-picker__days">
+          <div class="date-time-picker__dates__day-name">Mon</div>
+          <div class="date-time-picker__dates__day-name">Tue</div>
+          <div class="date-time-picker__dates__day-name">Wed</div>
+          <div class="date-time-picker__dates__day-name">Thu</div>
+          <div class="date-time-picker__dates__day-name">Fri</div>
+          <div class="date-time-picker__dates__day-name">Sat</div>
+          <div class="date-time-picker__dates__day-name">Sun</div>
+        </div>
+
       </div>
       <div class="date-time-picker__dates" v-if="displayType === 'days'">
         <div v-for="(day, index) in getArrayOfDays()" :key="index" :style="getTimePickerDayStyle()"
-          class="date-time-picker__dates__day" @click="day !== null ? handleDayClick(new Date(getYear(), getMonth(), day)) : null">
+          class="date-time-picker__dates__day"
+          @click="day !== null ? handleDayClick(new Date(getYear(), getMonth(), day)) : null">
           <div class="date-time-picker__dates__day__container">
             <div v-if="day !== null" class="date-time-picker__dates__day__display">
               <span>{{ day }}</span>
@@ -172,8 +176,8 @@ export default {
         </div>
       </div>
       <div class="date-time-picker__hours" v-else-if="displayType === 'time'">
-        <div v-for="(hour, index) in 24" :key="index" :style="getTimePickerDayStyle()"
-          class="date-time-picker__hour" @click="handleHourClick(new Date(getYear(), getMonth(), getDay(), hour))">
+        <div v-for="(hour, index) in 24" :key="index" class="date-time-picker__hour"
+          @click="handleHourClick(new Date(getYear(), getMonth(), getDay(), hour))">
           <div class="date-time-picker__dates__hour__container">
             <div class="date-time-picker__dates__hour__display">
               <span>{{ hour < 10 ? `0${hour}` : hour }}</span>
@@ -261,35 +265,44 @@ export default {
   flex-direction: column;
 }
 
+.date-time-picker__days-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.date-time-picker__dates__day-name {
+  width: calc((100% / 7) - 4.3px);
+  height: calc(100% / 7 - 5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .date-time-picker__days {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 10px;
-}
-
-.date-time-picker__days__day-name {
-  background-color: red;
 }
 
 .date-time-picker__dates {
   width: 100%;
-  height: calc(100%);
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   padding: 5px;
+  gap: 5px;
 }
 
-.date-time-picker__dates__day__container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  cursor: pointer;
+.date-time-picker__dates__day {
+  background-color: #195874;
+  color: white;
+  border-radius: 6px;
 }
 
 .date-time-picker__dates__day__display {
@@ -302,19 +315,6 @@ export default {
   cursor: pointer;
 }
 
-.date-time-picker__dates__day__display:first-child {
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.date-time-picker__dates__day:nth-child(7n) .date-time-picker__dates__day__display {
-  border-right: 1px solid black;
-}
-
-.date-time-picker__dates__day:nth-child(-n+7) .date-time-picker__dates__day__display {
-  border-top: 1px solid black;
-}
-
 .date-time-picker__months {
   width: 100%;
   height: 100%;
@@ -322,25 +322,19 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   padding: 5px;
+  gap: 5px;
 }
 
 .date-time-picker__month {
-  width: calc(100% / 4);
-  height: calc(100% / 3);
+  width: calc((100% / 4) - 4px);
+  height: calc((100% / 3) - 5px);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.date-time-picker__month:nth-child(4n) {
-  border-right: 1px solid black;
-}
-
-.date-time-picker__month:nth-child(-n+4) {
-  border-top: 1px solid black;
+  background-color: #195874;
+  color: white;
+  border-radius: 6px;
 }
 
 .date-time-picker__hours {
@@ -350,28 +344,18 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   padding: 5px;
+  gap: 5px;
 }
 
 .date-time-picker__hour {
-  min-width: calc(100% / 6);
-  min-height: calc(100% / 4);
+  min-width: calc((100% / 6) - 4.2px);
+  min-height: calc((100% / 4) - 5px);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.date-time-picker__hour:nth-child(6n) {
-  border-right: 1px solid black;
-}
-
-.date-time-picker__hour:nth-child(-n+6) {
-  border-top: 1px solid black;
-}
-
-.date-time-picker__hour:last-child {
-  border-right: 1px solid black;
+  background-color: #195874;
+  color: white;
+  border-radius: 6px;
 }
 </style>

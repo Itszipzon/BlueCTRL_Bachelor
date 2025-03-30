@@ -6,7 +6,7 @@ import DateTimeElement from '../components/DateTimeElement.vue';
 
 <script>
 const selectedTime = ref(null);
-const active = ref(false);
+const active = ref(true);
 
 const toggleActive = () => {
   active.value = !active.value;
