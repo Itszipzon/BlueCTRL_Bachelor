@@ -4,7 +4,7 @@
     <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       attribution="Map data © OpenStreetMap contributors" />
     <l-marker v-for="(marker, index) in markers" :key="index"
-      :lat-lng="[marker.gpsPosition.latitude, marker.gpsPosition.longitude]" :icon="createCustomIcon()"
+      :lat-lng="[marker.gpsPosition.latitude, marker.gpsPosition.longitude]" :icon="createCustomIcon(marker)"
       @click="onMarkerClick(marker)">
     </l-marker>
   </l-map>
@@ -23,11 +23,18 @@ export default {
     });
   },
   props: {
+    rules: {
+      type: Object,
+      default: () => ({
+        pulseSelected: false,
+      }),
+    },
     large: Boolean,
     markers: Array,
     center: Object,
     resize: Function,
     setValues: Function,
+    selectedVessel: Array,
   },
   components: {
     LMap,
@@ -40,10 +47,12 @@ export default {
       this.$emit('map-ready', this.$refs.leafletMap.mapObject);
     },
 
-    createCustomIcon() {
+    createCustomIcon(vessel) {
+
+      const isSelected = this.selectedVessel && this.rules.pulseSelected && this.selectedVessel.some(v => v.id === vessel.id);
       return L.divIcon({
-        className: 'custom-icon',
-        html: `<img src="${MapMarker}" alt="Marker Icon" style="width: 40px; height: 40px;" />`,
+        className: isSelected ? 'custom-icon pulse' : 'custom-icon',
+        html: `<img src="${MapMarker}" alt="Marker Icon" class="marker-icon" />`,
         iconSize: [40, 40],
         iconAnchor: [20, 20],
         popupAnchor: [0, -20],
@@ -66,10 +75,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .custom-icon img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.pulse img {
+  animation: pulseAnimation 1s infinite alternate;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.2);
+  }
 }
 </style>

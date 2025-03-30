@@ -51,6 +51,7 @@ function zoomInMap(value) {
 }
 
 function setValues(values) {
+
   selectedMarker.value = values;
   setTimeout(() => {
     zoomInMap(15);
@@ -74,7 +75,8 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container">
-    <div v-if="selectedMarker.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle" @click="toggleMapSize">
+    <div v-if="selectedMarker.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle"
+      @click="toggleMapSize">
       {{ largeMap ? 'Exit Fullscreen' : 'Fullscreen' }}
     </div>
     <div :class="['top-container', { large: largeMap }]">
@@ -95,7 +97,7 @@ onUnmounted(() => {
     <div :class="['vessel-data-container', { small: !largeMap }]">
       <VesselData :selectedMarker="selectedMarker" />
     </div>
-    <div  :class="['vessel-data-container', { small: !largeMap }]">
+    <div :class="['vessel-data-container', { small: !largeMap }]">
       <TankData />
     </div>
   </div>
