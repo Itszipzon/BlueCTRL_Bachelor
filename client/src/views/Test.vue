@@ -8,6 +8,15 @@ import DateTimeElement from '../components/DateTimeElement.vue';
 const selectedTime = ref(null);
 const active = ref(true);
 
+const activeDates = ref([
+  new Date(2025, 2, 1, 0),
+  new Date(2025, 2, 2, 0),
+  new Date(2025, 2, 3, 0),
+  new Date(2025, 2, 4, 0),
+]);
+
+console.log(activeDates.value);
+
 const toggleActive = () => {
   active.value = !active.value;
 };
@@ -40,7 +49,7 @@ const monthName = (e) => {
     <button @click="toggleActive">Click me</button>
     <h1 v-if="selectedTime">{{ dayOfWeek(selectedTime) }} {{ monthName(selectedTime) }} {{ selectedTime.getDate() }} {{ selectedTime.getFullYear() }} {{ displayHour(selectedTime) }}:00</h1>
     <div :class="['date-time-picker', { active: active }]">
-      <DateTimeElement :onHourClick="clickHour" />
+      <DateTimeElement :displayActive="true" :onHourClick="clickHour" :activeDates="activeDates" />
     </div>
   </div>
 </template>

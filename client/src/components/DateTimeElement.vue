@@ -35,14 +35,23 @@ export default {
   },
   methods: {
     handleHourClick(e) {
+      if (this.displayActive && !this.isActiveDate(e)) {
+        return;
+      }
       if (this.onHourClick) this.onHourClick(e);
     },
     handleDayClick(e) {
+      if (this.displayActive && !this.isActiveDate(e)) {
+        return;
+      }
       this.displayType = "time";
       this.startTime.day = e.getDate();
       if (this.onDayClick) this.onDayClick(e);
     },
     handleMonthClick(e) {
+      if (this.displayActive && !this.isActiveDate(e)) {
+        return;
+      }
       this.setDisplayType("days");
       this.startTime.month = e.getMonth();
       if (this.onMonthClick) this.onMonthClick(e);
@@ -115,6 +124,15 @@ export default {
     setDisplayType(type) {
       this.displayType = type;
     },
+    isActiveDate(date) {
+      if (!this.displayActive) return true;
+      if (date === null) return false;
+      return this.activeDates.some(dates => dates.getDate() === date.getDate() && dates.getMonth() === date.getMonth() && dates.getFullYear() === date.getFullYear());
+    },
+    isInactive(date) {
+      if (date === null) return false;
+      return !this.activeDates.some(dates => dates.getDate() === date.getDate() && dates.getMonth() === date.getMonth() && dates.getFullYear() === date.getFullYear());
+    }
   },
 };
 </script>
@@ -165,7 +183,7 @@ export default {
       </div>
       <div class="date-time-picker__dates" v-if="displayType === 'days'">
         <div v-for="(day, index) in getArrayOfDays()" :key="index" :style="getTimePickerDayStyle()"
-          class="date-time-picker__dates__day"
+          :class="['date-time-picker__dates__day', { active: isActiveDate(day === null ? null : new Date(startTime.year, startTime.month - 1, day)), inactive: isInactive(day === null ? null : new Date(startTime.year, startTime.month - 1, day)) }]"
           @click="day !== null ? handleDayClick(new Date(getYear(), getMonth(), day)) : null">
           <div class="date-time-picker__dates__day__container">
             <div v-if="day !== null" class="date-time-picker__dates__day__display">
@@ -300,9 +318,19 @@ export default {
 }
 
 .date-time-picker__dates__day {
-  background-color: #195874;
-  color: white;
   border-radius: 6px;
+}
+
+.date-time-picker__dates__day.active {
+  color: white;
+  background-color: #195874;
+  cursor: pointer;
+}
+
+.date-time-picker__dates__day.inactive {
+  color: black;
+  border: 1px solid #195874;
+  cursor:default;
 }
 
 .date-time-picker__dates__day__display {
@@ -312,7 +340,6 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  cursor: pointer;
 }
 
 .date-time-picker__months {
