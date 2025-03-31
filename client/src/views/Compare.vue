@@ -2,8 +2,8 @@
 import Map from "../components/Map.vue";
 import { ref } from "vue";
 import VesselData from "../components/VesselData.vue";
-import LeftContainer from "../components/compare/LeftContainer.vue"
-import RightContainer from "../components/compare/RightContainer.vue"
+import LeftContainer from "../components/compare/LeftContainer.vue";
+import RightContainer from "../components/compare/RightContainer.vue";
 
 const center = ref({
   lat: 62.47225,
@@ -56,12 +56,12 @@ const center = ref({
 }
 
 .left-container {
-  background-color: aquamarine;
   width: 100%;
+  border-right: 0.5px solid #ccc;
 }
 
 .right-container {
-  background-color: bisque;
   width: 100%;
+  border-left: 0.5px solid #ccc;
 }
 </style>
