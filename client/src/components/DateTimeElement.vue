@@ -35,13 +35,13 @@ export default {
   },
   methods: {
     handleHourClick(e) {
-      if (this.displayActive && !this.isActiveDate(e)) {
+      if (this.displayActive && !this.isActiveHour(e.getHours())) {
         return;
       }
       if (this.onHourClick) this.onHourClick(e);
     },
     handleDayClick(e) {
-      if (this.displayActive && !this.isActiveDate(e)) {
+      if (this.displayActive && !this.isActiveDay(e.getDate())) {
         return;
       }
       this.displayType = "time";
@@ -49,11 +49,11 @@ export default {
       if (this.onDayClick) this.onDayClick(e);
     },
     handleMonthClick(e) {
-      if (this.displayActive && !this.isActiveDate(e)) {
+      if (this.displayActive && !this.isActiveMonth(e - 1)) {
         return;
       }
       this.setDisplayType("days");
-      this.startTime.month = e.getMonth();
+      this.startTime.month = e;
       if (this.onMonthClick) this.onMonthClick(e);
     },
     getMonthName(month, amount) {
@@ -124,15 +124,27 @@ export default {
     setDisplayType(type) {
       this.displayType = type;
     },
-    isActiveDate(date) {
+    isActiveHour(hour) {
       if (!this.displayActive) return true;
-      if (date === null) return false;
-      return this.activeDates.some(dates => dates.getDate() === date.getDate() && dates.getMonth() === date.getMonth() && dates.getFullYear() === date.getFullYear());
+      return this.activeDates.some(date => date.getHours() === hour && date.getDate() === this.startTime.day && date.getMonth() === this.startTime.month - 1 && date.getFullYear() === this.startTime.year);
     },
-    isInactive(date) {
-      if (date === null) return false;
-      return !this.activeDates.some(dates => dates.getDate() === date.getDate() && dates.getMonth() === date.getMonth() && dates.getFullYear() === date.getFullYear());
-    }
+    isActiveDay(day) {
+      if (day === null) return false;
+      if (!this.displayActive) return true;
+      return this.activeDates.some(date => date.getDate() === day && date.getMonth() === this.startTime.month - 1 && date.getFullYear() === this.startTime.year);
+    },
+    isInactiveDay(day) {
+      if (day === null) return false;
+      if (!this.displayActive) return false;
+      return !this.activeDates.some(date => date.getDate() === day && date.getMonth() === this.startTime.month - 1 && date.getFullYear() === this.startTime.year);
+    },
+    isActiveMonth(month) {
+      if (!this.displayActive) return true;
+      return this.activeDates.some(date => date.getMonth() === month && date.getFullYear() === this.startTime.year);
+    },
+    isActiveYear(year) {
+      return this.activeDates.some(activeDate => activeDate.getFullYear() === year);
+    },
   },
 };
 </script>
@@ -183,7 +195,7 @@ export default {
       </div>
       <div class="date-time-picker__dates" v-if="displayType === 'days'">
         <div v-for="(day, index) in getArrayOfDays()" :key="index" :style="getTimePickerDayStyle()"
-          :class="['date-time-picker__dates__day', { active: isActiveDate(day === null ? null : new Date(startTime.year, startTime.month - 1, day)), inactive: isInactive(day === null ? null : new Date(startTime.year, startTime.month - 1, day)) }]"
+          :class="['date-time-picker__dates__day', { active: isActiveDay(day), inactive: isInactiveDay(day) }]"
           @click="day !== null ? handleDayClick(new Date(getYear(), getMonth(), day)) : null">
           <div class="date-time-picker__dates__day__container">
             <div v-if="day !== null" class="date-time-picker__dates__day__display">
@@ -194,18 +206,18 @@ export default {
         </div>
       </div>
       <div class="date-time-picker__hours" v-else-if="displayType === 'time'">
-        <div v-for="(hour, index) in 24" :key="index" class="date-time-picker__hour"
-          @click="handleHourClick(new Date(getYear(), getMonth(), getDay(), hour))">
+        <div v-for="(hour, index) in 24" :key="index" :class="['date-time-picker__hour', { active: isActiveHour(index) }]"
+          @click="handleHourClick(new Date(getYear(), getMonth(), getDay(), index))">
           <div class="date-time-picker__dates__hour__container">
             <div class="date-time-picker__dates__hour__display">
-              <span>{{ hour < 10 ? `0${hour}` : hour }}</span>
+              <span>{{ index < 10 ? `0${index}` : index }}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="date-time-picker__months" v-else-if="displayType === 'month'">
-        <div v-for="(month, index) in 12" :key="index" class="date-time-picker__month"
-          @click="handleMonthClick(new Date(getYear(), month))">
+        <div v-for="(month, index) in 12" :key="index" :class="['date-time-picker__month', { active: isActiveMonth(index) }]"
+          @click="handleMonthClick(month)">
           <div class="date-time-picker__dates__month__container">
             <div class="date-time-picker__month__display">
               <span>{{ getMonthName(month, 3) }}</span>
@@ -358,10 +370,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  background-color: #195874;
-  color: white;
+  color: black;
+  border: 1px solid #195874;
   border-radius: 6px;
+  cursor:default;
+}
+
+.date-time-picker__month.active {
+  color: white;
+  background-color: #195874;
+  cursor: pointer;
 }
 
 .date-time-picker__hours {
@@ -380,9 +398,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  background-color: #195874;
-  color: white;
+  color: black;
+  border: 1px solid #195874;
   border-radius: 6px;
+  cursor:default;
+}
+
+.date-time-picker__hour.active {
+  color: white;
+  background-color: #195874;
+  cursor: pointer;
 }
 </style>

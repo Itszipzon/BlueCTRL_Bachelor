@@ -10,6 +10,10 @@ const active = ref(true);
 
 const activeDates = ref([
   new Date(2025, 2, 1, 0),
+  new Date(2025, 2, 1, 1),
+  new Date(2025, 2, 1, 2),
+  new Date(2025, 2, 1, 3),
+  new Date(2025, 2, 1, 4),
   new Date(2025, 2, 2, 0),
   new Date(2025, 2, 3, 0),
   new Date(2025, 2, 4, 0),
