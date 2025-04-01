@@ -11,7 +11,6 @@
       stroke="#ffffff"
       stroke-width="2"
       fill="transparent"
-   
     />
   </svg>
 </template>
