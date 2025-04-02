@@ -2,7 +2,15 @@
 
 const props = defineProps({
   boats: Array,
+  selectedBoat: Object,
 });
+
+const emit = defineEmits(["boat-selected"]);
+
+const handleBoatClick = (boat) => {
+  emit("boat-selected", boat);
+  console.log("Boat clicked:", boat);
+};
 
 </script>
 <template>
@@ -10,7 +18,12 @@ const props = defineProps({
     <div class="boat-list-container">
       <h3>Filter boats</h3>
       <div class="boat-list">
-        <div class="boat-item" v-for="boat in props.boats" :key="boat.id">
+        <div
+          :class="['boat-item', { selected: boat.id === selectedBoat.id }]"
+          v-for="boat in props.boats"
+          :key="boat.id"
+          @click="handleBoatClick(boat)"
+        >
           <img
             class="boat-flag"
             :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
@@ -62,6 +75,10 @@ const props = defineProps({
   border: 1px solid #ddd;
   border-radius: 6px;
   background-color: #f9f9f9;
+}
+
+.boat-item.selected {
+  background-color: #eaeaea;
 }
 
 .boat-item:hover {

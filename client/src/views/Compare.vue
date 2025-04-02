@@ -1,10 +1,19 @@
 <script setup>
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
+import { ref } from "vue";
 
 const props = defineProps({
   boats: Array,
 });
+
+const selectedBoat = ref(null);
+
+const selectBoat = (boat) => {
+  selectedBoat.value = boat;
+};
+
+
 </script>
 
 <template>
@@ -12,10 +21,10 @@ const props = defineProps({
     <div class="top-container">
       <div class="bottom-container">
         <div class="left-container">
-          <LeftContainer :boats="props.boats" />
+          <LeftContainer :boats="props.boats" :selectedBoat="selectedBoat" @boat-selected="selectBoat" />
         </div>
         <div class="right-container">
-          <RightContainer />
+          <RightContainer :selectedBoat="selectedBoat" />
         </div>
       </div>
     </div>
