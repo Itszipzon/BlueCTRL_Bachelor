@@ -1,25 +1,18 @@
 <script setup>
-import Map from "../components/Map.vue";
-import { ref } from "vue";
-import VesselData from "../components/VesselData.vue";
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
 
-const center = ref({
-  lat: 62.47225,
-  lng: 6.15492,
+const props = defineProps({
+  boats: Array,
 });
 </script>
 
 <template>
   <div class="main-container">
     <div class="top-container">
-      <div class="map-container">
-        <Map :center="center" />
-      </div>
       <div class="bottom-container">
         <div class="left-container">
-          <LeftContainer />
+          <LeftContainer :boats="props.boats" />
         </div>
         <div class="right-container">
           <RightContainer />
@@ -28,6 +21,7 @@ const center = ref({
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .main-container {
@@ -47,10 +41,9 @@ const center = ref({
 }
 
 .bottom-container {
-  height: calc(100dvh - 50px - 300px);
+  height: calc(100dvh - 50px);
   width: 100%;
   display: flex;
-  flex-direction: grid;
   background-color: #f5f5f5;
   overflow: auto;
 }
