@@ -37,8 +37,16 @@ const props = defineProps({
 
 .boat-list-container {
   background-color: white;
-  padding: 10px;
+  padding: 20px;
+  border-radius: 6px;
 }
+
+.boat-list-container h3 {
+  font-size: 16px;
+  font-weight: bolder;
+  font-family: "Poppins", sans-serif;
+}
+
 .boat-list {
   display: flex;
   flex-direction: column;
@@ -70,5 +78,7 @@ const props = defineProps({
   font-size: 14px;
   font-weight: 500;
 }
+
+
 
 </style>
