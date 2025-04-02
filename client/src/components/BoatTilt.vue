@@ -33,13 +33,13 @@ console.log(sideStyle)
     <div class="boat-tilt-container">
         <!-- Front view for roll -->
         <div class="tilt-view" v-if="props.type === 'roll' && hasSensorData">
-            <img class="boat-image" src="@/assets/boat-front-view.svg" alt="Boat Front View" :style="frontStyle" />
+            <img class="boat-image" src="@/assets/icons/boat-front-view.svg" alt="Boat Front View" :style="frontStyle" />
             <p class="tilt-label">Roll: {{ roll }}°</p>
         </div>
 
         <!-- Side view for pitch -->
         <div class="tilt-view" v-else-if="props.type === 'pitch' && hasSensorData">
-            <img class="boat-image" src="@/assets/boat-side-view.svg" alt="Boat Side View" :style="sideStyle" />
+            <img class="boat-image" src="@/assets/icons/boat-side-view.svg" alt="Boat Side View" :style="sideStyle" />
             <p class="tilt-label">Pitch: {{ pitch }}°</p>
         </div>
 
