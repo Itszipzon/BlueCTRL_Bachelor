@@ -25,7 +25,6 @@ const router = new VueRouter({
       path: "/compare",
       name: "compare",
       component: Compare,
-      props: true,
     },
     {
       path: "/test",

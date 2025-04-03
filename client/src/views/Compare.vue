@@ -1,13 +1,13 @@
 <script setup>
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 
-const props = defineProps({
-  boats: Array,
-});
+const boats = inject("boats");
 
 const selectedBoat = ref(null);
+
+console.log("Boats in Compare.vue:", boats);
 
 const selectBoat = (boat) => {
   selectedBoat.value = boat;
@@ -21,7 +21,7 @@ const selectBoat = (boat) => {
     <div class="top-container">
       <div class="bottom-container">
         <div class="left-container">
-          <LeftContainer :boats="props.boats" :selectedBoat="selectedBoat" @boat-selected="selectBoat" />
+          <LeftContainer :boats="boats" :selectedBoat="selectedBoat" @boat-selected="selectBoat" />
         </div>
         <div class="right-container">
           <RightContainer :selectedBoat="selectedBoat" />

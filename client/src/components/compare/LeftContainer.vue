@@ -9,7 +9,6 @@ const emit = defineEmits(["boat-selected"]);
 
 const handleBoatClick = (boat) => {
   emit("boat-selected", boat);
-  console.log("Boat clicked:", boat);
 };
 
 </script>
@@ -19,8 +18,8 @@ const handleBoatClick = (boat) => {
       <h3>Filter boats</h3>
       <div class="boat-list">
         <div
-          :class="['boat-item', { selected: boat.id === selectedBoat.id }]"
-          v-for="boat in props.boats"
+          :class="['boat-item', { selected: boat.id === selectedBoat?.id }]"
+          v-for="boat in boats"
           :key="boat.id"
           @click="handleBoatClick(boat)"
         >
