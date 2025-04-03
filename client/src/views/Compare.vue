@@ -5,12 +5,15 @@ import { inject, ref } from "vue";
 
 const boats = inject("boats");
 
-const selectedBoat = ref(null);
+const selectedBoats = ref([]);
 
-console.log("Boats in Compare.vue:", boats);
-
-const selectBoat = (boat) => {
-  selectedBoat.value = boat;
+const toggleBoatSelection = (boat) => {
+  const index = selectedBoats.value.findIndex((b) => b.id === boat.id);
+  if (index === -1) {
+    selectedBoats.value.push(boat);
+  } else {
+    selectedBoats.value.splice(index, 1);
+  }
 };
 
 
@@ -21,10 +24,10 @@ const selectBoat = (boat) => {
     <div class="top-container">
       <div class="bottom-container">
         <div class="left-container">
-          <LeftContainer :boats="boats" :selectedBoat="selectedBoat" @boat-selected="selectBoat" />
+          <LeftContainer :boats="boats" :selectedBoats="selectedBoats" @boat-selected="toggleBoatSelection" />
         </div>
         <div class="right-container">
-          <RightContainer :selectedBoat="selectedBoat" />
+          <RightContainer :selectedBoats="selectedBoats" />
         </div>
       </div>
     </div>

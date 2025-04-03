@@ -2,7 +2,7 @@
 
 const props = defineProps({
   boats: Array,
-  selectedBoat: Object,
+  selectedBoats: Array,
 });
 
 const emit = defineEmits(["boat-selected"]);
@@ -18,7 +18,7 @@ const handleBoatClick = (boat) => {
       <h3>Filter boats</h3>
       <div class="boat-list">
         <div
-          :class="['boat-item', { selected: boat.id === selectedBoat?.id }]"
+          :class="['boat-item', { selected: selectedBoats.some((b) => b.id === boat.id) }]"
           v-for="boat in boats"
           :key="boat.id"
           @click="handleBoatClick(boat)"
