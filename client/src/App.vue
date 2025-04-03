@@ -43,7 +43,7 @@ provide("boats", boats);
     <div v-if="isLoggedIn">
       <Header :boats="boats" />
       <div class="mainPage">
-        <router-view :boats="boats" />
+        <router-view />
       </div>
     </div>
     <div v-else class="login">
