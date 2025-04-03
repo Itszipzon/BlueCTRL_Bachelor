@@ -152,7 +152,7 @@ export default {
 
 <template>
   <div class="date-time-picker__container">
-    <div class="date-time-picker__header" v-if="displayType === 'days'">
+    <div class="date-time-picker__header pointer" v-if="displayType === 'days'">
       <button cla @click="prevMonth()">
         <ArrowLeft />
       </button>
@@ -231,7 +231,7 @@ export default {
 
 <style scoped>
 .date-time-picker__container {
-  width: 100%;
+  width: 300px;
   height: 100%;
   color: black;
   display: flex;
@@ -252,6 +252,11 @@ export default {
   margin: 0;
   font-size: 20px;
   font-weight: bold;
+  cursor: default;
+}
+
+.date-time-picker__header.pointer h1 {
+  cursor: pointer;
 }
 
 .date-time-picker__header button {

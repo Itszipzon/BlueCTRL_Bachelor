@@ -9,23 +9,23 @@ const selectedTime = ref(null);
 const active = ref(true);
 
 const activeDates = ref([
-  new Date(2025, 2, 1, 0),
-  new Date(2025, 2, 1, 1),
-  new Date(2025, 2, 1, 2),
-  new Date(2025, 2, 1, 3),
-  new Date(2025, 2, 1, 4),
-  new Date(2025, 2, 2, 0),
-  new Date(2025, 2, 3, 0),
-  new Date(2025, 2, 4, 0),
+  new Date(2025, 3, 1, 0),
+  new Date(2025, 3, 1, 1),
+  new Date(2025, 3, 1, 2),
+  new Date(2025, 3, 1, 3),
+  new Date(2025, 3, 1, 4),
+  new Date(2025, 3, 2, 0),
+  new Date(2025, 3, 3, 0),
+  new Date(2025, 3, 4, 0),
+  new Date(2026, 4, 1, 2),
 ]);
-
-console.log(activeDates.value);
 
 const toggleActive = () => {
   active.value = !active.value;
 };
 
 const clickHour = (e) => {
+  console.log(e);
   selectedTime.value = e;
 };
 
@@ -53,7 +53,7 @@ const monthName = (e) => {
     <button @click="toggleActive">Click me</button>
     <h1 v-if="selectedTime">{{ dayOfWeek(selectedTime) }} {{ monthName(selectedTime) }} {{ selectedTime.getDate() }} {{ selectedTime.getFullYear() }} {{ displayHour(selectedTime) }}:00</h1>
     <div :class="['date-time-picker', { active: active }]">
-      <DateTimeElement :displayActive="true" :onHourClick="clickHour" :activeDates="activeDates" />
+      <DateTimeElement :displayActive="false" :onHourClick="clickHour" :activeDates="activeDates" />
     </div>
   </div>
 </template>
