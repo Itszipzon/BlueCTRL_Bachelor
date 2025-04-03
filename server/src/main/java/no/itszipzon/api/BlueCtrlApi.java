@@ -1,13 +1,17 @@
 package no.itszipzon.api;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -50,7 +54,8 @@ public class BlueCtrlApi {
     @GetMapping("/**")
     public ResponseEntity<JsonNode> getData(
             HttpServletRequest request,
-            @RequestHeader("Authorization") String authorizationHeader) {
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam(required = false) Map<String, String> queryParams) {
 
         String path = "/api" + request.getRequestURI().replaceFirst("/api", "");
 
@@ -58,8 +63,12 @@ public class BlueCtrlApi {
             return ResponseEntity.badRequest().build();
         }
 
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(path);
+        if (queryParams != null && !queryParams.isEmpty()) {
+            queryParams.forEach(uriBuilder::queryParam);
+        }
         JsonNode data = webClient.get()
-                .uri(path)
+                .uri(uriBuilder.toUriString())
                 .headers(headers -> headers.set("Authorization", authorizationHeader))
                 .retrieve()
                 .bodyToMono(JsonNode.class)
@@ -72,7 +81,7 @@ public class BlueCtrlApi {
      * This endpoint localhost:8080/api/login
      *
      * @param request             none
-     *                           
+     * 
      * @param authorizationHeader Basic auth with name and password
      * 
      * @return A ResponseEntity containing the JSON response from the external API.
@@ -86,7 +95,7 @@ public class BlueCtrlApi {
             HttpServletRequest request,
             @RequestHeader("Authorization") String authorizationHeader) {
 
-        String path =  request.getRequestURI().replaceFirst("/login", "/fuel-types");
+        String path = request.getRequestURI().replaceFirst("/login", "/fuel-types");
         if (path.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
