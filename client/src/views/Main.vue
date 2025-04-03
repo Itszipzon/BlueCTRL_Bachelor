@@ -163,7 +163,7 @@ onUnmounted(() => {
   background: url('@/assets/icons/protractor.png') no-repeat center center;
   background-size: 120%;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
 }
 
 .map {
