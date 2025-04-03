@@ -2,6 +2,7 @@
 import { onMounted, provide, ref } from "vue";
 import Header from "./components/Header.vue";
 import Login from "./views/Login.vue";
+import router from "./router";
 
 const isLoggedIn = ref(true);
 
@@ -13,6 +14,7 @@ onMounted(() => {
 
 window.addEventListener("logout", () => {
   localStorage.removeItem("SESSION");
+  router.push("/");
   isLoggedIn.value = false;
 });
 
