@@ -4,12 +4,20 @@ const props = defineProps({
   selectedMarker: Object
 });
 
+function getCountryCode(countryCode) {
+  if (countryCode) {
+    return countryCode.toLowerCase();
+  } else {
+    return "placeholder";
+  }
+}
+
 </script>
 
 <template>
   <div class="vessel-data-hero">
     <div class="vessel-data-header">
-      <img :src="`${selectedMarker.countryCode ? `https://flagcdn.com/h40/${selectedMarker?.countryCode}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
+      <img :src="`${selectedMarker.countryCode ? `https://flagcdn.com/h40/${getCountryCode(selectedMarker?.countryCode)}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
       <h2>{{ selectedMarker?.vesselName }}</h2>
     </div>
     <div class="vessel-data-container">

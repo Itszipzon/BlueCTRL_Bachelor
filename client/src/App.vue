@@ -11,21 +11,7 @@ const boats = ref([]);
 onMounted(() => {
   if (localStorage.getItem("SESSION")) {
     isLoggedIn.value = true;
-
-    axios.get("https://portal.x-connect.io/api/bluebox-vessels-minimal", {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-      }
-    })
-    .then((response) => {
-      boats.value = response.data;
-    })
-    .catch((error => {
-      console.error("Error fetching boats:", error);
-      localStorage.removeItem("SESSION");
-      isLoggedIn.value = false;
-      router.push("/");
-    }));
+    gatherBoats();
   }
 });
 
@@ -41,6 +27,42 @@ window.addEventListener("login", () => {
 
 const toggleLogin = () => {
   isLoggedIn.value = !isLoggedIn.value;
+  if (isLoggedIn.value) {
+    gatherBoats();
+  } else {
+    localStorage.removeItem("SESSION");
+    router.push("/");
+  }
+}
+
+function gatherBoats() {
+  axios.get("http://localhost:8080/api/bluebox-vessels-minimal", {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+      }
+    })
+    .then((response) => {
+      boats.value = response.data;
+      for (let i = 0; i < response.data.length; i++) {
+        axios.get(`http://localhost:8080/api/vessel-gps-position/?vesselId=${response.data[i].id}`, {
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+          }
+        })
+        .then((r) => {
+          boats.value[i].gpsPosition = r.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching GPS position:", error);
+        });
+      }
+    })
+    .catch((error => {
+      console.error("Error fetching boats:", error);
+      localStorage.removeItem("SESSION");
+      isLoggedIn.value = false;
+      router.push("/");
+    }));
 }
 
 provide("boats", boats);

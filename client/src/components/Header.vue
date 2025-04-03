@@ -27,14 +27,12 @@ const toggleSidebar = (element) => {
     isSidebarOpen.value = true;
   }
 
-  console.log(!element);
 };
 
 const selectBoat = (boat) => {
   isSidebarOpen.value = false;
   if (window.location.pathname !== "/") {
     router.push("/");
-    console.log("redirecting");
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
     }, 250);
