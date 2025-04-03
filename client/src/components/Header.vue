@@ -14,6 +14,7 @@ const listType = ref("boats");
 const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
 let input = ref("");
+const searchListOpen = ref(false);
 const searchRef = ref(null);
 
 const toggleSidebar = (element) => {
@@ -56,16 +57,14 @@ document.addEventListener("mousedown", (e) => {
   if (isSidebarOpen.value && !e.target.closest(".header-container")) {
     isSidebarOpen.value = false;
   }
-});
 
-const handleClickOutside = (event) => {
-  if (searchRef.value && !searchRef.value.contains(event.target)) {
-    input.value = "";
+  if (!searchListOpen.value && e.target.closest(".header-item-3")) {
+    searchListOpen.value = true;
   }
-};
 
-onMounted(() => {
-  document.addEventListener("mousedown", handleClickOutside);
+  if (searchListOpen.value && !e.target.closest(".header-item-3")) {
+    searchListOpen.value = false;
+  }
 });
 
 onBeforeUnmount(() => {
@@ -84,10 +83,14 @@ onBeforeUnmount(() => {
         </div>
         <div class="header-item-3" ref="searchRef">
           <input type="text" v-model="input" placeholder="Search boats.." />
-          <div class="search-results" v-if="input">
+          <div class="remove-input" v-if="input" @click="() => input = ''">
+            <div class="remove-input-line" />
+            <div class="remove-input-line" />
+          </div>
+          <div class="search-results" v-if="searchListOpen && input">
             <div class="boatresult" v-for="boat in filteredBoats()" @click="() => {
               selectBoat(boat);
-              input = '';
+              searchListOpen = false;
               }" :key="boat.id">
               <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
               <span class="boat-name">{{ boat.vesselName }}</span>
@@ -237,12 +240,18 @@ onBeforeUnmount(() => {
   gap: 5px;
 }
 
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .boat-list {
   flex-grow: 1;
   list-style: none;
   padding: 0;
-  padding-top: 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  padding: 10px 10px 0 0;
 }
 
 .boat-list.closed {
@@ -259,7 +268,6 @@ onBeforeUnmount(() => {
   cursor: pointer;
   width: 100%;
   transition: all 0.3s ease-in-out;
-  overflow: hidden;
 }
 
 .boat-item.closed {
@@ -319,10 +327,49 @@ onBeforeUnmount(() => {
 
 .header-item-3 {
   display: flex;
-  align-items: end;
   height: 32px;
   width: 100%;
-  position: relative;
+}
+
+.remove-input {
+  position: absolute;
+  right: 5px;
+  top: calc(32px / 2 - 10px);
+  width: 20px;
+  height: 20px;
+  background-color: rgb(234, 234, 234);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.remove-input:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.remove-input-line {
+  width: 20px;
+  height: 2px;
+  background-color: #474646;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+}
+
+.remove-input-line:nth-child(1) {
+  position: absolute;
+  width: 15px;
+  top: calc(50% - 1px);
+  left: calc(50% - 7.5px);
+  transform: rotate(45deg);
+}
+
+.remove-input-line:nth-child(2) {
+  position: absolute;
+  width: 15px;
+  top: calc(50% - 1px);
+  left: calc(50% - 7.5px);
+  transform: rotate(-45deg);
+  
 }
 
 .search-results {
@@ -357,7 +404,7 @@ onBeforeUnmount(() => {
   height: 100%;
   width: 100%;
   border-radius: 6px;
-  padding: 10px;
+  padding: 10px 30px 10px 10px;
   border: none;
 }
 
