@@ -3,12 +3,29 @@ import { onMounted, provide, ref } from "vue";
 import Header from "./components/Header.vue";
 import Login from "./views/Login.vue";
 import router from "./router";
+import axios from "axios";
 
-const isLoggedIn = ref(true);
+const isLoggedIn = ref(false);
+const boats = ref([]);
 
 onMounted(() => {
   if (localStorage.getItem("SESSION")) {
     isLoggedIn.value = true;
+
+    axios.get("https://portal.x-connect.io/api/bluebox-vessels-minimal", {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+      }
+    })
+    .then((response) => {
+      boats.value = response.data;
+    })
+    .catch((error => {
+      console.error("Error fetching boats:", error);
+      localStorage.removeItem("SESSION");
+      isLoggedIn.value = false;
+      router.push("/");
+    }));
   }
 });
 
@@ -25,15 +42,6 @@ window.addEventListener("login", () => {
 const toggleLogin = () => {
   isLoggedIn.value = !isLoggedIn.value;
 }
-
-const boats = ref([
-  { id: 1, vesselName: "Boat Name 1", countryCode: "no", gpsPosition: { latitude: 62.4722, longitude: 6.1495 } },
-  { id: 2, vesselName: "Boat Name 2", countryCode: "au", gpsPosition: { latitude: 62.4622, longitude: 6.1495 } },
-  { id: 3, vesselName: "Boat Name 3", countryCode: "es", gpsPosition: { latitude: 62.4722, longitude: 6.1595 } },
-  { id: 4, vesselName: "Boat Name 4", countryCode: "se", gpsPosition: { latitude: 62.4822, longitude: 6.1695 } },
-  { id: 5, vesselName: "Boat Name 5", countryCode: "za", gpsPosition: { latitude: 62.4722, longitude: 6.1395 } },
-  { id: 6, vesselName: "Boat Name 6", countryCode: "us", gpsPosition: { latitude: 62.4922, longitude: 6.1495 } },
-]);
 
 provide("boats", boats);
 </script>
