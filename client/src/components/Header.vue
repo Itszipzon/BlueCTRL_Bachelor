@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
 }
 
 .sidebar.open {
-  width: calc(325px - 75px);
+  width: calc(345px - 75px);
 }
 
 .sidebar-content {
