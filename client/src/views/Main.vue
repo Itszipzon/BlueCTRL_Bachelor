@@ -123,8 +123,8 @@ onUnmounted(() => {
   font-size: 20px;
   cursor: pointer;
   background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
