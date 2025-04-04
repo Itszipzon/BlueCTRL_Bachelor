@@ -44,11 +44,11 @@ async function fetchSensorData() {
                 .then((r) => {
                     if (r.status === 200) {
                         const data = r.data;
+                        console.log(data);
                         if (data.signalEvents && data.signalEvents.length > 0) {
                             // Use the last value in the signalEvents array
                             const lastEvent = data.signalEvents[data.signalEvents.length - 1];
-                            sensorValue.value = parseFloat(lastEvent.value);
-                            console.log(sensorValue)
+                            sensorValue.value = lastEvent.doubleValue;
                             hasSensorData.value = true;
                         } else {
                             hasSensorData.value = false;
@@ -67,10 +67,10 @@ async function fetchSensorData() {
 
 }
 
-onMounted(() => {
+/* onMounted(() => {
     fetchSensorData();
     setInterval(fetchSensorData, 10 * 1000);
-});
+}); */
 
 // Computed style for the rotating boat image.
 const styleTransform = computed(() => ({
@@ -118,14 +118,15 @@ const styleTransform = computed(() => ({
     justify-content: flex-end;
     width: 100%;
     height: 100%;
-    background: url('@/assets/icons/protractor.png') no-repeat center center;
+    background: url('@/assets/icons/protractor.png') no-repeat center calc(100% - 20px);
     background-size: 120%;
+    margin-bottom: 5px;
 }
 
 /* The container displays the protractor as a background */
 .protractor-container {
     background-size: contain;
-    margin-bottom: 8%;
+    margin-bottom: 8px;
     /* Space between the protractor and the text */
 }
 
