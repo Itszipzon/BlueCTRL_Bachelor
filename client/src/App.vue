@@ -45,7 +45,6 @@ function gatherBoats() {
       if (response.status !== 200) {
         console.error("Error fetching boats:", response.status);
       }
-      console.log(response.data);
       boats.value = response.data;
     })
     .catch((error => {

@@ -1,5 +1,5 @@
 <template>
-  <l-map :center="[center.lat, center.lng]" :zoom="13" style="height: 100%; width: 100%;" ref="leafletMap"
+  <l-map :center="[center.lat, center.lng]" :zoom="5" style="height: 100%; width: 100%;" ref="leafletMap"
     @ready="onMapReady">
     <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       attribution="Map data © OpenStreetMap contributors" />

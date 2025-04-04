@@ -54,7 +54,7 @@ function setValues(values) {
 
   selectedMarker.value = values;
   setTimeout(() => {
-    zoomInMap(100);
+    zoomInMap(10);
   }, 250);
   setCenter(values.gpsPosition.latitude, values.gpsPosition.longitude);
 }
