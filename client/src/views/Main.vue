@@ -4,6 +4,8 @@ import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
 import TankData from '../components/TankData.vue';
 import BoatTilt from '../components/BoatTilt.vue';
+import Fullscreen from '../components/icons/Fullscreen.svg';
+import Smallscreen from '../components/icons/Smallscreen.svg';
 
 const markers = inject('boats');
 const selectedMarker = ref(null);
@@ -78,7 +80,8 @@ onUnmounted(() => {
   <div class="main-container">
     <div v-if="selectedMarker?.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle"
       @click="toggleMapSize">
-      {{ largeMap ? 'Exit Fullscreen' : 'Fullscreen' }}
+      <img :src="Fullscreen" v-if="!largeMap" />
+      <img :src="Smallscreen" v-else />
     </div>
     <div :class="['top-container', { large: largeMap }]">
       <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
@@ -112,13 +115,15 @@ onUnmounted(() => {
 }
 
 .resize-button {
+  height: fit-content;
+  width: fit-content;
   position: absolute;
-  top: calc(15px);
-  right: 15px;
+  top: 10px;
+  right: 10px;
   font-size: 20px;
   cursor: pointer;
   background-color: white;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   display: flex;
@@ -126,7 +131,16 @@ onUnmounted(() => {
   justify-content: space-between;
   transition: top 0.5s ease, right 0.5s ease;
   color: black;
-  padding: 5px 10px;
+}
+
+.resize-button.small {
+  top: 30px;
+  right: 30px;
+}
+
+.resize-button img {
+  width: 30px;
+  height: 30px;
 }
 
 .top-container {
