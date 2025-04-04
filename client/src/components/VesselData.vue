@@ -1,7 +1,10 @@
 <script setup>
 
 const props = defineProps({
-  selectedMarker: Object
+  selectedMarker: {
+    type: Object,
+    required: false
+  }
 });
 
 function getCountryCode(countryCode) {
@@ -17,7 +20,8 @@ function getCountryCode(countryCode) {
 <template>
   <div class="vessel-data-hero">
     <div class="vessel-data-header">
-      <img :src="`${selectedMarker.countryCode ? `https://flagcdn.com/h40/${getCountryCode(selectedMarker?.countryCode)}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
+      <img
+        :src="`${selectedMarker?.countryCode ? `https://flagcdn.com/h40/${getCountryCode(selectedMarker?.countryCode)}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
       <h2>{{ selectedMarker?.vesselName }}</h2>
     </div>
     <div class="vessel-data-container">
@@ -41,7 +45,6 @@ function getCountryCode(countryCode) {
 </template>
 
 <style scoped>
-
 .vessel-data-hero {
   width: 100%;
   display: flex;
@@ -56,7 +59,7 @@ function getCountryCode(countryCode) {
   align-items: center;
   gap: 10px;
   color: black;
-  
+
 }
 
 .vessel-data-container {
