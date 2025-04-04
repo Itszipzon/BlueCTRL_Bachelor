@@ -1,49 +1,100 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watchEffect } from 'vue';
+import axios from 'axios';
 
-const pitch = ref(0);
-const roll = ref(0);
-
-const hasSensorData = ref(true);
+const sensorValue = ref(0);
+const hasSensorData = ref(false);
 
 const props = defineProps({
-    type: String,
-    vesselId: Number
+    // "roll" or "pitch"
+    type: {
+        type: String,
+        required: true,
+        validator: value => ['roll', 'pitch'].includes(value)
+    },
+    vesselId: {
+        type: Number,
+        required: false
+    }
 });
 
-if (props.pitch && props.hasSensorData) {
-    console.log('Pitch:', props.pitch);
+function getSignalId() {
+    if (props.vesselId === 2) {
+        return props.type === 'roll' ? 18193 : 18194;
+    } else {
+        return props.type === 'roll' ? 118 : 119;
+    }
 }
 
-const frontStyle = {
-    transform: `rotate(${roll.value}deg)`,
-    transition: 'transform 0.2s ease-out',
-};
+watchEffect(() => {
+    console.log('vesselId changed to', props.vesselId);
+    fetchSensorData();
+})
 
-const sideStyle = {
-    transform: `rotate(${pitch.value}deg)`,
-    transition: 'transform 0.2s ease-out',
-};
+async function fetchSensorData() {
+    if (props.vesselId) {
+        const signalId = getSignalId();
+        const url = `http://localhost:8080/api/signal?signalId=${signalId}&vesselId=${props.vesselId}`;
+        if (localStorage.getItem("SESSION")) {
+            axios.get(url, {
+                headers: {
+                    Authorization: `Basic ${localStorage.getItem("SESSION")}`
+                }
+            })
+                .then((r) => {
+                    if (r.status === 200) {
+                        const data = r.data;
+                        if (data.signalEvents && data.signalEvents.length > 0) {
+                            // Use the last value in the signalEvents array
+                            const lastEvent = data.signalEvents[data.signalEvents.length - 1];
+                            sensorValue.value = parseFloat(lastEvent.value);
+                            console.log(sensorValue)
+                            hasSensorData.value = true;
+                        } else {
+                            hasSensorData.value = false;
+                        }
 
-console.log(sideStyle)
+                    }
+                })
+                .catch((e) => {
+                    localStorage.removeItem("SESSION");
+
+                });
+        }
+    } else {
+        console.log("No vessel id")
+    }
+
+}
+
+onMounted(() => {
+    fetchSensorData();
+    setInterval(fetchSensorData, 10 * 1000);
+});
+
+// Computed style for the rotating boat image.
+const styleTransform = computed(() => ({
+    transform: `rotate(${sensorValue.value}deg)`,
+    transition: 'transform 0.2s ease-out'
+}));
 </script>
 
 
 <template>
     <div class="boat-tilt-container">
-        <!-- Front view for roll -->
-        <div class="tilt-view" v-if="props.type === 'roll' && hasSensorData">
-            <img class="boat-image" src="@/assets/icons/boat-front-view.svg" alt="Boat Front View" :style="frontStyle" />
-            <p class="tilt-label">Roll: {{ roll }}°</p>
+        <div v-if="hasSensorData && props.vesselId !== null" class="tilt-view">
+            <!-- Container with the protractor background -->
+            <div class="protractor-container">
+                <img v-if="props.type === 'roll'" class="boat-image" src="@/assets/icons/boat-front-view.svg"
+                    alt="Boat Front View" :style="styleTransform" />
+                <img v-else-if="props.type === 'pitch'" class="boat-image" src="@/assets/icons/boat-side-view.svg"
+                    alt="Boat Side View" :style="styleTransform" />
+            </div>
+            <!-- The text is placed in normal flow below the protractor container -->
+            <p v-if="props.type === 'roll'" class="tilt-label">Roll: {{ sensorValue }}°</p>
+            <p v-else-if="props.type === 'pitch'" class="tilt-label">Pitch: {{ sensorValue }}°</p>
         </div>
-
-        <!-- Side view for pitch -->
-        <div class="tilt-view" v-else-if="props.type === 'pitch' && hasSensorData">
-            <img class="boat-image" src="@/assets/icons/boat-side-view.svg" alt="Boat Side View" :style="sideStyle" />
-            <p class="tilt-label">Pitch: {{ pitch }}°</p>
-        </div>
-
-        <div class="no-sensor-data" v-if="!hasSensorData">
+        <div v-else class="no-sensor-data">
             <p>No sensor data available</p>
         </div>
     </div>
@@ -54,38 +105,41 @@ console.log(sideStyle)
 <style scoped>
 .boat-tilt-container {
     display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-}
-
-.tilt-view {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    color: black;
+    justify-content: center;
 }
 
+/* The container displays the protractor as a background */
+.protractor-container {
+    width: 300px;
+    /* Adjust as needed */
+    height: 200px;
+    /* Adjust as needed */
+    background-size: contain;
+    margin-bottom: 8px;
+    /* Space between the protractor and the text */
+}
+
+/* Center the boat image within the protractor container */
 .boat-image {
+    display: block;
     width: 80px;
-    /* adjust as needed */
-    height: auto;
+    /* Adjust size as needed */
+    margin: 0 auto;
 }
 
+/* The tilt text below the protractor */
 .tilt-label {
     margin-top: 8px;
     font-weight: 500;
+    text-align: center;
 }
 
 .no-sensor-data {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
     color: black;
 }
 </style>

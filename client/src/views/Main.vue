@@ -6,7 +6,7 @@ import TankData from '../components/TankData.vue';
 import BoatTilt from '../components/BoatTilt.vue';
 
 const markers = inject('boats');
-const selectedMarker = ref({});
+const selectedMarker = ref(null);
 
 const largeMap = ref(true);
 let mapObject = null;
@@ -63,6 +63,7 @@ function handleResize() {
   //resizeStyle.value = getResizeStyle();
 }
 
+
 onMounted(() => {
   window.addEventListener('resize', handleResize);
 });
@@ -75,18 +76,18 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container">
-    <div v-if="selectedMarker.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle"
+    <div v-if="selectedMarker?.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle"
       @click="toggleMapSize">
       {{ largeMap ? 'Exit Fullscreen' : 'Fullscreen' }}
     </div>
     <div :class="['top-container', { large: largeMap }]">
       <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
-        :style="selectedMarker.vesselName ? {} : { height: '0px', padding: '0px', margin: '0px' }">
+        :style="selectedMarker?.vesselName ? {} : { height: '0px', padding: '0px', margin: '0px' }">
         <div class="marker-vessel-tilt">
-          <BoatTilt type="roll" :vesselId="1" />
+          <BoatTilt type="roll" :vesselId="selectedMarker?.id" />
         </div>
         <div class="marker-vessel-tilt">
-          <BoatTilt type="pitch" :vesselId="1" />
+          <BoatTilt type="pitch" :vesselId="selectedMarker?.id" />
         </div>
       </div>
       <div :class="['map', { small: !largeMap }]">
