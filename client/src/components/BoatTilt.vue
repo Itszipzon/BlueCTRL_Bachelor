@@ -104,20 +104,28 @@ const styleTransform = computed(() => ({
 
 <style scoped>
 .boat-tilt-container {
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: black;
+}
+
+.tilt-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    background: url('@/assets/icons/protractor.png') no-repeat center center;
+    background-size: 120%;
 }
 
 /* The container displays the protractor as a background */
 .protractor-container {
-    width: 300px;
-    /* Adjust as needed */
-    height: 200px;
-    /* Adjust as needed */
     background-size: contain;
-    margin-bottom: 8px;
+    margin-bottom: 8%;
     /* Space between the protractor and the text */
 }
 

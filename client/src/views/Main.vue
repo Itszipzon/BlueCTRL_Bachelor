@@ -161,8 +161,6 @@ onUnmounted(() => {
   width: calc(50% - 10px);
   height: 100%;
   background: #f0f0f0;
-  background: url('@/assets/icons/protractor.png') no-repeat center center;
-  background-size: 120%;
   border-radius: 8px;
   box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
 }
