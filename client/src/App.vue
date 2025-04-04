@@ -42,20 +42,11 @@ function gatherBoats() {
       }
     })
     .then((response) => {
-      boats.value = response.data;
-      for (let i = 0; i < response.data.length; i++) {
-        axios.get(`http://localhost:8080/api/vessel-gps-position/?vesselId=${response.data[i].id}`, {
-          headers: {
-            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-          }
-        })
-        .then((r) => {
-          boats.value[i].gpsPosition = r.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching GPS position:", error);
-        });
+      if (response.status !== 200) {
+        console.error("Error fetching boats:", response.status);
       }
+      console.log(response.data);
+      boats.value = response.data;
     })
     .catch((error => {
       console.error("Error fetching boats:", error);
