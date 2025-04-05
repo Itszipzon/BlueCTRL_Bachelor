@@ -6,7 +6,7 @@ import BoatCompare from "../assets/icons/BoatCompare.vue";
 import router from "../router";
 
 const props = defineProps({
-  boats: Array,
+  boats: Object,
 });
 
 const isSidebarOpen = ref(false);
@@ -46,7 +46,7 @@ const logout = () => {
 };
 
 function filteredBoats() {
-  return props.boats?.filter((boat) =>
+  return props.boats?.vessels.filter((boat) =>
     boat.vesselName.toLowerCase().includes(input.value.toLowerCase())
   );
 }
@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
         </div>
 
         <ul v-else-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
-          <li v-for="boat in props.boats" :key="boat.id" :class="[
+          <li v-for="boat in props.boats.vessels" :key="boat.id" :class="[
             'boat-item',
             { active: selectedBoat === boat.id, closed: !isSidebarOpen },
           ]" @click="selectBoat(boat)">

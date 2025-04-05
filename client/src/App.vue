@@ -6,7 +6,10 @@ import router from "./router";
 import axios from "axios";
 
 const isLoggedIn = ref(false);
-const boats = ref([]);
+const boats = ref({
+  loadingVessels: true,
+  vessels: []
+});
 
 onMounted(() => {
   if (localStorage.getItem("SESSION")) {
@@ -36,6 +39,7 @@ const toggleLogin = () => {
 }
 
 function gatherBoats() {
+  console.log("Loading vessels:", boats.value.loadingVessels);
   axios.get("http://localhost:8080/api/bluebox-vessels-minimal", {
       headers: {
         Authorization: `Basic ${localStorage.getItem("SESSION")}`,
@@ -45,7 +49,9 @@ function gatherBoats() {
       if (response.status !== 200) {
         console.error("Error fetching boats:", response.status);
       }
-      boats.value = response.data;
+      boats.value.loadingVessels = false;
+      console.log("Loading vessels:", boats.value.loadingVessels);
+      boats.value.vessels = response.data;
     })
     .catch((error => {
       console.error("Error fetching boats:", error);

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, inject } from 'vue';
+import { ref, onMounted, onUnmounted, inject, watchEffect } from 'vue';
 import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
 import TankData from '../components/TankData.vue';
@@ -7,8 +7,15 @@ import BoatTilt from '../components/BoatTilt.vue';
 import Fullscreen from '../components/icons/Fullscreen.svg';
 import Smallscreen from '../components/icons/Smallscreen.svg';
 
-const markers = inject('boats');
+const boats = inject('boats');
+const vessels = ref(null);
+const loadingVessels = ref(true);
 const selectedMarker = ref(null);
+
+watchEffect(() => {
+  vessels.value = boats.value.vessels;
+  loadingVessels.value = boats.value.loadingVessels;
+})
 
 const largeMap = ref(true);
 let mapObject = null;
@@ -78,6 +85,9 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container">
+    <div :class="['loading-vessels', { display: loadingVessels }]">
+      <div class="loading-vessels-text">Loading vessels...</div>
+    </div>
     <div v-if="selectedMarker?.vesselName" :class="['resize-button', { small: !largeMap }]" :style="resizeStyle"
       @click="toggleMapSize">
       <img :src="Fullscreen" v-if="!largeMap" />
@@ -94,7 +104,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div :class="['map', { small: !largeMap }]">
-        <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="markers" :center="center"
+        <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="vessels" :center="center"
           @map-ready="onMapReady" />
       </div>
     </div>
@@ -112,6 +122,27 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: space-between;
+}
+
+.loading-vessels {
+  position: fixed;
+  height: 100px;
+  width: 250px;
+  top: calc(50% - 50px);
+  left: calc(50% - 125px);
+  background-color: #fff;
+  z-index: 100000;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  display: none;
+
+}
+
+.loading-vessels.display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .resize-button {
