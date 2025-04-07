@@ -56,7 +56,6 @@ function getCountryCode(countryCode) {
 <style scoped>
 .vessel-data-hero {
   width: 100%;
-  height: 250px;
   display: flex;
 }
 
@@ -64,11 +63,10 @@ function getCountryCode(countryCode) {
   width: 100%;
   border-right: 0.5px solid #ccc;
   border-left: 0.5px solid #ccc;
-
 }
 
 .vessel-data-inner-box {
-
+  height: 100%;
   margin-right: 10px;
   margin-left: 10px;
 }
@@ -79,7 +77,6 @@ function getCountryCode(countryCode) {
   align-items: center;
   gap: 10px;
   color: black;
-  
 }
 
 .vessel-data-header h3 {
