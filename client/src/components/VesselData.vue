@@ -17,20 +17,20 @@ function getCountryCode(countryCode) {
 
 <template>
   <div class="vessel-data-hero">
+    <div class="vessel-data-header">
+      <img
+        :src="`${
+          selectedMarker?.countryCode
+            ? `https://flagcdn.com/h40/${getCountryCode(
+                selectedMarker?.countryCode
+              )}.png`
+            : `https://placehold.co/40x40/ffffff/ffffff`
+        }`"
+      />
+      <h3>{{ selectedMarker?.vesselName }}</h3>
+    </div>
     <div class="vessel-data-box">
       <div class="vessel-data-inner-box">
-        <div class="vessel-data-header">
-          <img
-            :src="`${
-              selectedMarker?.countryCode
-                ? `https://flagcdn.com/h40/${getCountryCode(
-                    selectedMarker?.countryCode
-                  )}.png`
-                : `https://placehold.co/40x40/ffffff/ffffff`
-            }`"
-          />
-          <h3>{{ selectedMarker?.vesselName }}</h3>
-        </div>
         <div class="vessel-data-container">
           <h3>Vessel info</h3>
           <div class="vessel-data-sub-container-values">
@@ -47,9 +47,9 @@ function getCountryCode(countryCode) {
           </div>
         </div>
       </div>
+      <div class="vessel-data-inner-box"></div>
+      <div class="vessel-data-inner-box"></div>
     </div>
-    <div class="vessel-data-box"></div>
-    <div class="vessel-data-box"></div>
   </div>
 </template>
 
@@ -57,18 +57,21 @@ function getCountryCode(countryCode) {
 .vessel-data-hero {
   width: 100%;
   display: flex;
+  flex-direction: column;
 }
 
 .vessel-data-box {
   width: 100%;
-  border-right: 0.5px solid #ccc;
-  border-left: 0.5px solid #ccc;
+  height: 100%;
+
+  display: flex;
+  box-sizing: border-box;
 }
 
 .vessel-data-inner-box {
-  height: 100%;
-  margin-right: 10px;
-  margin-left: 10px;
+  width: 100%;
+  border-right: 0.5px solid #ccc;
+  border-left: 0.5px solid #ccc;
 }
 
 .vessel-data-header {
@@ -92,9 +95,10 @@ function getCountryCode(countryCode) {
 
 .vessel-data-container {
   width: 100%;
-  background-color: #fff;
   display: flex;
   flex-wrap: wrap;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .vessel-data-container h3 {
