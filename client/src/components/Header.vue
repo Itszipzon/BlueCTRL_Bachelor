@@ -279,6 +279,7 @@ onBeforeUnmount(() => {
 
 .boat-flag {
   width: 35px;
+  border-radius: 6px;
 }
 
 .boat-name {

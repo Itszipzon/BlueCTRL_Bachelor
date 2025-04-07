@@ -1,10 +1,9 @@
 <script setup>
-
 const props = defineProps({
   selectedMarker: {
     type: Object,
-    required: false
-  }
+    required: false,
+  },
 });
 
 function getCountryCode(countryCode) {
@@ -14,43 +13,64 @@ function getCountryCode(countryCode) {
     return "placeholder";
   }
 }
-
 </script>
 
 <template>
   <div class="vessel-data-hero">
-    <div class="vessel-data-header">
-      <img
-        :src="`${selectedMarker?.countryCode ? `https://flagcdn.com/h40/${getCountryCode(selectedMarker?.countryCode)}.png` : `https://placehold.co/40x40/ffffff/ffffff`}`" />
-      <h2>{{ selectedMarker?.vesselName }}</h2>
-    </div>
-    <div class="vessel-data-container">
-      <div class="vessel-data-sub-container">
-        <h3>Vessel info</h3>
-        <div class="vessel-data-sub-container-values">
-          <p>ID:</p>
-          <p>{{ selectedMarker?.id }}</p>
+    <div class="vessel-data-box">
+      <div class="vessel-data-inner-box">
+        <div class="vessel-data-header">
+          <img
+            :src="`${
+              selectedMarker?.countryCode
+                ? `https://flagcdn.com/h40/${getCountryCode(
+                    selectedMarker?.countryCode
+                  )}.png`
+                : `https://placehold.co/40x40/ffffff/ffffff`
+            }`"
+          />
+          <h3>{{ selectedMarker?.vesselName }}</h3>
         </div>
-        <div class="vessel-data-sub-container-values">
-          <p>LATITUDE:</p>
-          <p>{{ selectedMarker?.gpsPosition?.latitude }}</p>
-        </div>
-        <div class="vessel-data-sub-container-values">
-          <p>LONGITUDE:</p>
-          <p>{{ selectedMarker?.gpsPosition?.longitude }}</p>
+        <div class="vessel-data-container">
+          <h3>Vessel info</h3>
+          <div class="vessel-data-sub-container-values">
+            <p>ID:</p>
+            <p>{{ selectedMarker?.id }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LATITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.latitude }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LONGITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.longitude }}</p>
+          </div>
         </div>
       </div>
     </div>
+    <div class="vessel-data-box"></div>
+    <div class="vessel-data-box"></div>
   </div>
 </template>
 
 <style scoped>
 .vessel-data-hero {
   width: 100%;
+  height: 250px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px 0;
+}
+
+.vessel-data-box {
+  width: 100%;
+  border-right: 0.5px solid #ccc;
+  border-left: 0.5px solid #ccc;
+
+}
+
+.vessel-data-inner-box {
+
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .vessel-data-header {
@@ -59,7 +79,18 @@ function getCountryCode(countryCode) {
   align-items: center;
   gap: 10px;
   color: black;
+  
+}
 
+.vessel-data-header h3 {
+  font-size: 16px;
+  font-weight: bolder;
+  font-family: "Poppins", sans-serif;
+}
+.vessel-data-header img {
+  width: 40px;
+  height: 32px;
+  border-radius: 6px;
 }
 
 .vessel-data-container {
@@ -69,20 +100,7 @@ function getCountryCode(countryCode) {
   flex-wrap: wrap;
 }
 
-.vessel-data-sub-container {
-  width: 100%;
-  padding: 10px 15px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: 8px;
-  width: 250px;
-}
-
-.vessel-data-sub-container h3 {
+.vessel-data-container h3 {
   margin: 0;
   padding: 8px 0;
   color: #464646;
@@ -110,7 +128,7 @@ function getCountryCode(countryCode) {
 .vessel-data-sub-container-values p:last-child {
   color: #005380;
   font-weight: normal;
-  width: 80px;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   white-space: nowrap;
