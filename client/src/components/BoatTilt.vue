@@ -177,7 +177,7 @@ const styleTransform = computed(() => ({
   background-image: url("@/assets/icons/protractor.png");
   background-repeat: no-repeat;
   background-position: center calc(100% + 10px);
-  background-size: 100% auto;
+  background-size: calc(120%) auto;
 }
 
 .tilt-label {
