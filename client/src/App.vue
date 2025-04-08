@@ -41,10 +41,10 @@ const toggleLogin = () => {
 function gatherBoats() {
   console.log("Loading vessels:", boats.value.loadingVessels);
   axios.get("http://localhost:8080/api/bluebox-vessels-minimal", {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-      }
-    })
+    headers: {
+      Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+    }
+  })
     .then((response) => {
       if (response.status !== 200) {
         console.error("Error fetching boats:", response.status);
@@ -60,6 +60,66 @@ function gatherBoats() {
       router.push("/");
     }));
 }
+
+const dummyBoats = ref([
+  {
+    id: 1,
+    vesselName: "Boat Name 1",
+    countryCode: "no",
+    gpsPosition: {
+      latitude: 62.4722,
+      longitude: 6.1495
+    }
+  },
+  {
+    id: 2,
+    vesselName: "Boat Name 2",
+    countryCode: "au",
+    gpsPosition: {
+      latitude: 62.4622,
+      longitude: 6.1495
+    }
+  },
+  {
+    id: 3,
+    vesselName: "Boat Name 3",
+    countryCode: "es",
+    gpsPosition: {
+      latitude: 62.4722,
+      longitude: 6.1595
+    }
+  },
+  {
+    id: 4,
+    vesselName: "Boat Name 4",
+    countryCode: "se",
+    gpsPosition: {
+      latitude: 62.4822,
+      longitude: 6.1695
+
+    }
+  },
+  {
+    id: 5,
+    vesselName: "Boat Name 5",
+    countryCode: "za",
+    gpsPosition: {
+      latitude: 62.4722,
+      longitude: 6.1395
+
+    }
+  },
+  {
+    id: 6,
+    vesselName: "Boat Name 6",
+    countryCode: "us",
+    gpsPosition: {
+      latitude: 62.4922,
+      longitude: 6.1495
+
+    }
+  },
+]);
 
 provide("boats", boats);
 </script>
