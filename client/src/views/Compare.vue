@@ -1,11 +1,18 @@
 <script setup>
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
-import { inject, ref } from "vue";
+import { inject, ref, watchEffect } from "vue";
 
-const boats = inject("boats");
+const boatsTotal = inject("boats");
+const boats = ref(null);
+const loadingVessels = ref(true);
 
 const selectedBoats = ref([]);
+
+watchEffect(() => {
+  boats.value = boatsTotal.value.vessels;
+  loadingVessels.value = boatsTotal.value.loadingVessels;
+});
 
 const toggleBoatSelection = (boat) => {
   const index = selectedBoats.value.findIndex((b) => b.id === boat.id);
