@@ -8,10 +8,9 @@ export default {
   },
   computed: {
     bars() {
-      // Map vessel data to chart bars
       return this.vessels.map((vessel) => ({
         label: vessel.vesselName,
-        value: vessel.travelDistance || 0, // Default to 0 if no distance
+        value: vessel.travelDistance || 0, 
       }));
     },
   },
@@ -41,9 +40,8 @@ export default {
 
 <style scoped>
 .chart {
-  width: 80%;
-  max-width: 600px;
-  margin: 50px auto;
+  width: 100%;
+  margin: 20px auto;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -77,8 +75,7 @@ export default {
 }
 
 .labels {
-  width: 80%;
-  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;

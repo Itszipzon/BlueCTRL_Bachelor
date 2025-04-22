@@ -8,13 +8,16 @@ const props = defineProps({
 
 <template>
   <div class="right-container-component">
-    <div class="chart-container">
-      <div v-if="selectedBoats && selectedBoats.length > 0">
-        <BarChart :vessels="selectedBoats" />
-      </div>
-      <div v-else class="empty-chart">
-        <p>No boats selected</p>
-        <BarChart :vessels="selectedBoats" />
+    <div class="charts-container">
+      <div class="traveldistance-chart">
+        <h3>Travel Distance</h3>
+        <div v-if="selectedBoats && selectedBoats.length > 0">
+          <BarChart :vessels="selectedBoats" />
+        </div>
+        <div v-else class="empty-chart">
+          <p>No boats selected</p>
+          <BarChart :vessels="selectedBoats" />
+        </div>
       </div>
     </div>
   </div>
@@ -30,8 +33,20 @@ const props = defineProps({
   flex-direction: column;
 }
 
-.chart-container {
+.charts-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.traveldistance-chart {
   position: relative;
+}
+
+.traveldistance-chart h3 {
+  font-size: 16px;
+  font-weight: bolder;
+  font-family: "Poppins", sans-serif;
 }
 
 .empty-chart {
