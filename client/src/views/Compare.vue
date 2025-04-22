@@ -22,8 +22,6 @@ const toggleBoatSelection = (boat) => {
     selectedBoats.value.splice(index, 1);
   }
 };
-
-
 </script>
 
 <template>
@@ -31,7 +29,11 @@ const toggleBoatSelection = (boat) => {
     <div class="top-container">
       <div class="bottom-container">
         <div class="left-container">
-          <LeftContainer :boats="boats" :selectedBoats="selectedBoats" @boat-selected="toggleBoatSelection" />
+          <LeftContainer
+            :boats="boats"
+            :selectedBoats="selectedBoats"
+            @boat-selected="toggleBoatSelection"
+          />
         </div>
         <div class="right-container">
           <RightContainer :selectedBoats="selectedBoats" />
@@ -40,7 +42,6 @@ const toggleBoatSelection = (boat) => {
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .main-container {

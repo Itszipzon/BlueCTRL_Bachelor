@@ -1,3 +1,24 @@
+<script>
+export default {
+  props: {
+    vessels: {
+      type: Array,
+      required: true,
+    },
+  },
+  computed: {
+    bars() {
+      // Map vessel data to chart bars
+      return this.vessels.map((vessel) => ({
+        label: vessel.vesselName,
+        value: vessel.travelDistance || 0, // Default to 0 if no distance
+      }));
+    },
+  },
+};
+
+</script>
+
 <template>
   <div>
     <div class="chart">
@@ -17,22 +38,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      bars: [
-        { label: "A", value: 1 },
-        { label: "B", value: 40 },
-        { label: "C", value: 90 },
-        { label: "D", value: 50 },
-        { label: "E", value: 80 },
-      ],
-    };
-  },
-};
-</script>
 
 <style scoped>
 .chart {

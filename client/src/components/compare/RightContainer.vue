@@ -1,8 +1,12 @@
 <script setup>
+
+import BarChart from '../BarChart.vue';
+
 const props = defineProps({
   selectedBoats: Array,
 });
 </script>
+
 <template>
   <div class="right-container-component">
     <div v-if="selectedBoats && selectedBoats.length > 0">
@@ -16,6 +20,9 @@ const props = defineProps({
     </div>
     <div v-else>
       <p>No boats selected</p>
+    </div>
+    <div class="chart-container">
+      <BarChart :vessels="selectedBoats" />
     </div>
   </div>
 </template>
