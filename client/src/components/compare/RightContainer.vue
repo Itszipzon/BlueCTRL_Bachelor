@@ -1,6 +1,5 @@
 <script setup>
-
-import BarChart from '../BarChart.vue';
+import BarChart from "../BarChart.vue";
 
 const props = defineProps({
   selectedBoats: Array,
@@ -9,20 +8,14 @@ const props = defineProps({
 
 <template>
   <div class="right-container-component">
-    <div v-if="selectedBoats && selectedBoats.length > 0">
-      <h3>Selected Boats</h3>
-      <ul>
-        <li v-for="boat in selectedBoats" :key="boat.id">
-          <p><strong>Name:</strong> {{ boat.vesselName }}</p>
-          <p><strong>Country Code:</strong> {{ boat.countryCode }}</p>
-        </li>
-      </ul>
-    </div>
-    <div v-else>
-      <p>No boats selected</p>
-    </div>
     <div class="chart-container">
-      <BarChart :vessels="selectedBoats" />
+      <div v-if="selectedBoats && selectedBoats.length > 0">
+        <BarChart :vessels="selectedBoats" />
+      </div>
+      <div v-else class="empty-chart">
+        <p>No boats selected</p>
+        <BarChart :vessels="selectedBoats" />
+      </div>
     </div>
   </div>
 </template>
@@ -35,5 +28,22 @@ const props = defineProps({
   color: black;
   display: flex;
   flex-direction: column;
+}
+
+.chart-container {
+  position: relative;
+}
+
+.empty-chart {
+  position: relative;
+}
+
+.empty-chart p {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1;
 }
 </style>
