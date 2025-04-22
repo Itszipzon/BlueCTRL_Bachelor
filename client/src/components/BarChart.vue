@@ -46,8 +46,8 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
   height: 300px;
-  border-left: 2px solid #333;
-  border-bottom: 2px solid #333;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   padding: 10px;
 }
 
