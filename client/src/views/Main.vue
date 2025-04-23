@@ -205,9 +205,9 @@ onUnmounted(() => {
 .marker-vessel-tilt {
   width: calc(50% - 10px);
   height: 100%;
-  background: #f0f0f0;
-  border-radius: 8px;
-  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
 .map {
