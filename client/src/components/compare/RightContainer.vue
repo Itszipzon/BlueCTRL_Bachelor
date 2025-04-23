@@ -50,6 +50,9 @@ const selectedTimePeriod = ref("all");
 .time-period-selector select {
   padding: 5px;
   font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #f9f9f9;
 }
 .right-container-component {
   padding: 20px;
