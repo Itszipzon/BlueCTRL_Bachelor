@@ -5,24 +5,46 @@ export default {
       type: Array,
       required: true,
     },
+    timePeriod: {
+      type: String,
+      required: false,
+      default: "all", 
+    },
   },
   computed: {
-    bars() {
+    filteredBars() {
+      if (!this.vessels) return [];
       return this.vessels.map((vessel) => ({
         label: vessel.vesselName,
-        value: vessel.travelDistance || 0, 
+        value: this.getTravelDistanceForPeriod(vessel),
       }));
     },
   },
+  methods: {
+    getTravelDistanceForPeriod(vessel) {
+      if (this.timePeriod === "all") {
+        return vessel.travelDistance || 0;
+      } else if (this.timePeriod === "lastWeek") {
+        return vessel.travelDistanceLastWeek || 0;
+      } else if (this.timePeriod === "lastMonth") {
+        return vessel.travelDistanceLastMonth || 0;
+      }
+      return 0;
+    },
+  },
+  watch: {
+    timePeriod() {
+      
+    },
+  },
 };
-
 </script>
 
 <template>
   <div>
     <div class="chart">
       <div
-        v-for="(bar, index) in bars"
+        v-for="(bar, index) in filteredBars"
         :key="index"
         class="bar"
         :style="{ height: bar.value + '%' }"
@@ -31,7 +53,7 @@ export default {
     </div>
 
     <div class="labels">
-      <div v-for="(bar, index) in bars" :key="index" class="label">
+      <div v-for="(bar, index) in filteredBars" :key="index" class="label">
         {{ bar.label }}
       </div>
     </div>

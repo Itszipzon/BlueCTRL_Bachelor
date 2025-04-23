@@ -1,9 +1,12 @@
 <script setup>
 import BarChart from "../BarChart.vue";
+import { ref } from 'vue'
 
 const props = defineProps({
   selectedBoats: Array,
 });
+
+const selectedTimePeriod = ref("all");
 </script>
 
 <template>
@@ -11,12 +14,22 @@ const props = defineProps({
     <div class="charts-container">
       <div class="traveldistance-chart">
         <h3>Travel Distance</h3>
+        <div class="time-period-selector">
+          <label for="time-period">Select Time Period:</label>
+          <select id="time-period" v-model="selectedTimePeriod">
+            <option value="all">All Time</option>
+            <option value="lastWeek">Last Week</option>
+            <option value="lastMonth">Last Month</option>
+          </select>
+        </div>
         <div v-if="selectedBoats && selectedBoats.length > 0">
-          <BarChart :vessels="selectedBoats" />
+          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod.value" />
+
         </div>
         <div v-else class="empty-chart">
           <p>No boats selected</p>
-          <BarChart :vessels="selectedBoats" />
+          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod.value" />
+
         </div>
       </div>
     </div>
@@ -24,6 +37,20 @@ const props = defineProps({
 </template>
 
 <style scoped>
+
+.time-period-selector {
+  margin-bottom: 10px;
+}
+
+.time-period-selector label {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.time-period-selector select {
+  padding: 5px;
+  font-size: 14px;
+}
 .right-container-component {
   padding: 20px;
   width: 100%;
