@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from "vue";
 import axios from "axios";
+import CurvedArrow from "./icons/CurvedArrow.vue";
 
 const sensorValue = ref(0);
 const hasSensorData = ref(false);
@@ -117,6 +118,9 @@ const styleTransform = computed(() => ({
 <template>
   <div class="boat-tilt-container" ref="boatTiltContainer">
     <div v-if="hasSensorData && props.vesselId !== null" class="tilt-view">
+      <div class="boat-tilt-arrow-container">
+        <CurvedArrow :reversed="sensorValue < 0" />
+      </div>
       <!-- Container with the protractor background -->
       <div class="protractor-container">
         <img
@@ -157,6 +161,12 @@ const styleTransform = computed(() => ({
   justify-content: center;
   color: black;
   padding: 10px;
+}
+
+.boat-tilt-arrow-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .tilt-view {
