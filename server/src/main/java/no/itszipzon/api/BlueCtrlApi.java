@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import reactor.netty.http.client.HttpClient;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -27,8 +31,20 @@ public class BlueCtrlApi {
     public BlueCtrlApi(WebClient.Builder webClientBuilder) {
         Dotenv dotenv = Dotenv.load();
         String baseUrl = dotenv.get("API_BASE_URL");
-        this.webClient = webClientBuilder.baseUrl(baseUrl).build();
+    
+        int maxBufferSize = 10 * 1024 * 1024; // 10 MB f.eks.
+    
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxBufferSize))
+            .build();
+    
+        this.webClient = webClientBuilder
+            .baseUrl(baseUrl)
+            .exchangeStrategies(strategies)
+            .clientConnector(new ReactorClientHttpConnector(HttpClient.create()))
+            .build();
     }
+    
 
     @GetMapping("/bluebox-vessels-minimal")
     public ResponseEntity<JsonNode> getVesselMinimal(HttpServletRequest request,
