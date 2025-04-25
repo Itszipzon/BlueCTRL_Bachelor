@@ -3,22 +3,24 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
-
-const updateShipDimensions = () => {
-  const element = document.getElementById("ship-tank-data");
-  if (element) {
-    shipWidth.value = element.offsetWidth;
-    shipHeight.value = shipWidth.value * 0.35;
-  }
-};
+let resizeObserver;
 
 onMounted(() => {
-  updateShipDimensions();
-  window.addEventListener('resize', updateShipDimensions);
+  const element = document.getElementById("ship-tank-data");
+
+  if (element) {
+    resizeObserver = new ResizeObserver(() => {
+      shipWidth.value = element.offsetWidth;
+      shipHeight.value = shipWidth.value * 0.35;
+    });
+    resizeObserver.observe(element);
+  }
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateShipDimensions);
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 </script>
 <template>
