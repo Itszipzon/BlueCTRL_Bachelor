@@ -138,7 +138,7 @@ export default {
           maxDistance > 0
             ? (this.getTravelDistanceForPeriod(vessel) / maxDistance) * 100
             : 0,
-        formattedValue: `${this.getTravelDistanceForPeriod(vessel)} km`
+        formattedValue: `${Math.round(this.getTravelDistanceForPeriod(vessel))} km`
       }));
     },
   },
