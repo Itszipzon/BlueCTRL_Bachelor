@@ -23,12 +23,12 @@ const selectedTimePeriod = ref("all");
           </select>
         </div>
         <div v-if="selectedBoats && selectedBoats.length > 0">
-          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod.value" />
+          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
 
         </div>
         <div v-else class="empty-chart">
           <p>No boats selected</p>
-          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod.value" />
+          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
 
         </div>
       </div>

@@ -18,15 +18,15 @@ const props = defineProps({
 });
 
 const updatedVessels = ref([...props.vessels]);
-const processedVesselIds = ref(new Set()); // Track processed vessels by ID
+const processedVesselIds = ref(new Set()); 
 
-// Watch the vessels prop for changes
+
 watch(
   () => props.vessels,
   async (newVessels, oldVessels) => {
     if (!newVessels?.length) return;
 
-    // Check for newly added vessels that haven't been processed
+    
     const newVessel = newVessels.find(
       (vessel) => !processedVesselIds.value.has(vessel.id)
     );
@@ -47,19 +47,19 @@ watch(
 
         console.log("Distance for vessel", newVessel.id, ":", distance);
 
-        // Mark this vessel as processed
+        
         processedVesselIds.value.add(newVessel.id);
 
-        // Update only the new vessel's travel distance
+        
         const updatedVessel = { ...newVessel, travelDistance: distance };
 
         const index = updatedVessels.value.findIndex(
           (vessel) => vessel.id === newVessel.id
         );
         if (index !== -1) {
-          updatedVessels.value[index] = updatedVessel; // Replace only the updated vessel
+          updatedVessels.value[index] = updatedVessel; 
         } else {
-          updatedVessels.value.push(updatedVessel); // Add the new vessel if not already present
+          updatedVessels.value.push(updatedVessel); 
         }
       } catch (error) {
         console.error(
@@ -75,7 +75,7 @@ watch(
 function calculateTotalTravelDistance(dataPoints) {
   if (!dataPoints || dataPoints.length < 2) return 0;
 
-  const R = 6371; // Earth's radius in km
+  const R = 6371; 
   let totalDistance = 0;
 
   for (let i = 1; i < dataPoints.length; i++) {
