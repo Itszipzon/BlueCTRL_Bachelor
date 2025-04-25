@@ -138,6 +138,7 @@ export default {
           maxDistance > 0
             ? (this.getTravelDistanceForPeriod(vessel) / maxDistance) * 100
             : 0,
+        formattedValue: `${this.getTravelDistanceForPeriod(vessel)} km`
       }));
     },
   },
@@ -167,7 +168,7 @@ export default {
         :key="index"
         class="bar"
         :style="{ height: bar.height + '%' }"
-        :data-value="bar.value" >
+        :data-value="bar.formattedValue" >
       </div>
     </div>
 
