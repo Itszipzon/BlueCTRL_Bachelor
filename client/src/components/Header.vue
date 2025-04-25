@@ -248,12 +248,13 @@ onBeforeUnmount(() => {
   flex-grow: 1;
   list-style: none;
   padding: 0;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 10px 10px 0 0;
 }
 
 .boat-list.closed {
   width: 0;
+  overflow: hidden;
 }
 
 .boat-item {
