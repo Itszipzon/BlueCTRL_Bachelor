@@ -77,12 +77,10 @@ function handleResize() {
 
 
 onMounted(() => {
-  /*   window.addEventListener('resize', handleResize); */
   window.addEventListener('resizeMap', handleResize);
 });
 
 onUnmounted(() => {
-  /*   window.removeEventListener('resize', handleResize); */
   window.removeEventListener('resizeMap');
   if (mapObject) {
     mapObject.off();
