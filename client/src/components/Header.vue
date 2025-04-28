@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
                 <div class="icon" @click="() => toggleSidebar('boats')">
                   <BoatIcon :active="listType === 'boats'" />
                 </div>
-                <div class="icon">
+                <div :class="['icon', 'clickable']">
                   <router-link to="/compare" class="link">
                     <BoatCompare />
                   </router-link>
@@ -438,6 +438,11 @@ onBeforeUnmount(() => {
   display: flex;
   cursor: pointer;
   margin-right: 20px;
+}
+
+.icon.clickable:hover {
+  background-color: #185c79;
+  border-radius: 6px;
 }
 
 .login-message {
