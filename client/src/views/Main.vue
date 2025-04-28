@@ -36,7 +36,6 @@ function getResizeStyle() {
 function toggleMapSize() {
   largeMap.value = !largeMap.value;
 
-  handleResize();
   if (mapObject) {
     const currentCenter = mapObject.getCenter();
 
