@@ -250,4 +250,37 @@ onUnmounted(() => {
 .vessel-data-container.small:last-child {
   margin-bottom: 20px;
 }
+
+@media (max-width: 800px) {
+  .top-container {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .marker-vessel-tilt-container.small {
+    margin: 20px 20px 0 20px;
+    width: calc(94% - 10px);
+    height: calc((94vw - 75px - 20px)/2 - 10px);
+    padding: 20px;
+  }
+
+  .map {
+    height: calc(100dvh - 50px);
+    width: calc(100dvw - 75px);
+    margin: 0;
+    padding: 0;
+  }
+
+  .map.small {
+    margin: 20px 0px 0 0;
+    height: calc((94vw - 75px - 20px) / 2 - 10px);
+    width: calc(94% - 10px);
+  }
+
+  .resize-button.small {
+    top: calc((94vw - 75px - 20px) / 2 - 10px + 50px);
+    left: calc(94% - 25px);
+  }
+
+}
 </style>

@@ -4,12 +4,16 @@ export default {
     reversed: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: String,
+      default: '30px'
     }
   }
 }
 </script>
 <template>
-  <svg fill="#000000" height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+  <svg fill="#000000" :height="size" :width="size" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 302.816 302.816" xml:space="preserve"
     :transform="reversed ? 'matrix(-1, 0, 0, 1, 0, 0)' : 'matrix(1, 0, 0, 1, 0, 0)'">
     <g id="SVGRepo_iconCarrier">

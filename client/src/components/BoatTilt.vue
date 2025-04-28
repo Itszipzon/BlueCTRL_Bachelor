@@ -9,6 +9,7 @@ const hasSensorData = ref(false);
 const containerWidth = ref(0);
 const containerHeight = ref(0);
 const boatTiltContainer = ref(null);
+const arrowSize = ref("30px");
 let resizeObserver;
 
 onMounted(() => {
@@ -19,6 +20,13 @@ onMounted(() => {
         containerWidth.value = width;
         containerHeight.value = height;
       }
+      if (containerWidth.value < 211) {
+        let newWidth = containerWidth.value * 0.15 - 10;
+        arrowSize.value = `${newWidth}px`;
+      } else {
+        arrowSize.value = "30px";
+      }
+      console.log("Arrow size:", arrowSize.value);
     });
     resizeObserver.observe(boatTiltContainer.value);
   }
@@ -119,7 +127,7 @@ const styleTransform = computed(() => ({
   <div class="boat-tilt-container" ref="boatTiltContainer">
     <div v-if="hasSensorData && props.vesselId !== null" class="tilt-view">
       <div class="boat-tilt-arrow-container">
-        <CurvedArrow :reversed="sensorValue < 0" />
+        <CurvedArrow :reversed="sensorValue < 0" :size="arrowSize" />
       </div>
       <!-- Container with the protractor background -->
       <div class="protractor-container">
