@@ -69,16 +69,24 @@ function setValues(values) {
 }
 
 function handleResize() {
-  //resizeStyle.value = getResizeStyle();
+  if (!largeMap.value && selectedMarker.value) {
+    toggleMapSize();
+    zoomInMap(5)
+  }
 }
 
 
 onMounted(() => {
-  window.addEventListener('resize', handleResize);
+  /*   window.addEventListener('resize', handleResize); */
+  window.addEventListener('resizeMap', handleResize);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
+  /*   window.removeEventListener('resize', handleResize); */
+  window.removeEventListener('resizeMap');
+  if (mapObject) {
+    mapObject.off();
+  }
 });
 
 </script>

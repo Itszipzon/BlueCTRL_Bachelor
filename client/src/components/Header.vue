@@ -4,6 +4,7 @@ import BoatIcon from "../assets/icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
 import BoatCompare from "../assets/icons/BoatCompare.vue";
 import router from "../router";
+import MapIcon from "../assets/icons/MapIcon.vue";
 
 const props = defineProps({
   boats: Object,
@@ -49,6 +50,14 @@ function filteredBoats() {
   return props.boats?.vessels.filter((boat) =>
     boat.vesselName.toLowerCase().includes(input.value.toLowerCase())
   );
+}
+
+const onMapClick = () => {
+  if (window.location.pathname !== "/") {
+    router.push("/");
+  } else {
+    window.dispatchEvent(new Event("resizeMap"));
+  }
 }
 
 document.addEventListener("mousedown", (e) => {
@@ -109,6 +118,9 @@ onBeforeUnmount(() => {
               <div class="icon-container">
                 <div class="icon" @click="() => toggleSidebar('boats')">
                   <BoatIcon :active="listType === 'boats'" />
+                </div>
+                <div :class="['icon', 'clickable']" @click="onMapClick">
+                  <MapIcon />
                 </div>
                 <div :class="['icon', 'clickable']">
                   <router-link to="/compare" class="link">
