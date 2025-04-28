@@ -22,6 +22,10 @@ window.addEventListener("logout", () => {
   localStorage.removeItem("SESSION");
   router.push("/");
   isLoggedIn.value = false;
+  boats.value = {
+    loadingVessels: true,
+    vessels: []
+  };
 });
 
 window.addEventListener("login", () => {
