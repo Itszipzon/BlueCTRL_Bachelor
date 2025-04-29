@@ -4,6 +4,7 @@ import Main from "../views/Main.vue";
 import Details from "../views/DetailsPage.vue";
 import Compare from "../views/Compare.vue";
 import Test from "../views/Test.vue";
+import Boats from "../views/Boats.vue";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,11 @@ const router = new VueRouter({
       path: "/test",
       name: "test",
       component: Test,
+    },
+    {
+      path: "/boats",
+      name: "boats",
+      component: Boats
     }
   ],
 });
