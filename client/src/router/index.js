@@ -33,7 +33,7 @@ const router = new VueRouter({
       component: Test,
     },
     {
-      path: "/boats",
+      path: "/vessels",
       name: "boats",
       component: Boats
     }

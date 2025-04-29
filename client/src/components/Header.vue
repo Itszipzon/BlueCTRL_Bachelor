@@ -117,11 +117,11 @@ onBeforeUnmount(() => {
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
-                <div class="icon-wrapper" @click="() => router.push('/boats')">
+                <div class="icon-wrapper" @click="() => router.push('/vessels')">
                   <div class="icon">
                     <BoatIcon />
                   </div>
-                  <span v-if="isSidebarHovered" class="icon-label">Boats</span>
+                  <span v-if="isSidebarHovered" class="icon-label">Vessels</span>
                 </div>
 
                 <div class="icon-wrapper clickable" @click="onMapClick">

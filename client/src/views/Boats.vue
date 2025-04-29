@@ -34,7 +34,7 @@ const selectBoat = (boat) => {
 <template>
   <div class="main-container">
     <div class="boat-list-container">
-      <h3>Browse boats</h3>
+      <h3>Browse vessels</h3>
       <div class="boat-list" v-for="boat in boats" :key="boat.id">
         <div class="boat-item" @click="selectBoat(boat)">
           <img
