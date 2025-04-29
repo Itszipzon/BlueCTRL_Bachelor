@@ -12,11 +12,12 @@ const props = defineProps({
 
 const isSidebarOpen = ref(false);
 const listType = ref("boats");
-const selectedBoat = ref(null);
 const isLoggedIn = ref(true);
 let input = ref("");
 const searchListOpen = ref(false);
 const searchRef = ref(null);
+
+const isSidebarHovered = ref(false);
 
 const toggleSidebar = (element) => {
   if (!element) {
@@ -27,7 +28,6 @@ const toggleSidebar = (element) => {
     listType.value = element;
     isSidebarOpen.value = true;
   }
-
 };
 
 const selectBoat = (boat) => {
@@ -58,7 +58,7 @@ const onMapClick = () => {
   } else {
     window.dispatchEvent(new Event("resizeMap"));
   }
-}
+};
 
 document.addEventListener("mousedown", (e) => {
   if (isSidebarOpen.value && !e.target.closest(".header-container")) {
@@ -90,16 +90,26 @@ onBeforeUnmount(() => {
         </div>
         <div class="header-item-3" ref="searchRef">
           <input type="text" v-model="input" placeholder="Search boats.." />
-          <div class="remove-input" v-if="input" @click="() => input = ''">
+          <div class="remove-input" v-if="input" @click="() => (input = '')">
             <div class="remove-input-line" />
             <div class="remove-input-line" />
           </div>
           <div class="search-results" v-if="searchListOpen && input">
-            <div class="boatresult" v-for="boat in filteredBoats()" @click="() => {
-              selectBoat(boat);
-              searchListOpen = false;
-              }" :key="boat.id">
-              <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
+            <div
+              class="boatresult"
+              v-for="boat in filteredBoats()"
+              @click="
+                () => {
+                  selectBoat(boat);
+                  searchListOpen = false;
+                }
+              "
+              :key="boat.id"
+            >
+              <img
+                class="boat-flag"
+                :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
+              />
               <span class="boat-name">{{ boat.vesselName }}</span>
             </div>
             <div class="item error" v-if="!filteredBoats().length">
@@ -110,32 +120,49 @@ onBeforeUnmount(() => {
         <div class="header-right"></div>
       </div>
     </div>
-    <div :class="['sidebar', { open: isSidebarOpen }]">
+    <div
+      :class="['sidebar', { open: isSidebarOpen || isSidebarHovered }]"
+      @mouseenter="isSidebarHovered = true"
+      @mouseleave="isSidebarHovered = false"
+    >
       <div class="sidebar-content">
         <div class="nav-items">
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
-                <div class="icon" @click="() => toggleSidebar('boats')">
-                  <BoatIcon :active="listType === 'boats'" />
+                <div class="icon-wrapper" @click="() => router.push('/boats')">
+                  <div class="icon">
+                    <BoatIcon :active="listType === 'boats'" />
+                  </div>
+                  <span v-if="isSidebarHovered" class="icon-label">Boats</span>
                 </div>
-                <div :class="['icon', 'clickable']" @click="onMapClick">
-                  <MapIcon />
+
+                <div class="icon-wrapper clickable" @click="onMapClick">
+                  <div class="icon">
+                    <MapIcon />
+                  </div>
+                  <span v-if="isSidebarHovered" class="icon-label">Map</span>
                 </div>
-                <div :class="['icon', 'clickable']">
-                  <router-link to="/compare" class="link">
+
+                <router-link to="/compare" class="link icon-wrapper clickable">
+                  <div class="icon">
                     <BoatCompare />
-                  </router-link>
-                </div>
+                  </div>
+                  <span v-if="isSidebarHovered" class="icon-label"
+                    >Compare</span
+                  >
+                </router-link>
               </div>
             </div>
           </div>
 
           <div class="nav-item">
             <div class="icon-container">
-              <div :class="['active-icon-bar']" />
-              <div class="icon" @click="logout">
-                <LogOut />
+              <div class="icon-wrapper clickable" @click="logout">
+                <div class="icon">
+                  <LogOut />
+                </div>
+                <span v-if="isSidebarHovered" class="icon-label">Log out</span>
               </div>
             </div>
           </div>
@@ -147,12 +174,23 @@ onBeforeUnmount(() => {
           Log in first to view the boats
         </div>
 
-        <ul v-else-if="listType === 'boats'" :class="['boat-list', { closed: !isSidebarOpen }]">
-          <li v-for="boat in props.boats.vessels" :key="boat.id" :class="[
-            'boat-item',
-            { active: selectedBoat === boat.id, closed: !isSidebarOpen },
-          ]" @click="selectBoat(boat)">
-            <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
+        <ul
+          v-else-if="listType === 'boats'"
+          :class="['boat-list', { closed: !isSidebarOpen }]"
+        >
+          <li
+            v-for="boat in props.boats.vessels"
+            :key="boat.id"
+            :class="[
+              'boat-item',
+              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
+            ]"
+            @click="selectBoat(boat)"
+          >
+            <img
+              class="boat-flag"
+              :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
+            />
             <span class="boat-name">{{ boat.vesselName }}</span>
           </li>
         </ul>
@@ -223,7 +261,7 @@ onBeforeUnmount(() => {
 }
 
 .sidebar.open {
-  width: calc(345px - 75px);
+  width: calc(245px - 75px);
 }
 
 .sidebar-content {
@@ -235,10 +273,11 @@ onBeforeUnmount(() => {
 .nav-items {
   display: flex;
   flex-direction: column;
-  width: 75px;
-  align-items: center;
+  width: 100%;
+  align-items: flex-start;
   padding-top: 20px;
   padding-bottom: 20px;
+  padding-left: 0;
   justify-content: space-between;
 }
 
@@ -381,7 +420,6 @@ onBeforeUnmount(() => {
   top: calc(50% - 1px);
   left: calc(50% - 7.5px);
   transform: rotate(-45deg);
-  
 }
 
 .search-results {
@@ -463,4 +501,26 @@ onBeforeUnmount(() => {
   font-size: 16px;
   padding: 20px;
 }
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.icon-label {
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.open .icon-label {
+  opacity: 1;
+}
+
 </style>
