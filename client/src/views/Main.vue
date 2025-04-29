@@ -255,6 +255,7 @@ onUnmounted(() => {
   .top-container {
     align-items: center;
     flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .marker-vessel-tilt-container.small {
@@ -264,23 +265,24 @@ onUnmounted(() => {
     padding: 20px;
   }
 
-  .map {
-    position: absolute;
-  }
-
   .map.small {
-    position:inherit;
-    left: 0;
-    top: 0;
     margin: 20px 0px 0 0;
     height: calc((94vw - 75px - 20px) / 2 - 10px);
     width: calc(94% - 10px);
   }
 
-  .resize-button.small {
+  .marker-vessel-tilt-container.small {
+    padding: 6px;
+  }
+
+.marker-vessel-tilt {
+  width: calc(50% - 3px);
+}
+
+/*   .resize-button.small {
     top: calc((94vw - 75px - 20px) / 2 - 10px + 50px);
     left: calc(94% - 25px);
-  }
+  } */
 
 }
 </style>
