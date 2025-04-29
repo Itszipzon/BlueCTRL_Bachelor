@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref, watchEffect, watch, nextTick } from "vue";
+import { inject, ref, watchEffect } from "vue";
+import router from "../router";
 
 const boatsTotal = inject("boats");
 
@@ -17,7 +18,17 @@ const props = defineProps({
 
 const isLoggedIn = ref(true);
 
-console.log("Boats:", boats.value);
+const selectBoat = (boat) => {
+  if (window.location.pathname !== "/") {
+    router.push("/");
+    setTimeout(() => {
+      console.log("Boat selected:", boat);
+      window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
+    }, 250);
+  } else {
+    window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
+  }
+};
 </script>
 
 <template>
@@ -25,7 +36,7 @@ console.log("Boats:", boats.value);
     <div class="boat-list-container">
       <h3>Browse boats</h3>
       <div class="boat-list" v-for="boat in boats" :key="boat.id">
-        <div class="boat-item">
+        <div class="boat-item" @click="selectBoat(boat)">
           <img
             class="boat-flag"
             :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
@@ -73,6 +84,15 @@ console.log("Boats:", boats.value);
   border: 1px solid #ddd;
   border-radius: 6px;
   background-color: #f9f9f9;
+}
+
+.boat-item.selected {
+  background-color: #eaeaea;
+}
+
+.boat-item:hover {
+  background-color: #eaeaea;
+  cursor: pointer;
 }
 
 .boat-flag {
