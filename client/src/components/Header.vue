@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount } from "vue";
 import BoatIcon from "../assets/icons/BoatIcon.vue";
 import LogOut from "../assets/icons/LogOut.vue";
 import BoatCompare from "../assets/icons/BoatCompare.vue";
@@ -11,24 +11,11 @@ const props = defineProps({
 });
 
 const isSidebarOpen = ref(false);
-const listType = ref("boats");
-const isLoggedIn = ref(true);
 let input = ref("");
 const searchListOpen = ref(false);
 const searchRef = ref(null);
 
 const isSidebarHovered = ref(false);
-
-const toggleSidebar = (element) => {
-  if (!element) {
-    isSidebarOpen.value = !isSidebarOpen.value;
-  } else if (element === listType.value) {
-    isSidebarOpen.value = !isSidebarOpen.value;
-  } else {
-    listType.value = element;
-    isSidebarOpen.value = true;
-  }
-};
 
 const selectBoat = (boat) => {
   isSidebarOpen.value = false;
@@ -132,7 +119,7 @@ onBeforeUnmount(() => {
               <div class="icon-container">
                 <div class="icon-wrapper" @click="() => router.push('/boats')">
                   <div class="icon">
-                    <BoatIcon :active="listType === 'boats'" />
+                    <BoatIcon />
                   </div>
                   <span v-if="isSidebarHovered" class="icon-label">Boats</span>
                 </div>
@@ -169,32 +156,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <div class="sidebar-list">
-        <div v-if="!isLoggedIn && isSidebarOpen" class="login-message">
-          Log in first to view the boats
-        </div>
-
-        <ul
-          v-else-if="listType === 'boats'"
-          :class="['boat-list', { closed: !isSidebarOpen }]"
-        >
-          <li
-            v-for="boat in props.boats.vessels"
-            :key="boat.id"
-            :class="[
-              'boat-item',
-              { active: selectedBoat === boat.id, closed: !isSidebarOpen },
-            ]"
-            @click="selectBoat(boat)"
-          >
-            <img
-              class="boat-flag"
-              :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
-            />
-            <span class="boat-name">{{ boat.vesselName }}</span>
-          </li>
-        </ul>
-      </div>
+      
     </div>
   </div>
 </template>
