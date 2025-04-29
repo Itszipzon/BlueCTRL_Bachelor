@@ -265,13 +265,13 @@ onUnmounted(() => {
   }
 
   .map {
-    height: calc(100dvh - 50px);
-    width: calc(100dvw - 75px);
-    margin: 0;
-    padding: 0;
+    position: absolute;
   }
 
   .map.small {
+    position:inherit;
+    left: 0;
+    top: 0;
     margin: 20px 0px 0 0;
     height: calc((94vw - 75px - 20px) / 2 - 10px);
     width: calc(94% - 10px);
