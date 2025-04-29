@@ -251,7 +251,7 @@ onUnmounted(() => {
   margin-bottom: 20px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 950px) {
   .top-container {
     align-items: center;
     flex-direction: column;
@@ -260,17 +260,18 @@ onUnmounted(() => {
 
   .marker-vessel-tilt-container.small {
     margin: 20px 20px 0 20px;
-    width: calc(94% - 10px);
-    height: calc((94vw - 75px - 20px)/2 - 10px);
+    width: calc(100% - 40px);
+    height: calc((100vw - 75px - 20px)/2 - 40px);
     padding: 20px;
   }
 
   .map.small {
     margin: 20px 0px 0 0;
-    height: calc((94vw - 75px - 20px) / 2 - 10px);
-    width: calc(94% - 10px);
+    height: calc((100vw - 75px - 40px) / 2 - 10px);
+    width: calc(100% - 40px);
   }
 
+@media (max-width: 800px) {
   .marker-vessel-tilt-container.small {
     padding: 6px;
   }
@@ -278,11 +279,8 @@ onUnmounted(() => {
 .marker-vessel-tilt {
   width: calc(50% - 3px);
 }
-
-/*   .resize-button.small {
-    top: calc((94vw - 75px - 20px) / 2 - 10px + 50px);
-    left: calc(94% - 25px);
-  } */
+  
+}
 
 }
 </style>
