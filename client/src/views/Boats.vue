@@ -60,6 +60,7 @@ const selectBoat = (boat) => {
   background-color: white;
   color: black;
   padding: 20px;
+  height: 100%;
 }
 
 .boat-list-container h3 {
