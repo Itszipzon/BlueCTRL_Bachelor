@@ -47,8 +47,40 @@ function getCountryCode(countryCode) {
           </div>
         </div>
       </div>
-      <div class="vessel-data-inner-box"></div>
-      <div class="vessel-data-inner-box"></div>
+      <div class="vessel-data-inner-box">
+        <div class="vessel-data-container">
+          <h3>Vessel info</h3>
+          <div class="vessel-data-sub-container-values">
+            <p>ID:</p>
+            <p>{{ selectedMarker?.id }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LATITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.latitude }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LONGITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.longitude }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="vessel-data-inner-box">
+        <div class="vessel-data-container">
+          <h3>Vessel info</h3>
+          <div class="vessel-data-sub-container-values">
+            <p>ID:</p>
+            <p>{{ selectedMarker?.id }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LATITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.latitude }}</p>
+          </div>
+          <div class="vessel-data-sub-container-values">
+            <p>LONGITUDE:</p>
+            <p>{{ selectedMarker?.gpsPosition?.longitude }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -136,5 +168,19 @@ function getCountryCode(countryCode) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 950px) {
+  .vessel-data-box {
+    flex-direction: column;
+  }
+
+.vessel-data-inner-box {
+  width: 100%;
+  border-top: 0.5px solid #ccc;
+  border-bottom: 0.5px solid #ccc;
+  border-right: none;
+  border-left: none;
+}
 }
 </style>
