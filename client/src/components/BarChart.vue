@@ -1,177 +1,17 @@
-<script setup>
-import axios from "axios";
-import { ref, watch } from "vue";
-
-// Dates for the last 7 days
-const from = new Date().setDate(new Date().getDate() - 7);
-const to = new Date().setDate(new Date().getDate());
-
-const props = defineProps({
-  vessels: {
-    type: Array,
-    required: true,
-  },
-  timePeriod: {
-    type: String,
-    default: "all",
-  },
-});
-
-const updatedVessels = ref([...props.vessels]);
-const processedVesselIds = ref(new Set()); 
-
-
-watch(
-  () => props.vessels,
-  async (newVessels, oldVessels) => {
-    if (!newVessels?.length) return;
-
-    
-    const newVessel = newVessels.find(
-      (vessel) => !processedVesselIds.value.has(vessel.id)
-    );
-
-    if (newVessel) {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/vessel-gps-positions?vesselId=${newVessel.id}&from=${from}&to=${to}`,
-          {
-            headers: {
-              Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-            },
-          }
-        );
-
-        const gpsData = response.data;
-        const distance = calculateTotalTravelDistance(gpsData);
-
-        console.log("Distance for vessel", newVessel.id, ":", distance);
-
-        
-        processedVesselIds.value.add(newVessel.id);
-
-        
-        const updatedVessel = { ...newVessel, travelDistance: distance };
-
-        const index = updatedVessels.value.findIndex(
-          (vessel) => vessel.id === newVessel.id
-        );
-        if (index !== -1) {
-          updatedVessels.value[index] = updatedVessel; 
-        } else {
-          updatedVessels.value.push(updatedVessel); 
-        }
-      } catch (error) {
-        console.error(
-          `Error fetching GPS data for vessel ${newVessel.id}`,
-          error
-        );
-      }
-    }
-  },
-  { immediate: true, deep: true }
-);
-
-function calculateTotalTravelDistance(dataPoints) {
-  if (!dataPoints || dataPoints.length < 2) return 0;
-
-  const R = 6371; 
-  let totalDistance = 0;
-
-  for (let i = 1; i < dataPoints.length; i++) {
-    const prev = dataPoints[i - 1];
-    const curr = dataPoints[i];
-
-    const dLat = toRadians(curr.latitude - prev.latitude);
-    const dLon = toRadians(curr.longitude - prev.longitude);
-
-    const lat1 = toRadians(prev.latitude);
-    const lat2 = toRadians(curr.latitude);
-
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-
-    totalDistance += distance;
-  }
-
-  return totalDistance;
-}
-
-function toRadians(degrees) {
-  return degrees * (Math.PI / 180);
-}
-
-defineExpose({
-  updatedVessels,
-});
-</script>
-
-
-
-<script>
-export default {
-  props: {
-    vessels: {
-      type: Array,
-      required: true,
-    },
-    timePeriod: {
-      type: String,
-      required: false,
-      default: "all",
-    },
-  },
-  computed: {
-    filteredBars() {
-      if (!this.updatedVessels) return [];
-      const maxDistance = Math.max(
-        ...this.updatedVessels.map((vessel) => vessel.travelDistance || 0)
-      );
-
-      return this.updatedVessels.map((vessel) => ({
-        label: vessel.vesselName,
-        value: this.getTravelDistanceForPeriod(vessel),
-        height:
-          maxDistance > 0
-            ? (this.getTravelDistanceForPeriod(vessel) / maxDistance) * 100
-            : 0,
-        formattedValue: `${Math.round(this.getTravelDistanceForPeriod(vessel))} km`
-      }));
-    },
-  },
-  methods: {
-    getTravelDistanceForPeriod(vessel) {
-      if (this.timePeriod === "all") {
-        return vessel.travelDistance || 0;
-      } else if (this.timePeriod === "lastWeek") {
-        return vessel.travelDistanceLastWeek || 0;
-      } else if (this.timePeriod === "lastMonth") {
-        return vessel.travelDistanceLastMonth || 0;
-      }
-      return 0;
-    },
-  },
-  watch: {
-    timePeriod() {},
-  },
-};
-</script>
-
 <template>
   <div>
     <div class="chart">
+      <div v-if="isLoading" class="spinner-overlay">
+        <div class="spinner"></div>
+      </div>
       <div
         v-for="(bar, index) in filteredBars"
         :key="index"
         class="bar"
         :style="{ height: bar.height + '%' }"
-        :data-value="bar.formattedValue" >
-      </div>
+        :data-value="bar.formattedValue"
+      ></div>
     </div>
-
     <div class="labels">
       <div v-for="(bar, index) in filteredBars" :key="index" class="label">
         {{ bar.label }}
@@ -179,6 +19,145 @@ export default {
     </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+
+export default {
+  props: {
+    vessels: { type: Array, required: true },
+    timePeriod: { type: String, default: "all" },
+  },
+
+  data() {
+    return {
+      updatedVessels: [...this.vessels], 
+      processedIds: new Set(), 
+      isLoading: false, 
+    };
+  },
+  watch: {
+    vessels: {
+      handler: "fetchDistances",
+      immediate: true,
+      deep: true,
+    },
+  },
+  computed: {
+    filteredBars() {
+      if (!this.updatedVessels.length) return [];
+      const raw = this.updatedVessels.map((v) =>
+        Number(this.getDistanceForPeriod(v))
+      );
+      const values = raw.map((v) => (Number.isFinite(v) ? v : 0));
+
+      const max = values.length ? Math.max(...values) : 0;
+      return this.updatedVessels.map((v, i) => {
+        const val = values[i];
+        return {
+          label: v.vesselName,
+          value: val,
+          height: max ? (val / max) * 100 : 0,
+          formattedValue: `${Math.round(val)} km`,
+        };
+      });
+    },
+  },
+
+  methods: {
+    async fetchDistances(newVessels) {
+      const currentIds = new Set(newVessels.map((v) => v.id));
+
+      this.updatedVessels = this.updatedVessels.filter((v) =>
+        currentIds.has(v.id)
+      );
+
+      this.processedIds.forEach((id) => {
+        if (!currentIds.has(id)) this.processedIds.delete(id);
+      });
+
+
+      if (!newVessels.length) return;
+
+      this.isLoading = true; 
+      const MS_DAY = 86_400_000;
+      const from = Date.now() - 7 * MS_DAY;
+      const to = Date.now();
+
+      try {
+        const tasks = newVessels
+          .filter((v) => !this.processedIds.has(v.id))
+          .map(async (v) => {
+            try {
+              const { data } = await axios.get(
+                "http://localhost:8080/api/vessel-gps-positions",
+                {
+                  params: { vesselId: v.id, from, to },
+                  headers: {
+                    Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+                  },
+                }
+              );
+
+              const dist = this.totalDistance(data);
+              this.processedIds.add(v.id);
+              const idx = this.updatedVessels.findIndex((e) => e.id === v.id);
+              const record = { ...v, travelDistance: dist };
+
+              if (idx === -1) {
+                this.updatedVessels.push(record);
+              } else {
+                this.$set(this.updatedVessels, idx, record);
+              }
+            } catch (err) {
+              console.error(`GPS request failed for vessel ${v.id}`, err);
+            }
+          });
+        await Promise.all(tasks);
+      } finally {
+        this.isLoading = false; 
+      }
+    },
+
+    getDistanceForPeriod(v) {
+      switch (this.timePeriod) {
+        case "all":
+          return v.travelDistance || 0;
+        case "lastWeek":
+          return v.travelDistanceLastWeek || 0;
+        case "lastMonth":
+          return v.travelDistanceLastMonth || 0;
+        default:
+          return 0;
+      }
+    },
+
+
+    totalDistance(points) {
+      if (!points || points.length < 2) return 0;
+
+      const R = 6_371; 
+      const rad = (d) => (d * Math.PI) / 180;
+
+      const sum = points.slice(1).reduce((acc, cur, i) => {
+        const prev = points[i];
+        const dLat = rad(cur.latitude - prev.latitude);
+        const dLon = rad(cur.longitude - prev.longitude);
+
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(rad(prev.latitude)) *
+            Math.cos(rad(cur.latitude)) *
+            Math.sin(dLon / 2) ** 2;
+
+        return acc + 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      }, 0);
+
+      return Number.isFinite(sum) ? sum : 0;
+    },
+  },
+};
+</script>
 
 <style scoped>
 .chart {
@@ -190,7 +169,7 @@ export default {
   height: 300px;
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 0;
   position: relative;
 }
 
@@ -203,6 +182,7 @@ export default {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  min-height: 3px; 
 }
 
 .bar:hover {
@@ -232,5 +212,14 @@ export default {
   text-align: center;
   font-size: 14px;
   color: #555;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
