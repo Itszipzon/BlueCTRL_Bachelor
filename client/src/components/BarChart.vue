@@ -31,18 +31,25 @@ export default {
 
   data() {
     return {
-      updatedVessels: [...this.vessels], 
-      processedIds: new Set(), 
-      isLoading: false, 
+      updatedVessels: [...this.vessels],
+      processedIds: new Set(),
+      isLoading: false,
     };
   },
+
   watch: {
     vessels: {
       handler: "fetchDistances",
       immediate: true,
       deep: true,
     },
+    timePeriod: {
+      handler() {
+        this.fetchDistances(this.vessels);
+      },
+    },
   },
+
   computed: {
     filteredBars() {
       if (!this.updatedVessels.length) return [];
@@ -76,17 +83,39 @@ export default {
         if (!currentIds.has(id)) this.processedIds.delete(id);
       });
 
-
       if (!newVessels.length) return;
 
-      this.isLoading = true; 
+      this.isLoading = true;
+
       const MS_DAY = 86_400_000;
-      const from = Date.now() - 7 * MS_DAY;
-      const to = Date.now();
+      const now = new Date();
+      let to = now.getTime();
+      let from;
+
+      switch (this.timePeriod) {
+        case "lastWeek":
+          from = to - 7 * MS_DAY;
+          break;
+        case "lastMonth":
+          from = to - 30 * MS_DAY;
+          break;
+        case "yesterday":
+          const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+          );
+          to = today.getTime();
+          from = to - MS_DAY;
+          break;
+        default:
+          from = to - 7 * MS_DAY;
+          break;
+      }
 
       try {
         const tasks = newVessels
-          .filter((v) => !this.processedIds.has(v.id))
+          .filter((v) => !this.processedIds.has(`${v.id}-${this.timePeriod}`))
           .map(async (v) => {
             try {
               const { data } = await axios.get(
@@ -100,7 +129,7 @@ export default {
               );
 
               const dist = this.totalDistance(data);
-              this.processedIds.add(v.id);
+              this.processedIds.add(`${v.id}-${this.timePeriod}`);
               const idx = this.updatedVessels.findIndex((e) => e.id === v.id);
               const record = { ...v, travelDistance: dist };
 
@@ -115,28 +144,18 @@ export default {
           });
         await Promise.all(tasks);
       } finally {
-        this.isLoading = false; 
+        this.isLoading = false;
       }
     },
 
     getDistanceForPeriod(v) {
-      switch (this.timePeriod) {
-        case "all":
-          return v.travelDistance || 0;
-        case "lastWeek":
-          return v.travelDistanceLastWeek || 0;
-        case "lastMonth":
-          return v.travelDistanceLastMonth || 0;
-        default:
-          return 0;
-      }
+      return v.travelDistance || 0;
     },
-
 
     totalDistance(points) {
       if (!points || points.length < 2) return 0;
 
-      const R = 6_371; 
+      const R = 6371;
       const rad = (d) => (d * Math.PI) / 180;
 
       const sum = points.slice(1).reduce((acc, cur, i) => {
@@ -182,7 +201,7 @@ export default {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  min-height: 3px; 
+  min-height: 3px;
 }
 
 .bar:hover {

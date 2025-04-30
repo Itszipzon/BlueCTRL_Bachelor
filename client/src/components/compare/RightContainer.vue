@@ -1,6 +1,6 @@
 <script setup>
 import BarChart from "../BarChart.vue";
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const props = defineProps({
   selectedBoats: Array,
@@ -17,19 +17,17 @@ const selectedTimePeriod = ref("all");
         <div class="time-period-selector">
           <label for="time-period">Select Time Period:</label>
           <select id="time-period" v-model="selectedTimePeriod">
-            <option value="all">All Time</option>
             <option value="lastWeek">Last Week</option>
             <option value="lastMonth">Last Month</option>
+            <option value="yesterday">Yesterday</option>
           </select>
         </div>
         <div v-if="selectedBoats && selectedBoats.length > 0">
           <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
-
         </div>
         <div v-else class="empty-chart">
           <p>No boats selected</p>
           <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
-
         </div>
       </div>
     </div>
@@ -37,7 +35,6 @@ const selectedTimePeriod = ref("all");
 </template>
 
 <style scoped>
-
 .time-period-selector {
   margin-bottom: 10px;
 }
