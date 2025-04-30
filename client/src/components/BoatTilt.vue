@@ -26,7 +26,6 @@ onMounted(() => {
       } else {
         arrowSize.value = "30px";
       }
-      console.log("Arrow size:", arrowSize.value);
     });
     resizeObserver.observe(boatTiltContainer.value);
   }
@@ -61,11 +60,15 @@ function getSignalId() {
 const vesselDimentions = computed(() => {
   if (props.type === "roll") {
     return {
+      pureWidth: containerWidth.value * 0.25,
+      pureHeight: 0,
       width: containerWidth.value * 0.25 + "px",
       marginBottom: "-5px"
     };
   } else if (props.type === "pitch") {
     return {
+      pureWidth: 0,
+      pureHeight: containerHeight.value * 0.25,
       height: containerHeight.value * 0.25 + "px",
       marginBottom: "-8px"
     };
@@ -73,7 +76,6 @@ const vesselDimentions = computed(() => {
 })
 
 watchEffect(() => {
-  console.log("vesselId changed to", props.vesselId);
   fetchSensorData();
 });
 
@@ -91,7 +93,6 @@ async function fetchSensorData() {
         .then((r) => {
           if (r.status === 200) {
             const data = r.data;
-            console.log(data);
             if (data.signalEvents && data.signalEvents.length > 0) {
               // Use the last value in the signalEvents array
               const lastEvent = data.signalEvents[data.signalEvents.length - 1];
@@ -131,20 +132,17 @@ const styleTransform = computed(() => ({
       </div>
       <!-- Container with the protractor background -->
       <div class="protractor-container">
-        <img
-          v-if="props.type === 'roll'"
-          class="boat-image"
-          src="@/assets/boatfront.png"
-          alt="Boat Front View"
-          :style="[styleTransform, vesselDimentions]"
-        />
-        <img
-          v-else-if="props.type === 'pitch'"
-          class="boat-image"
-          src="@/assets/boatside.png"
-          alt="Boat Side View"
-          :style="[styleTransform, vesselDimentions]"
-        />
+        <img v-if="props.type === 'roll'" class="boat-image" src="@/assets/boatfront.png" alt="Boat Front View"
+          :style="[styleTransform, vesselDimentions]" />
+        <img v-else-if="props.type === 'pitch'" class="boat-image" src="@/assets/boatside.png" alt="Boat Side View"
+          :style="[styleTransform, vesselDimentions]" />
+        <div class="svg-boat-tilt-indicator">
+          <svg xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <line :x1="containerWidth/2 - 1" :y1="containerHeight * 0.65" :y2="containerHeight / 18" :x2="containerWidth/2 - 1" stroke="black" stroke-width="2" />
+          </g>
+          </svg>
+        </div>
       </div>
       <!-- The text is placed in normal flow below the protractor container -->
       <p v-if="props.type === 'roll'" class="tilt-label">
@@ -208,5 +206,13 @@ const styleTransform = computed(() => ({
   justify-content: center;
   align-items: center;
   color: black;
+}
+
+.svg-boat-tilt-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
