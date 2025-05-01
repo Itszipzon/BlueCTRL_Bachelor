@@ -2,6 +2,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from "vue";
 import axios from "axios";
 import CurvedArrow from "./icons/CurvedArrow.vue";
+import protractor_non_exagerate from "@/assets/icons/protractor_non_exagerate.png";
+import protractor_exagerate from "@/assets/icons/protractor_exagerate.png";
 
 const sensorValue = ref(0);
 const hasSensorData = ref(false);
@@ -63,6 +65,14 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  backgroundOffset: {
+    type: Number,
+    default: 100,
+  },
+  exagerate_values: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 function getSignalId() {
@@ -110,7 +120,6 @@ async function fetchSensorData() {
           if (r.status === 200) {
             const data = r.data;
             if (data.signalEvents && data.signalEvents.length > 0) {
-              // Use the last value in the signalEvents array
               const lastEvent = data.signalEvents[data.signalEvents.length - 1];
               sensorValue.value = Math.round(lastEvent.doubleValue * 10000) / 10000;
               hasSensorData.value = true;
@@ -123,19 +132,19 @@ async function fetchSensorData() {
           localStorage.removeItem("SESSION");
         });
     }
-  } else {
-    console.log("No vessel id");
   }
 }
 
-/* onMounted(() => {
-    fetchSensorData();
-    setInterval(fetchSensorData, 10 * 1000);
-}); */
+const backgroundStyle = computed(() => ({
+  backgroundImage: `url(${props.exagerate_values ? protractor_exagerate : protractor_non_exagerate})`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: `center calc(${props.backgroundOffset}%)`,
+  backgroundSize: "calc(100%) auto",
+}));
 
 // Computed style for the rotating boat image.
 const styleTransform = computed(() => ({
-  transform: `rotate(${sensorValue.value}deg)`,
+  transform: `rotate(${sensorValue.value * (props.exagerate_values ? 3 : 1)}deg)`,
   transition: "transform 0.2s ease-out",
 }));
 </script>
@@ -147,7 +156,7 @@ const styleTransform = computed(() => ({
         <CurvedArrow :reversed="sensorValue < 0" :size="arrowSize" />
       </div>
       <!-- Container with the protractor background -->
-      <div class="protractor-container">
+      <div class="protractor-container" :style="backgroundStyle">
         <img v-if="props.type === 'roll'" class="boat-image" src="@/assets/boatfront.png" alt="Boat Front View"
           :style="[styleTransform, vesselDimentions]" />
         <img v-else-if="props.type === 'pitch'" class="boat-image" src="@/assets/boatside.png" alt="Boat Side View"
@@ -206,10 +215,6 @@ const styleTransform = computed(() => ({
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background-image: url("@/assets/icons/protractor.png");
-  background-repeat: no-repeat;
-  background-position: center calc(100% + 10px);
-  background-size: calc(120%) auto;
 }
 
 .tilt-label {

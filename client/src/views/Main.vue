@@ -11,6 +11,7 @@ const boats = inject('boats');
 const vessels = ref(null);
 const loadingVessels = ref(true);
 const selectedMarker = ref(null);
+const exagerateValues = ref(false);
 
 watchEffect(() => {
   vessels.value = boats.value.vessels;
@@ -101,12 +102,16 @@ onUnmounted(() => {
     <div :class="['top-container', { large: largeMap }]">
       <div :class="['marker-vessel-tilt-container', { small: !largeMap }]"
         :style="selectedMarker?.vesselName ? {} : { height: '0px', padding: '0px', margin: '0px' }">
-        <div class="marker-vessel-tilt">
-          <BoatTilt type="roll" :vesselId="selectedMarker?.id" />
+        <div class="marker-vessel-tilt-holder">
+
+          <div class="marker-vessel-tilt">
+            <BoatTilt type="roll" :exagerate_values="exagerateValues" background-offset="75" :vesselId="selectedMarker?.id" />
+          </div>
+          <div class="marker-vessel-tilt">
+            <BoatTilt type="pitch" :exagerate_values="exagerateValues" background-offset="75" :vesselId="selectedMarker?.id" />
+          </div>
         </div>
-        <div class="marker-vessel-tilt">
-          <BoatTilt type="pitch" :vesselId="selectedMarker?.id" />
-        </div>
+        <button @click="() => exagerateValues = !exagerateValues">{{exagerateValues ? 'Un Exagerate values' : 'Exagerate values'}}</button>
       </div>
       <div :class="['map', { small: !largeMap }]">
         <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="vessels" :center="center"
@@ -189,7 +194,7 @@ onUnmounted(() => {
 .marker-vessel-tilt-container {
   background: #ffff;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -205,6 +210,33 @@ onUnmounted(() => {
   width: calc(50% - 10px);
   height: calc((50vw - 75px - 20px)/2 - 10px);
   padding: 20px;
+}
+
+.marker-vessel-tilt-container button {
+  width: fit-content;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  border: none;
+  background: #005380;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1001;
+}
+
+.marker-vessel-tilt-container button:hover {
+  background: #00406d;
+}
+
+.marker-vessel-tilt-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
 
 .marker-vessel-tilt {
@@ -271,16 +303,16 @@ onUnmounted(() => {
     width: calc(100% - 40px);
   }
 
-@media (max-width: 800px) {
-  .marker-vessel-tilt-container.small {
-    padding: 6px;
-  }
+  @media (max-width: 800px) {
+    .marker-vessel-tilt-container.small {
+      padding: 6px;
+    }
 
-.marker-vessel-tilt {
-  width: calc(50% - 3px);
-}
-  
-}
+    .marker-vessel-tilt {
+      width: calc(50% - 3px);
+    }
+
+  }
 
 }
 </style>
