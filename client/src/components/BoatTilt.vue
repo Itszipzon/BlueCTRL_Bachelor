@@ -112,7 +112,7 @@ async function fetchSensorData() {
             if (data.signalEvents && data.signalEvents.length > 0) {
               // Use the last value in the signalEvents array
               const lastEvent = data.signalEvents[data.signalEvents.length - 1];
-              sensorValue.value = lastEvent.doubleValue;
+              sensorValue.value = Math.round(lastEvent.doubleValue * 10000) / 10000;
               hasSensorData.value = true;
             } else {
               hasSensorData.value = false;
