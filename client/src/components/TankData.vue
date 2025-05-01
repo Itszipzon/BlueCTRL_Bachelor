@@ -1,19 +1,29 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import ShipOverview from '../assets/ShipOverview.vue';
+import ShipSideview from '../assets/ShipSideview.vue';
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
+const containerRef = ref(null);
 let resizeObserver;
 
-onMounted(() => {
-  const element = document.getElementById("ship-tank-data");
+onMounted(async () => {
 
-  if (element) {
+  if (containerRef.value) {
+
+    const rect = containerRef.value.getBoundingClientRect();
+
+    shipWidth.value = rect.width;
+    shipHeight.value = rect.width * 0.35;
+
     resizeObserver = new ResizeObserver(() => {
-      shipWidth.value = element.offsetWidth;
-      shipHeight.value = shipWidth.value * 0.35;
+      const updatedRect = containerRef.value.getBoundingClientRect();
+      shipWidth.value = updatedRect.width;
+      shipHeight.value = updatedRect.width * 0.35;
     });
-    resizeObserver.observe(element);
+
+    resizeObserver.observe(containerRef.value);
   }
 });
 
@@ -29,55 +39,40 @@ onUnmounted(() => {
 
     </div>
     <p>Ship tank data overview</p>
-    <svg :width="shipWidth" :height="shipHeight" xmlns="http://www.w3.org/2000/svg">
-      <!-- Top line -->
-      <line :x1="shipWidth * 0.2" y1="10" :x2="shipWidth - 10" y2="10" stroke="black" stroke-width="1" />
-      <!-- Right line -->
-      <line :x1="shipWidth - 10" y1="9.5" :x2="shipWidth - 10" :y2="shipHeight - 10 + 0.5" stroke="black"
-        stroke-width="1" />
-      <!-- Bottom line -->
-      <line :x1="shipWidth - 10" :y1="shipHeight - 10" :x2="shipWidth * 0.2" :y2="shipHeight - 10" stroke="black"
-        stroke-width="1" />
-
-      <line :x1="shipWidth * 0.2 + 0.25" y1="10.25" x2="0" :y2="(shipHeight - 10) * 0.5" stroke="black"
-        stroke-width="1" />
-      <line :x1="shipWidth * 0.2 + 0.25" :y1="shipHeight - 10 + 0.25" x2="0" :y2="(shipHeight - 10) * 0.5"
-        stroke="black" stroke-width="1" />
-    </svg>
+    <div class="ship-drawing-container" ref="containerRef">
+      <ShipOverview :width="shipWidth" :height="shipHeight" />
+    </div>
     <p>Ship tank data side view</p>
-    <svg :width="shipWidth" :height="shipHeight/2" xmlns="http://www.w3.org/2000/svg">
-      <g >
-        <line :x1="shipWidth * 0.2" y1="10" :x2="shipWidth - 10" y2="10" stroke="black" stroke-width="1" />
-        <line :x1="shipWidth - 10" y1="9.5" :x2="shipWidth - 10" :y2="shipHeight/2 - 10 + 0.5" stroke="black"
-        stroke-width="1" />
-        <line :x1="shipWidth - 10" :y1="shipHeight/2 - 10" :x2="shipWidth * 0.2" :y2="shipHeight/2 - 10" stroke="black"
-        stroke-width="1" />
-
-        <line :x1="shipWidth * 0.2 + 0.25" y1="10.25" x2="0" y2="10" stroke="black"
-        stroke-width="1" />
-        <line :x1="shipWidth * 0.2 + 0.25" :y1="shipHeight/2 - 10" x2="0" y2="10" stroke="black" stroke-width="1" />
-      </g>
-    </svg>
+    <div class="ship-drawing-container">
+      <ShipSideview :width="shipWidth" :height="shipHeight" />
+    </div>
   </div>
 </template>
 <style scoped>
 p {
   color: black;
 }
+
 .ship-tank-data {
   height: fit-content;
   width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
 }
 
 .ship-tanks {
   position: absolute;
   height: 200px;
   width: 600px;
-  background-color: #f0f0f0;
   left: 0;
   top: 0;
+}
+
+.ship-drawing-container {
+  width: 100%;
+  max-width: 800px;
+  height: fit-content;
 }
 </style>
