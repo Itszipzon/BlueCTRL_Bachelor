@@ -119,13 +119,13 @@ onBeforeUnmount(() => {
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
-                <div :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/'}]" @click="onMapClick">
+                <div :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/'}, { large: isSidebarHovered }]" @click="onMapClick">
                   <div class="icon">
                     <MapIcon />
                   </div>
                   <span v-if="isSidebarHovered" class="icon-label">Map</span>
                 </div>
-                <div :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/vessels'}]" @click="() => router.push('/vessels')">
+                <div :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/vessels'}, { large: isSidebarHovered }]" @click="() => router.push('/vessels')">
                   <div class="icon">
                     <BoatIcon />
                   </div>
@@ -133,7 +133,7 @@ onBeforeUnmount(() => {
                 </div>
 
                 
-                <router-link to="/compare" :class="['link icon-wrapper clickable', { active: router.history.current.fullPath.includes('/compare')}]">
+                <router-link to="/compare" :class="['link icon-wrapper clickable', { active: router.history.current.fullPath.includes('/compare')}, { large: isSidebarHovered }]">
                   <div class="icon">
                     <BoatCompare />
                   </div>
@@ -471,15 +471,18 @@ onBeforeUnmount(() => {
 .icon-wrapper {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 32px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .icon-wrapper.active {
   background-color: #185c79;
   border-radius: 6px;
-  
+}
+
+.icon-wrapper.large {
+  width: 125px;
 }
 
 .icon-label {
