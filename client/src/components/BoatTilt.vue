@@ -9,6 +9,9 @@ const hasSensorData = ref(false);
 const containerWidth = ref(0);
 const containerHeight = ref(0);
 const boatTiltContainer = ref(null);
+const svgContainer = ref(null);
+const svgWidth = ref(0);
+const svgHeight = ref(0);
 const arrowSize = ref("30px");
 let resizeObserver;
 
@@ -29,11 +32,24 @@ onMounted(() => {
     });
     resizeObserver.observe(boatTiltContainer.value);
   }
+  if (svgContainer.value) {
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        svgWidth.value = width;
+        svgHeight.value = height;
+      }
+    });
+    resizeObserver.observe(svgContainer.value);
+  }
 });
 
 onBeforeUnmount(() => {
   if (resizeObserver && containerRef.value) {
     resizeObserver.unobserve(containerRef.value);
+  }
+  if (resizeObserver && svgContainer.value) {
+    resizeObserver.unobserve(svgContainer.value);
   }
 });
 
@@ -136,10 +152,10 @@ const styleTransform = computed(() => ({
           :style="[styleTransform, vesselDimentions]" />
         <img v-else-if="props.type === 'pitch'" class="boat-image" src="@/assets/boatside.png" alt="Boat Side View"
           :style="[styleTransform, vesselDimentions]" />
-        <div class="svg-boat-tilt-indicator">
+        <div class="svg-boat-tilt-indicator" ref="svgContainer">
           <svg xmlns="http://www.w3.org/2000/svg">
           <g>
-            <line :x1="containerWidth/2 - 1" :y1="containerHeight * 0.65" :y2="containerHeight / 18" :x2="containerWidth/2 - 1" stroke="black" stroke-width="2" />
+            <line :x1="svgWidth/2 - 1" :y1="svgHeight * 0.65" :y2="svgHeight / 18" :x2="svgWidth/2 - 1" stroke="black" stroke-width="2" />
           </g>
           </svg>
         </div>
