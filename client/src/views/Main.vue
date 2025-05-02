@@ -111,7 +111,11 @@ onUnmounted(() => {
             <BoatTilt type="pitch" :exagerate_values="exagerateValues" background-offset="75" :vesselId="selectedMarker?.id" />
           </div>
         </div>
-        <button @click="() => exagerateValues = !exagerateValues">{{exagerateValues ? 'Un Exagerate values' : 'Exagerate values'}}</button>
+        <div class="marker-vessel-tilt-exagerate">
+          <input type="checkbox" id="exagerate" v-model="exagerateValues" />
+          <label for="exagerate">Exagerate values</label>
+        </div>
+        <!-- <button @click="() => exagerateValues = !exagerateValues">{{exagerateValues ? 'Un Exagerate values' : 'Exagerate values'}}</button> -->
       </div>
       <div :class="['map', { small: !largeMap }]">
         <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="vessels" :center="center"
@@ -122,7 +126,7 @@ onUnmounted(() => {
       <VesselData :selectedMarker="selectedMarker" />
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
-      <TankData />
+      <TankData :vesselId="selectedMarker?.id" />
     </div>
   </div>
 </template>
@@ -225,6 +229,17 @@ onUnmounted(() => {
   cursor: pointer;
   font-size: 14px;
   z-index: 1001;
+}
+
+.marker-vessel-tilt-exagerate {
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  left: 7px;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  gap: 5px;
 }
 
 .marker-vessel-tilt-container button:hover {
