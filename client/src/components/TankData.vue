@@ -45,7 +45,7 @@ const fetchTankData = async (vesselId) => {
             });
 
             if (foundTanks.value) {
-              const newTemp = temp.filter(tank => 
+              const newTemp = temp.filter(tank =>
                 tank.content.toLowerCase().includes("fuel") || tank.content.toLowerCase().includes("fresh water")
               )
               tanks.value = newTemp
@@ -112,10 +112,24 @@ onUnmounted(() => {
 });
 
 const shipTankVolumeStyle = (tank) => {
+  const percent = (tank.volume / tank.capacity) * 100
+  let background = "red";
+
+
+  if (percent > 75) {
+    background = "green";
+  } else if (percent > 50) {
+    background = "yellow";
+  } else if (percent > 25) {
+    background = "orange";
+  } else {
+    background = "red";
+  }
+
   return {
     width: "100%",
-    height: `${(tank.volume / tank.capacity)*100}%`,
-    backgroundColor: "red"
+    height: `${percent}%`,
+    backgroundColor: background
   }
 }
 
