@@ -81,7 +81,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resizeMap');
+  window.removeEventListener('resizeMap', handleResize);
   if (mapObject) {
     mapObject.off();
   }
@@ -115,7 +115,6 @@ onUnmounted(() => {
           <input type="checkbox" id="exagerate" v-model="exagerateValues" />
           <label for="exagerate">Exagerate values</label>
         </div>
-        <!-- <button @click="() => exagerateValues = !exagerateValues">{{exagerateValues ? 'Un Exagerate values' : 'Exagerate values'}}</button> -->
       </div>
       <div :class="['map', { small: !largeMap }]">
         <Map :large="largeMap" :setValues="setValues" :resize="toggleMapSize" :markers="vessels" :center="center"

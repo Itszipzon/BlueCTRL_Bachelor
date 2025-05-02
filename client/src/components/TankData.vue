@@ -113,6 +113,7 @@ onUnmounted(() => {
   if (resizeObserver) {
     resizeObserver.disconnect();
   }
+  containerRef.value = null
 });
 
 const shipTankVolumeStyle = (tank) => {

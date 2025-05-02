@@ -47,9 +47,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (resizeObserver && containerRef.value) {
-    resizeObserver.unobserve(containerRef.value);
-  }
   if (resizeObserver && svgContainer.value) {
     resizeObserver.unobserve(svgContainer.value);
   }
