@@ -62,11 +62,11 @@ const props = defineProps({
     validator: (value) => ["roll", "pitch"].includes(value),
   },
   vesselId: {
-    type: Number,
+    type: String | "",
     required: false,
   },
   backgroundOffset: {
-    type: Number,
+    type: String,
     default: 100,
   },
   exagerate_values: {

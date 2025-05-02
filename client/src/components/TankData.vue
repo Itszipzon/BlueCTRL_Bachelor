@@ -13,13 +13,17 @@ let resizeObserver;
 
 const props = defineProps({
   vesselId: {
-    type: Number,
+    type: String | "",
     required: true
   }
 });
 
 const fetchTankData = async (vesselId) => {
   foundTanks.value = false;
+  if (!vesselId) {
+    console.log("No valid vesselId")
+    return
+  }
   let temp = [];
   try {
     axios.get(`http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks?fromProject=True`, {
