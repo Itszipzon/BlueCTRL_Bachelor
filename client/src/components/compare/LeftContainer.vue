@@ -13,7 +13,7 @@ const handleBoatClick = (boat) => {
 <template>
   <div class="left-container-component">
     <div class="boat-list-container">
-      <h3>Filter boats</h3>
+      <h3>Choose vessels to compare</h3>
       <div class="boat-list">
         <div
           :class="[

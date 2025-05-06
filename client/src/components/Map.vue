@@ -17,12 +17,15 @@
       :icon="createCustomIcon(marker)"
       @click="onMarkerClick(marker)"
     >
+      <l-tooltip :permanent="false" :direction="'top'">
+        {{ marker.vesselName }}
+      </l-tooltip>
     </l-marker>
   </l-map>
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import MapMarker from "../assets/icons/boatmarker.svg";
@@ -52,6 +55,7 @@ export default {
     LTileLayer,
     LMarker,
     LPopup,
+    LTooltip,
   },
   methods: {
     onMapReady() {
