@@ -18,7 +18,14 @@
       @click="onMarkerClick(marker)"
     >
       <l-tooltip :permanent="false" :direction="'top'">
-        {{ marker.vesselName }}
+        <div class="tooltip-content">
+          <img
+            class="tooltip-flag"
+            :src="`https://flagcdn.com/h20/${marker.countryCode.toLowerCase()}.png`"
+            alt="flag"
+          />
+          <span>{{ marker.vesselName }}</span>
+        </div>
       </l-tooltip>
     </l-marker>
   </l-map>
@@ -95,6 +102,12 @@ export default {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.tooltip-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .pulse img {
