@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
-import ShipOverview from '../assets/ShipOverview.vue';
-import ShipSideview from '../assets/ShipSideview.vue';
-import axios from 'axios';
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import ShipOverview from "../assets/ShipOverview.vue";
+import ShipSideview from "../assets/ShipSideview.vue";
+import axios from "axios";
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
@@ -25,8 +25,8 @@ const props = defineProps({
 const fetchTankData = async (vesselId) => {
   foundTanks.value = false;
   if (!vesselId) {
-    console.log("No valid vesselId")
-    return
+    console.log("No valid vesselId");
+    return;
   }
   if (props.dummy) {
     if (vesselId === 28) {
@@ -43,22 +43,30 @@ const fetchTankData = async (vesselId) => {
   }
   let temp = [];
   try {
-    axios.get(`http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks?fromProject=True`, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-      }
-    })
+    axios
+      .get(
+        `http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks?fromProject=True`,
+        {
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+          },
+        }
+      )
       .then((r) => {
         temp = r.data;
 
-        axios.get(`http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks/current`, {
-          headers: {
-            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-          }
-        })
+        axios
+          .get(
+            `http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks/current`,
+            {
+              headers: {
+                Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+              },
+            }
+          )
           .then((current) => {
-            current.data.forEach(newTank => {
-              const existingTank = temp.find(t => t.id === newTank.id);
+            current.data.forEach((newTank) => {
+              const existingTank = temp.find((t) => t.id === newTank.id);
               if (existingTank) {
                 foundTanks.value = true;
                 existingTank.volume = newTank.volume;
@@ -66,16 +74,18 @@ const fetchTankData = async (vesselId) => {
             });
 
             if (foundTanks.value) {
-              const newTemp = temp.filter(tank =>
-                tank.content.toLowerCase().includes("fuel") || tank.content.toLowerCase().includes("fresh water")
-              )
-              tanks.value = newTemp
-              console.log(newTemp)
+              const newTemp = temp.filter(
+                (tank) =>
+                  tank.content.toLowerCase().includes("fuel") ||
+                  tank.content.toLowerCase().includes("fresh water")
+              );
+              tanks.value = newTemp;
+              console.log(newTemp);
             }
-          })
+          });
       });
   } catch (error) {
-    console.error('Failed to fetch tank data:', error);
+    console.error("Failed to fetch tank data:", error);
   }
 };
 
@@ -124,19 +134,18 @@ watch(
       });
     }
   }
-)
+);
 
 onUnmounted(() => {
   if (resizeObserver) {
     resizeObserver.disconnect();
   }
-  containerRef.value = null
+  containerRef.value = null;
 });
 
 const shipTankVolumeStyle = (tank) => {
-  const percent = (tank.volume / tank.capacity) * 100
+  const percent = (tank.volume / tank.capacity) * 100;
   let background = "red";
-
 
   if (percent > 75) {
     background = "green";
@@ -151,25 +160,30 @@ const shipTankVolumeStyle = (tank) => {
   return {
     width: "100%",
     height: `${percent}%`,
-    backgroundColor: background
-  }
-}
-
+    backgroundColor: background,
+  };
+};
 </script>
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
     <div class="ship-tanks">
-      <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`">
+      <div
+        class="ship-tank"
+        v-for="(tank, index) in tanks"
+        :key="`Tank${index}`"
+      >
         <div class="ship-tank-volume" :style="shipTankVolumeStyle(tank)" />
       </div>
     </div>
-    <p>Ship tank data overview</p>
-    <div class="ship-drawing-container" ref="containerRef">
-      <ShipOverview :width="shipWidth" :height="shipHeight" />
-    </div>
-    <p>Ship tank data side view</p>
-    <div class="ship-drawing-container">
-      <ShipSideview :width="shipWidth" :height="shipHeight" />
+    <div class="ship-drawings">
+      <p>Ship tank data overview</p>
+      <div class="ship-drawing-container" ref="containerRef">
+        <ShipOverview :width="shipWidth" :height="shipHeight" />
+      </div>
+      <p>Ship tank data side view</p>
+      <div class="ship-drawing-container">
+        <ShipSideview :width="shipWidth" :height="shipHeight" />
+      </div>
     </div>
   </div>
   <div class="ship-tank-no-tank" v-else>
@@ -182,23 +196,24 @@ p {
 }
 
 .ship-tank-data {
-  height: fit-content;
-  width: 100%;
   display: flex;
-  justify-content: center;
-  flex-direction: column;
   align-items: center;
+  max-height: 500px;
+  height: 500px;
+  
 }
 
 .ship-tanks {
-  position: absolute;
-  height: 200px;
-  width: 600px;
-  left: 0;
-  top: 0;
+  
+  height: 100%;
+  padding: 15px;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 2px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
 .ship-tank {
@@ -209,11 +224,24 @@ p {
   align-items: flex-end;
 }
 
-.ship-drawing-container {
+.ship-drawings {
+  height: 100%;
   width: 100%;
-  max-width: 800px;
-  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  
 }
+.ship-drawing-container {
+  justify-content: center;
+  width: 100%;
+   max-width: 800px;
+   height: fit-content;
+
+
+}
+
 
 .ship-tank-no-tank {
   display: flex;
