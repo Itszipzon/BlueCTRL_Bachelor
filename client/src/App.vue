@@ -8,6 +8,7 @@ import axios from "axios";
 const isLoggedIn = ref(false);
 const boats = ref({
   loadingVessels: true,
+  dummyData: true,
   vessels: []
 });
 
@@ -56,6 +57,22 @@ function gatherBoats() {
       boats.value.loadingVessels = false;
       console.log("Loading vessels:", boats.value.loadingVessels);
       boats.value.vessels = response.data;
+      if (boats.value.dummyData) {
+        const dummyVesselNames = [
+          "SS Viking",
+          "SS Ocean Explorer",
+          "SS Nordskog",
+          "Imrik Explorer",
+          "Singh Seek",
+          "SS Ocean Voyager",
+          "SS Oceanic",
+          "SS Oceanic Explorer",
+        ]
+        boats.value.vessels.forEach((vessel, index) => {
+          console.log("Vessel name:", vessel);
+          vessel.vesselName = dummyVesselNames[index % dummyVesselNames.length];
+        });
+      }
     })
     .catch((error => {
       console.error("Error fetching boats:", error);
@@ -64,66 +81,6 @@ function gatherBoats() {
       router.push("/");
     }));
 }
-
-const dummyBoats = ref([
-  {
-    id: 1,
-    vesselName: "Boat Name 1",
-    countryCode: "no",
-    gpsPosition: {
-      latitude: 62.4722,
-      longitude: 6.1495
-    }
-  },
-  {
-    id: 2,
-    vesselName: "Boat Name 2",
-    countryCode: "au",
-    gpsPosition: {
-      latitude: 62.4622,
-      longitude: 6.1495
-    }
-  },
-  {
-    id: 3,
-    vesselName: "Boat Name 3",
-    countryCode: "es",
-    gpsPosition: {
-      latitude: 62.4722,
-      longitude: 6.1595
-    }
-  },
-  {
-    id: 4,
-    vesselName: "Boat Name 4",
-    countryCode: "se",
-    gpsPosition: {
-      latitude: 62.4822,
-      longitude: 6.1695
-
-    }
-  },
-  {
-    id: 5,
-    vesselName: "Boat Name 5",
-    countryCode: "za",
-    gpsPosition: {
-      latitude: 62.4722,
-      longitude: 6.1395
-
-    }
-  },
-  {
-    id: 6,
-    vesselName: "Boat Name 6",
-    countryCode: "us",
-    gpsPosition: {
-      latitude: 62.4922,
-      longitude: 6.1495
-
-    }
-  },
-]);
 
 provide("boats", boats);
 </script>

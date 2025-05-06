@@ -10,12 +10,14 @@ import Smallscreen from '../components/icons/Smallscreen.svg';
 const boats = inject('boats');
 const vessels = ref(null);
 const loadingVessels = ref(true);
+const dummyData = ref(false);
 const selectedMarker = ref(null);
 const exagerateValues = ref(false);
 
 watchEffect(() => {
   vessels.value = boats.value.vessels;
   loadingVessels.value = boats.value.loadingVessels;
+  dummyData.value = boats.value.dummyData;
 })
 
 const largeMap = ref(true);
@@ -105,10 +107,10 @@ onUnmounted(() => {
         <div class="marker-vessel-tilt-holder">
 
           <div class="marker-vessel-tilt">
-            <BoatTilt type="roll" :exagerate_values="exagerateValues" background-offset="75" :vesselId="selectedMarker?.id" />
+            <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
           </div>
           <div class="marker-vessel-tilt">
-            <BoatTilt type="pitch" :exagerate_values="exagerateValues" background-offset="75" :vesselId="selectedMarker?.id" />
+            <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
           </div>
         </div>
         <div class="marker-vessel-tilt-exagerate">
@@ -125,7 +127,7 @@ onUnmounted(() => {
       <VesselData :selectedMarker="selectedMarker" />
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
-      <TankData :vesselId="selectedMarker?.id" />
+      <TankData :vesselId="selectedMarker?.id" :dummy="dummyData" />
     </div>
   </div>
 </template>

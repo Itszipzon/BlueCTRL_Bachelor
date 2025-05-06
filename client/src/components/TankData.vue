@@ -15,6 +15,10 @@ const props = defineProps({
   vesselId: {
     type: String | "",
     required: true
+  },
+  dummy: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -23,6 +27,19 @@ const fetchTankData = async (vesselId) => {
   if (!vesselId) {
     console.log("No valid vesselId")
     return
+  }
+  if (props.dummy) {
+    if (vesselId === 28) {
+      tanks.value = [
+        { id: 1, content: "Fuel", volume: 500, capacity: 1000 },
+        { id: 2, content: "Fresh Water", volume: 300, capacity: 500 },
+        { id: 3, content: "Ballast", volume: 500, capacity: 800 },
+        { id: 4, content: "Fresh Water", volume: 100, capacity: 500 },
+        { id: 5, content: "Ballast", volume: 330, capacity: 800 },
+      ];
+      foundTanks.value = true;
+    }
+    return;
   }
   let temp = [];
   try {

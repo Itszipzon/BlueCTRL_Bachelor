@@ -70,6 +70,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  dummyData: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 function getSignalId() {
@@ -103,7 +107,18 @@ watchEffect(() => {
 });
 
 async function fetchSensorData() {
+  console.log("Fetching sensor data for vesselId:", props.dummyData);
   if (props.vesselId) {
+    if (props.dummyData) {
+      if (props.vesselId === 28) {
+        sensorValue.value = props.type === "roll" ? 10 : -10;
+        hasSensorData.value = true;
+      } else if (props.vesselId === 2) {
+        sensorValue.value = props.type === "roll" ? 5 : -5;
+        hasSensorData.value = true;
+      }
+      return;
+    }
     const signalId = getSignalId();
     const url = `http://localhost:8080/api/signal?signalId=${signalId}&vesselId=${props.vesselId}`;
     if (localStorage.getItem("SESSION")) {
