@@ -35,8 +35,8 @@ const router = new VueRouter({
     {
       path: "/vessels",
       name: "boats",
-      component: Boats
-    }
+      component: Boats,
+    },
   ],
 });
 

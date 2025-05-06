@@ -29,7 +29,7 @@ const selectBoat = (boat) => {
   }
 };
 
-console.log(router.history.current.fullPath)
+console.log(router.history.current.fullPath);
 
 const logout = () => {
   window.dispatchEvent(new Event("logout"));
@@ -88,13 +88,21 @@ onBeforeUnmount(() => {
             <div class="remove-input-line" />
           </div>
           <div class="search-results" v-if="searchListOpen && input">
-            <div class="boatresult" v-for="boat in filteredBoats()" @click="
-              () => {
-                selectBoat(boat);
-                searchListOpen = false;
-              }
-            " :key="boat.id">
-              <img class="boat-flag" :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`" />
+            <div
+              class="boatresult"
+              v-for="boat in filteredBoats()"
+              @click="
+                () => {
+                  selectBoat(boat);
+                  searchListOpen = false;
+                }
+              "
+              :key="boat.id"
+            >
+              <img
+                class="boat-flag"
+                :src="`https://flagcdn.com/h40/${boat.countryCode.toLowerCase()}.png`"
+              />
               <span class="boat-name">{{ boat.vesselName }}</span>
             </div>
             <div class="item error" v-if="!filteredBoats().length">
@@ -105,37 +113,62 @@ onBeforeUnmount(() => {
         <div class="header-right"></div>
       </div>
     </div>
-    <div :class="['sidebar', { open: isSidebarOpen || isSidebarHovered }]" @mouseenter="isSidebarHovered = true"
-      @mouseleave="isSidebarHovered = false">
+    <div
+      :class="['sidebar', { open: isSidebarOpen || isSidebarHovered }]"
+      @mouseenter="isSidebarHovered = true"
+      @mouseleave="isSidebarHovered = false"
+    >
       <div class="sidebar-content">
         <div class="nav-items">
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
                 <div
-                  :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/' }, { large: isSidebarHovered }]"
-                  @click="onMapClick">
+                  :class="[
+                    'icon-wrapper clickable',
+                    { active: router.history.current.fullPath === '/' },
+                    { large: isSidebarHovered },
+                  ]"
+                  @click="onMapClick"
+                >
                   <div class="icon">
                     <MapIcon />
                   </div>
                   <span v-if="isSidebarHovered" class="icon-label">Map</span>
                 </div>
                 <div
-                  :class="['icon-wrapper clickable', { active: router.history.current.fullPath === '/vessels' }, { large: isSidebarHovered }]"
-                  @click="() => router.push('/vessels')">
+                  :class="[
+                    'icon-wrapper clickable',
+                    { active: router.history.current.fullPath === '/vessels' },
+                    { large: isSidebarHovered },
+                  ]"
+                  @click="() => router.push('/vessels')"
+                >
                   <div class="icon">
                     <BoatIcon />
                   </div>
-                  <span v-if="isSidebarHovered" class="icon-label">Vessels</span>
+                  <span v-if="isSidebarHovered" class="icon-label"
+                    >Vessels</span
+                  >
                 </div>
 
-
-                <router-link to="/compare"
-                  :class="['link icon-wrapper clickable', { active: router.history.current.fullPath.includes('/compare') }, { large: isSidebarHovered }]">
+                <router-link
+                  to="/compare"
+                  :class="[
+                    'link icon-wrapper clickable',
+                    {
+                      active:
+                        router.history.current.fullPath.includes('/compare'),
+                    },
+                    { large: isSidebarHovered },
+                  ]"
+                >
                   <div class="icon">
                     <BoatCompare />
                   </div>
-                  <span v-if="isSidebarHovered" class="icon-label">Compare</span>
+                  <span v-if="isSidebarHovered" class="icon-label"
+                    >Compare</span
+                  >
                 </router-link>
               </div>
             </div>
@@ -153,8 +186,6 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -324,8 +355,6 @@ onBeforeUnmount(() => {
 .header-item-2 h1 {
   color: white;
 }
-
-
 
 .router-link-active,
 .router-link-exact-active {

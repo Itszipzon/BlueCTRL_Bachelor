@@ -14,12 +14,12 @@ let resizeObserver;
 const props = defineProps({
   vesselId: {
     type: String | "",
-    required: true
+    required: true,
   },
   dummy: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const fetchTankData = async (vesselId) => {
@@ -200,11 +200,9 @@ p {
   align-items: center;
   max-height: 500px;
   height: 500px;
-  
 }
 
 .ship-tanks {
-  
   height: 100%;
   padding: 15px;
   display: flex;
@@ -230,18 +228,13 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  
 }
 .ship-drawing-container {
   justify-content: center;
   width: 100%;
-   max-width: 800px;
-   height: fit-content;
-
-
+  max-width: 800px;
+  height: fit-content;
 }
-
 
 .ship-tank-no-tank {
   display: flex;

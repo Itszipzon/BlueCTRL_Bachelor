@@ -175,12 +175,12 @@ function getCountryCode(countryCode) {
     flex-direction: column;
   }
 
-.vessel-data-inner-box {
-  width: 100%;
-  border-top: 0.5px solid #ccc;
-  border-bottom: 0.5px solid #ccc;
-  border-right: none;
-  border-left: none;
-}
+  .vessel-data-inner-box {
+    width: 100%;
+    border-top: 0.5px solid #ccc;
+    border-bottom: 0.5px solid #ccc;
+    border-right: none;
+    border-left: none;
+  }
 }
 </style>

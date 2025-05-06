@@ -1,24 +1,35 @@
 <template>
-  <l-map :center="[center.lat, center.lng]" :zoom="5" style="height: 100%; width: 100%;" ref="leafletMap"
-    @ready="onMapReady">
-    <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      attribution="Map data © OpenStreetMap contributors" />
-    <l-marker v-for="(marker, index) in markers" :key="index"
-      :lat-lng="[marker.gpsPosition.latitude, marker.gpsPosition.longitude]" :icon="createCustomIcon(marker)"
-      @click="onMarkerClick(marker)">
+  <l-map
+    :center="[center.lat, center.lng]"
+    :zoom="5"
+    style="height: 100%; width: 100%"
+    ref="leafletMap"
+    @ready="onMapReady"
+  >
+    <l-tile-layer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution="Map data © OpenStreetMap contributors"
+    />
+    <l-marker
+      v-for="(marker, index) in markers"
+      :key="index"
+      :lat-lng="[marker.gpsPosition.latitude, marker.gpsPosition.longitude]"
+      :icon="createCustomIcon(marker)"
+      @click="onMarkerClick(marker)"
+    >
     </l-marker>
   </l-map>
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker, LPopup } from 'vue2-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import MapMarker from '../assets/icons/boatmarker.svg';
+import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import MapMarker from "../assets/icons/boatmarker.svg";
 
 export default {
   mounted() {
-    window.addEventListener('selectBoat', (e) => {
+    window.addEventListener("selectBoat", (e) => {
       this.onMarkerClick(e.detail);
     });
   },
@@ -44,14 +55,16 @@ export default {
   },
   methods: {
     onMapReady() {
-      this.$emit('map-ready', this.$refs.leafletMap.mapObject);
+      this.$emit("map-ready", this.$refs.leafletMap.mapObject);
     },
 
     createCustomIcon(vessel) {
-
-      const isSelected = this.selectedVessel && this.rules.pulseSelected && this.selectedVessel.some(v => v.id === vessel.id);
+      const isSelected =
+        this.selectedVessel &&
+        this.rules.pulseSelected &&
+        this.selectedVessel.some((v) => v.id === vessel.id);
       return L.divIcon({
-        className: isSelected ? 'custom-icon pulse' : 'custom-icon',
+        className: isSelected ? "custom-icon pulse" : "custom-icon",
         html: `<img src="${MapMarker}" alt="Marker Icon" class="marker-icon" />`,
         iconSize: [40, 40],
         iconAnchor: [20, 20],
@@ -60,8 +73,6 @@ export default {
     },
 
     onMarkerClick(marker) {
-
-
       if (this.large) {
         this.resize();
         setTimeout(() => {

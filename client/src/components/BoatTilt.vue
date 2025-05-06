@@ -90,17 +90,17 @@ const vesselDimentions = computed(() => {
       pureWidth: containerWidth.value * 0.25,
       pureHeight: 0,
       width: containerWidth.value * 0.25 + "px",
-      marginBottom: "-5px"
+      marginBottom: "-5px",
     };
   } else if (props.type === "pitch") {
     return {
       pureWidth: 0,
       pureHeight: containerHeight.value * 0.25,
       height: containerHeight.value * 0.25 + "px",
-      marginBottom: "-8px"
+      marginBottom: "-8px",
     };
   }
-})
+});
 
 watchEffect(() => {
   fetchSensorData();
@@ -133,7 +133,8 @@ async function fetchSensorData() {
             const data = r.data;
             if (data.signalEvents && data.signalEvents.length > 0) {
               const lastEvent = data.signalEvents[data.signalEvents.length - 1];
-              sensorValue.value = Math.round(lastEvent.doubleValue * 10000) / 10000;
+              sensorValue.value =
+                Math.round(lastEvent.doubleValue * 10000) / 10000;
               hasSensorData.value = true;
             } else {
               hasSensorData.value = false;
@@ -148,7 +149,9 @@ async function fetchSensorData() {
 }
 
 const backgroundStyle = computed(() => ({
-  backgroundImage: `url(${props.exagerate_values ? protractor_exagerate : protractor_non_exagerate})`,
+  backgroundImage: `url(${
+    props.exagerate_values ? protractor_exagerate : protractor_non_exagerate
+  })`,
   backgroundRepeat: "no-repeat",
   backgroundPosition: `center calc(${props.backgroundOffset}%)`,
   backgroundSize: "calc(100%) auto",
@@ -156,7 +159,9 @@ const backgroundStyle = computed(() => ({
 
 // Computed style for the rotating boat image.
 const styleTransform = computed(() => ({
-  transform: `rotate(${sensorValue.value * (props.exagerate_values ? 3 : 1)}deg)`,
+  transform: `rotate(${
+    sensorValue.value * (props.exagerate_values ? 3 : 1)
+  }deg)`,
   transition: "transform 0.2s ease-out",
 }));
 </script>
@@ -169,15 +174,32 @@ const styleTransform = computed(() => ({
       </div>
       <!-- Container with the protractor background -->
       <div class="protractor-container" :style="backgroundStyle">
-        <img v-if="props.type === 'roll'" class="boat-image" src="@/assets/boatfront.png" alt="Boat Front View"
-          :style="[styleTransform, vesselDimentions]" />
-        <img v-else-if="props.type === 'pitch'" class="boat-image" src="@/assets/boatside.png" alt="Boat Side View"
-          :style="[styleTransform, vesselDimentions]" />
+        <img
+          v-if="props.type === 'roll'"
+          class="boat-image"
+          src="@/assets/boatfront.png"
+          alt="Boat Front View"
+          :style="[styleTransform, vesselDimentions]"
+        />
+        <img
+          v-else-if="props.type === 'pitch'"
+          class="boat-image"
+          src="@/assets/boatside.png"
+          alt="Boat Side View"
+          :style="[styleTransform, vesselDimentions]"
+        />
         <div class="svg-boat-tilt-indicator" ref="svgContainer">
           <svg xmlns="http://www.w3.org/2000/svg">
-          <g>
-            <line :x1="svgWidth/2 - 1" :y1="svgHeight * 0.65" :y2="svgHeight / 18" :x2="svgWidth/2 - 1" stroke="black" stroke-width="2" />
-          </g>
+            <g>
+              <line
+                :x1="svgWidth / 2 - 1"
+                :y1="svgHeight * 0.65"
+                :y2="svgHeight / 18"
+                :x2="svgWidth / 2 - 1"
+                stroke="black"
+                stroke-width="2"
+              />
+            </g>
           </svg>
         </div>
       </div>

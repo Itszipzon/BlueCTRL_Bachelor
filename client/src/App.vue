@@ -9,7 +9,7 @@ const isLoggedIn = ref(false);
 const boats = ref({
   loadingVessels: true,
   dummyData: true,
-  vessels: []
+  vessels: [],
 });
 
 onMounted(() => {
@@ -25,7 +25,7 @@ window.addEventListener("logout", () => {
   isLoggedIn.value = false;
   boats.value = {
     loadingVessels: true,
-    vessels: []
+    vessels: [],
   };
 });
 
@@ -41,15 +41,16 @@ const toggleLogin = () => {
     localStorage.removeItem("SESSION");
     router.push("/");
   }
-}
+};
 
 function gatherBoats() {
   console.log("Loading vessels:", boats.value.loadingVessels);
-  axios.get("http://localhost:8080/api/bluebox-vessels-minimal", {
-    headers: {
-      Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-    }
-  })
+  axios
+    .get("http://localhost:8080/api/bluebox-vessels-minimal", {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+      },
+    })
     .then((response) => {
       if (response.status !== 200) {
         console.error("Error fetching boats:", response.status);
@@ -67,19 +68,19 @@ function gatherBoats() {
           "SS Ocean Voyager",
           "SS Oceanic",
           "SS Oceanic Explorer",
-        ]
+        ];
         boats.value.vessels.forEach((vessel, index) => {
           console.log("Vessel name:", vessel);
           vessel.vesselName = dummyVesselNames[index % dummyVesselNames.length];
         });
       }
     })
-    .catch((error => {
+    .catch((error) => {
       console.error("Error fetching boats:", error);
       localStorage.removeItem("SESSION");
       isLoggedIn.value = false;
       router.push("/");
-    }));
+    });
 }
 
 provide("boats", boats);
