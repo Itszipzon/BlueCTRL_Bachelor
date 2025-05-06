@@ -6,7 +6,7 @@ const props = defineProps({
   selectedBoats: Array,
 });
 
-const selectedTimePeriod = ref("all");
+const selectedTimePeriod = ref("lastWeek");
 </script>
 
 <template>
