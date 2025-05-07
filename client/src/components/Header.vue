@@ -123,64 +123,93 @@ onBeforeUnmount(() => {
           <div class="top-items">
             <div class="nav-item">
               <div class="icon-container">
-                <div
-                  :class="[
-                    'icon-wrapper clickable',
-                    { active: router.history.current.fullPath === '/' },
-                    { large: isSidebarHovered },
-                  ]"
-                  @click="onMapClick"
-                >
-                  <div class="icon">
-                    <MapIcon />
-                  </div>
-                  <span v-if="isSidebarHovered" class="icon-label">Map</span>
-                </div>
-                <div
-                  :class="[
-                    'icon-wrapper clickable',
-                    { active: router.history.current.fullPath === '/vessels' },
-                    { large: isSidebarHovered },
-                  ]"
-                  @click="() => router.push('/vessels')"
-                >
-                  <div class="icon">
-                    <BoatIcon />
-                  </div>
-                  <span v-if="isSidebarHovered" class="icon-label"
-                    >Vessels</span
+                <div class="map-container">
+                  <div
+                    :class="[
+                      'active-icon-bar',
+                      { active: router.history.current.fullPath === '/' },
+                    ]"
+                  />
+                  <div
+                    :class="[
+                      'icon-wrapper clickable',
+                      { active: router.history.current.fullPath === '/' },
+                      { large: isSidebarHovered },
+                    ]"
+                    @click="onMapClick"
                   >
+                    <div class="icon"><MapIcon /></div>
+                    <span v-if="isSidebarHovered" class="icon-label">Map</span>
+                  </div>
                 </div>
 
-                <router-link
-                  to="/compare"
-                  :class="[
-                    'link icon-wrapper clickable',
-                    {
-                      active:
-                        router.history.current.fullPath.includes('/compare'),
-                    },
-                    { large: isSidebarHovered },
-                  ]"
-                >
-                  <div class="icon">
-                    <BoatCompare />
-                  </div>
-                  <span v-if="isSidebarHovered" class="icon-label"
-                    >Compare</span
+                <div class="vessel-container">
+                  <div
+                    :class="[
+                      'active-icon-bar',
+                      {
+                        active: router.history.current.fullPath === '/vessels',
+                      },
+                    ]"
+                  />
+                  <div
+                    :class="[
+                      'icon-wrapper clickable',
+                      {
+                        active: router.history.current.fullPath === '/vessels',
+                      },
+                      { large: isSidebarHovered },
+                    ]"
+                    @click="() => router.push('/vessels')"
                   >
-                </router-link>
+                    <div class="icon"><BoatIcon /></div>
+                    <span v-if="isSidebarHovered" class="icon-label"
+                      >Vessels</span
+                    >
+                  </div>
+                </div>
+                <div class="compare-container">
+                  <div
+                    :class="[
+                      'active-icon-bar',
+                      {
+                        active:
+                          router.history.current.fullPath.includes('/compare'),
+                      },
+                    ]"
+                  />
+                  <router-link
+                    to="/compare"
+                    :class="[
+                      'link icon-wrapper clickable',
+                      {
+                        active:
+                          router.history.current.fullPath.includes('/compare'),
+                      },
+                      { large: isSidebarHovered },
+                    ]"
+                  >
+                    <div class="icon"><BoatCompare /></div>
+                    <span v-if="isSidebarHovered" class="icon-label"
+                      >Compare</span
+                    >
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="nav-item">
-            <div class="icon-container">
-              <div class="icon-wrapper clickable" @click="logout">
-                <div class="icon">
-                  <LogOut />
+          <div class="bottom-div">
+            <div class="nav-item">
+              <div class="icon-container">
+                <div class="icon-wrapper clickable" @click="logout">
+                  <div class="icon">
+                    <LogOut />
+                  </div>
+                  <span v-if="isSidebarHovered" class="icon-label"
+                    >Log out</span
+                  >
                 </div>
-                <span v-if="isSidebarHovered" class="icon-label">Log out</span>
               </div>
             </div>
           </div>
@@ -285,20 +314,6 @@ onBeforeUnmount(() => {
   flex-direction: column;
   width: 100%;
 }
-
-.boat-list {
-  flex-grow: 1;
-  list-style: none;
-  padding: 0;
-  overflow: hidden;
-  padding: 10px 10px 0 0;
-}
-
-.boat-list.closed {
-  width: 0;
-  overflow: hidden;
-}
-
 .boat-item {
   display: flex;
   align-items: center;
@@ -471,6 +486,9 @@ onBeforeUnmount(() => {
 
 .active-icon-bar.active {
   height: 20px;
+  position: absolute;
+  left: -20px;
+  top: 5px;
 }
 
 .icon {
@@ -496,14 +514,8 @@ onBeforeUnmount(() => {
 .icon-wrapper {
   display: flex;
   align-items: center;
-  width: 32px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-}
-
-.icon-wrapper.active {
-  background-color: #185c79;
-  border-radius: 6px;
 }
 
 .icon-wrapper.large {
