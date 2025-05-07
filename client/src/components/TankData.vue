@@ -11,6 +11,9 @@ const originalTanks = ref([]);
 const tanks = ref([]);
 const foundTanks = ref(false);
 const currentAbove = ref(true);
+
+const tanksMoved = ref(false);
+
 let resizeObserver;
 let startX = 0;
 let startY = 0;
@@ -66,7 +69,7 @@ const fetchTankData = async (vesselId) => {
             tank.content.toLowerCase().includes("fresh water")
         );
         tanks.value = newTemp;
-        originalTanks.value = newTemp;
+        originalTanks.value = JSON.parse(JSON.stringify(newTemp));
         foundTanks.value = true;
         console.log("New Temp: ", newTemp);
       });
@@ -196,6 +199,8 @@ const mouseUpTank = () => {
 const handleMouseMove = (event) => {
   if (!tankMoving.value || tankMovingIndex.value === -1) return;
 
+  tanksMoved.value = true;
+
   const dx = event.clientX - startX;
   const dy = event.clientY - startY;
 
@@ -245,10 +250,16 @@ const handleSave = () => {
   });
   console.log("Saving tank data:", tanks);
 }
+
+const revertTanks = () => {
+  tanks.value = JSON.parse(JSON.stringify(originalTanks.value));
+  tanksMoved.value = false;
+};
 </script>
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
-    <div class="ship-tank-position-save-container">
+    <div class="ship-tank-position-save-container" v-if="tanksMoved">
+      <button @click="revertTanks">Revert</button>
       <button @click="handleSave">Save</button>
     </div>
     <div class="ship-drawings">
@@ -296,6 +307,7 @@ p {
   display: flex;
   top: 0;
   right: 0;
+  gap: 5px
 }
 
 .ship-tank-position-save-container button {
