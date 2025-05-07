@@ -4,20 +4,17 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import no.itszipzon.tables.Fuel;
 
 public interface FuelRepo extends JpaRepository<Fuel, Long> {
   
-  @Query("""
-    SELECT f
-    FROM Fuel f
-    WHERE f.vesselId = :vesselId
-    AND f.added = (
-      SELECT MAX(f2.added)
-      FROM Fuel f2
-      WHERE f2.vesselId = :vesselId
-    )
-      """)
-  Optional<List<Fuel>> findByVesselIdLatest(Long vesselId);
+  @Query(value = """
+    SELECT DISTINCT ON (f.tank_id) *
+    FROM fuel f
+    WHERE f.vessel_id = :vesselId
+    ORDER BY f.tank_id, f.added DESC
+    """, nativeQuery = true)
+  Optional<List<Fuel>> findByVesselIdLatest(@Param("vesselId") Long vesselId);
 
 }

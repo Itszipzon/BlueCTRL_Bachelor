@@ -59,6 +59,7 @@ const fetchTankData = async (vesselId) => {
         }
       )
       .then((r) => {
+        console.log("Data: ", r.data);
         const newTemp = r.data.filter(
           (tank) =>
             tank.content.toLowerCase().includes("fuel") ||
@@ -223,8 +224,25 @@ const handleMouseMove = (event) => {
 
 const handleSave = () => {
   const data = []
-  axios.post("http://localhost:8080/api/savetanks", {
+
+  for (let i = 0; i < tanks.value.length; i++) {
+    data.push({
+      vesselId: props.vesselId,
+      tankId: tanks.value[i].id,
+      x: tanks.value[i].x,
+      y: tanks.value[i].y,
+      z: tanks.value[i].z,
+    })
+  }
+
+  axios.post("http://localhost:8080/api/savetanks", data)
+  .then((r) => {
+    alert(r.data ? "Tank data saved successfully!" : "Failed to save tank data.");
   })
+  .catch((error) => {
+    console.error("Error saving tank data:", error);
+    alert("Failed to save tank data.");
+  });
   console.log("Saving tank data:", tanks);
 }
 </script>

@@ -223,8 +223,6 @@ public class BlueCtrlApi {
       fuel.setZ(Double.parseDouble(tank.get("z").toString()));
       fuelList.add(fuel);
     }
-
-
     try {
       fuelRepo.saveAll(fuelList);
       success = true;
