@@ -1,5 +1,6 @@
 package no.itszipzon.api;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class BlueCtrlApi {
         while (volumeIterator.hasNext()) {
           JsonNode volumeNode = volumeIterator.next();
           if (capacityNode.get("id").asText().equals(volumeNode.get("id").asText())) {
-            if (!latestFuelData.isPresent()) {
+            if (!latestFuelData.isPresent() || latestFuelData.get().isEmpty()) {
               ((ObjectNode) capacityNode).set("x", null);
               ((ObjectNode) capacityNode).set("y", null);
               ((ObjectNode) capacityNode).set("z", null);
@@ -205,23 +206,27 @@ public class BlueCtrlApi {
    * @return A ResponseEntity containing a boolean indicating success or failure.
    */
   @PostMapping("/savetanks")
-  public ResponseEntity<Boolean> saveTankData(@RequestBody Map<String, Object> tankData) {
+  public ResponseEntity<Boolean> saveTankData(@RequestBody List<Map<String, Object>> tankData) {
 
     /**
      * Format of tankData: { "vesselId": 1, "tankId": 1, "x": 1.0, "y": 1.0, "z": 1.0 }
      */
     boolean success = false;
 
-    Fuel fuel = new Fuel();
-    fuel.setVesselId(Long.parseLong(tankData.get("vesselId").toString()));
-    fuel.setTankId(Long.parseLong(tankData.get("tankId").toString()));
-    fuel.setX(Double.parseDouble(tankData.get("x").toString()));
-    fuel.setY(Double.parseDouble(tankData.get("y").toString()));
-    fuel.setZ(Double.parseDouble(tankData.get("z").toString()));
+    List<Fuel> fuelList = new ArrayList<>();
+    for (Map<String, Object> tank : tankData) {
+      Fuel fuel = new Fuel();
+      fuel.setVesselId(Long.parseLong(tank.get("vesselId").toString()));
+      fuel.setTankId(Long.parseLong(tank.get("tankId").toString()));
+      fuel.setX(Double.parseDouble(tank.get("x").toString()));
+      fuel.setY(Double.parseDouble(tank.get("y").toString()));
+      fuel.setZ(Double.parseDouble(tank.get("z").toString()));
+      fuelList.add(fuel);
+    }
 
 
     try {
-      fuelRepo.save(fuel);
+      fuelRepo.saveAll(fuelList);
       success = true;
     } catch (Exception e) {
       System.out.println("Error saving tank data: " + e.getMessage());
