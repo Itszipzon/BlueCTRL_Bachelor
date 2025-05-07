@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
 import ShipOverview from "../assets/ShipOverview.vue";
 import ShipSideview from "../assets/ShipSideview.vue";
 import axios from "axios";
+import Revert from "../assets/icons/Revert.vue";
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
@@ -259,7 +260,7 @@ const revertTanks = () => {
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
     <div class="ship-tank-position-save-container" v-if="tanksMoved">
-      <button @click="revertTanks">Revert</button>
+      <button @click="revertTanks"><Revert /></button>
       <button @click="handleSave">Save</button>
     </div>
     <div class="ship-drawings">
@@ -313,10 +314,10 @@ p {
 .ship-tank-position-save-container button {
   background-color: #1a6281;
   border: 1px solid black;
-  padding: 4px;
+  padding: 2px 4px;
   border-radius: 8px;
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
   z-index: 11;
 }
