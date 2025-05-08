@@ -26,6 +26,8 @@ let startY = 0;
 const tankMovingIndex = ref(-1);
 const tankMoving = ref(false);
 
+const tankOverIndex = ref(-1);
+
 const props = defineProps({
   vesselId: {
     type: String | "",
@@ -40,7 +42,6 @@ const props = defineProps({
 const fetchTankData = async (vesselId) => {
   foundTanks.value = false;
   if (!vesselId) {
-    console.log("No valid vesselId");
     return;
   }
   if (props.dummy) {
@@ -67,7 +68,6 @@ const fetchTankData = async (vesselId) => {
         }
       )
       .then((r) => {
-        console.log("Data: ", r.data);
         const newTemp = r.data.filter(
           (tank) =>
             tank.content.toLowerCase().includes("fuel") ||
@@ -76,7 +76,6 @@ const fetchTankData = async (vesselId) => {
         tanks.value = newTemp;
         originalTanks.value = JSON.parse(JSON.stringify(newTemp));
         foundTanks.value = true;
-        console.log("New Temp: ", newTemp);
       });
   } catch (error) {
     console.error("Failed to fetch tank data:", error);
@@ -202,6 +201,8 @@ const mouseUpTank = () => {
 };
 
 const handleMouseMove = (event) => {
+  mouseX.value = event.clientX;
+  mouseY.value = event.clientY;
   if (!tankMoving.value || tankMovingIndex.value === -1) return;
 
   tanksMoved.value = true;
@@ -228,8 +229,6 @@ const handleMouseMove = (event) => {
     tank.z = (tank.z || 0) + dyRel;
     tank.y = tank.y || 0; // Reset y to 0 for side view
   }
-
-  console.log(tank);
 };
 
 const handleSave = () => {
@@ -246,14 +245,13 @@ const handleSave = () => {
   }
 
   axios.post("http://localhost:8080/api/savetanks", data)
-  .then((r) => {
-    alert(r.data ? "Tank data saved successfully!" : "Failed to save tank data.");
-  })
-  .catch((error) => {
-    console.error("Error saving tank data:", error);
-    alert("Failed to save tank data.");
-  });
-  console.log("Saving tank data:", tanks);
+    .then((r) => {
+      alert(r.data ? "Tank data saved successfully!" : "Failed to save tank data.");
+    })
+    .catch((error) => {
+      console.error("Error saving tank data:", error);
+      alert("Failed to save tank data.");
+    });
 }
 
 const revertTanks = () => {
@@ -261,21 +259,50 @@ const revertTanks = () => {
   tanksMoved.value = false;
 };
 
-/* const tankDisplayStyle = (tank) => {
+const tankDisplayStyle = () => {
+  const activeIndex = tankOverIndex.value >= 0 ? tankOverIndex.value : tankMovingIndex.value;
+
+  if (activeIndex === -1) return { display: "none" };
+
   return {
-    display = ``,
-    position: "fixed",
-    left: `${mouseX * shipWidth.value}px`,
-    top: `${mouseY * shipHeight.value}px`,
-    width: `75px`,
-    height: `75px`,
+    left: `${mouseX.value + 10}px`,
+    top: `${mouseY.value + 10}px`,
   };
-} */
+};
+
+const mouseOverTank = (index) => {
+  tankOverIndex.value = index;
+}
+
+const mouseOutTank = () => {
+  tankOverIndex.value = -1;
+}
 </script>
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
+    <div class="ship-tank-display" v-if="tankOverIndex >= 0 || tankMovingIndex >= 0" :style="tankDisplayStyle()">
+      <div class="ship-tank-display-element">
+        <p>Content:</p>
+        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].content }}</p>
+      </div>
+      <div class="ship-tank-display-element">
+        <p>Capacity:</p>
+        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].capacity.toFixed(2) }}</p>
+      </div>
+      <div class="ship-tank-display-element">
+        <p>Volume:</p>
+        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].volume.toFixed(2) }}</p>
+      </div>
+      <div class="ship-tank-display-element">
+        <p>Filled:</p>
+        <p>{{ ((tanks[tankOverIndex >= 0 ? tankOverIndex : 0].volume / tanks[tankOverIndex >= 0 ? tankOverIndex :
+          0].capacity) * 100).toFixed(2) }}%</p>
+      </div>
+    </div>
     <div class="ship-tank-position-save-container" v-if="tanksMoved">
-      <button @click="revertTanks"><Revert /></button>
+      <button @click="revertTanks">
+        <Revert />
+      </button>
       <button @click="handleSave">Save</button>
     </div>
     <div class="ship-drawings">
@@ -283,7 +310,8 @@ const revertTanks = () => {
       <div class="ship-drawing-container" ref="containerRef">
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`" :style="shipTankStyle(tank, true)"
-            @mousedown="(e) => mouseDownTank(e, tank, index, true)" @mouseup="mouseUpTank">
+            @mousedown="(e) => mouseDownTank(e, tank, index, true)" @mouseup="mouseUpTank"
+            @mouseover="mouseOverTank(index)" @mouseout="mouseOutTank()">
             <div class="ship-tank-volume" :style="shipTankVolumeStyle(tank)" />
           </div>
         </div>
@@ -294,7 +322,7 @@ const revertTanks = () => {
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`"
             :style="shipTankStyle(tank, false)" @mousedown="(e) => mouseDownTank(e, tank, index, false)"
-            @mouseup="mouseUpTank">
+            @mouseup="mouseUpTank" @mouseover="mouseOverTank(index)" @mouseout="mouseOutTank()">
             <div class="ship-tank-volume" :style="shipTankVolumeStyle(tank)" />
           </div>
         </div>
@@ -316,6 +344,24 @@ p {
   align-items: center;
   max-height: 500px;
   height: 500px;
+}
+
+.ship-tank-display {
+  border: 1px solid black;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  z-index: 100;
+  width: 150px;
+  padding: 5px;
+}
+
+.ship-tank-display-element {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .ship-tank-position-save-container {
