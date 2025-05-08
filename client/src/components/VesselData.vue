@@ -160,7 +160,7 @@ function getCountryCode(countryCode) {
 }
 
 .vessel-data-sub-container-values p:last-child {
-  color: #005380;
+  color: black;
   font-weight: normal;
   width: 100%;
   display: flex;
