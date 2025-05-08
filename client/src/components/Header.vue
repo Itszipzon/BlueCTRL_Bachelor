@@ -534,4 +534,22 @@ onBeforeUnmount(() => {
 .sidebar.open .icon-label {
   opacity: 1;
 }
+
+@media (max-width: 500px) {
+  
+  .header-content {
+    justify-content: space-between;
+    
+  }
+
+  .header-item-3 {
+    width: 100%;
+    
+
+  }
+
+  .header-right {
+    width: 0%;
+  }
+}
 </style>
