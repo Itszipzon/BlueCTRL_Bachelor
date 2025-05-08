@@ -17,10 +17,13 @@ const handleSelectAll = () => {
 <template>
   <div class="left-container-component">
     <div class="boat-list-container">
-      <h3>Choose vessels to compare</h3>
-      <button class="select-all-button" @click="handleSelectAll">
-        Select All
-      </button>
+      <div class="top-div">
+        <h3>Choose vessels to compare</h3>
+        <button class="select-all-button" @click="handleSelectAll">
+          Select All
+        </button>
+      </div>
+
       <div class="boat-list">
         <div
           :class="[
@@ -129,6 +132,12 @@ const handleSelectAll = () => {
   font-weight: bold;
   color: #005380;
   background-color: white;
+}
+
+.top-div {
+  display: flex;
+  justify-content: space-between;
+  
 }
 
 .select-all-button {
