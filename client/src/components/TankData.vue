@@ -7,6 +7,10 @@ import Revert from "../assets/icons/Revert.vue";
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
+
+const mouseX = ref(0);
+const mouseY = ref(0);
+
 const containerRef = ref(null);
 const originalTanks = ref([]);
 const tanks = ref([]);
@@ -152,7 +156,7 @@ const shipTankStyle = (tank, above) => {
   const height = Math.max(20, maxTankSize.height * sizeScale);
 
   return {
-    position: tank.x != null && tank.y != null && tank.z != null ? "absolute" : "relative",
+    position: tank.x != null && tank.y != null && tank.z != null ? "relative" : "relative",
     left: `${(tank.x || 0) * shipWidth.value}px`,
     top: `${(above ? (tank.y || 0) : (tank.z || 0)) * shipHeight.value}px`,
     width: `${width}px`,
@@ -256,6 +260,17 @@ const revertTanks = () => {
   tanks.value = JSON.parse(JSON.stringify(originalTanks.value));
   tanksMoved.value = false;
 };
+
+/* const tankDisplayStyle = (tank) => {
+  return {
+    display = ``,
+    position: "fixed",
+    left: `${mouseX * shipWidth.value}px`,
+    top: `${mouseY * shipHeight.value}px`,
+    width: `75px`,
+    height: `75px`,
+  };
+} */
 </script>
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
