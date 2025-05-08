@@ -4,16 +4,23 @@ const props = defineProps({
   selectedBoats: Array,
 });
 
-const emit = defineEmits(["boat-selected"]);
+const emit = defineEmits(["boat-selected", "all-boats-selected"]);
 
 const handleBoatClick = (boat) => {
   emit("boat-selected", boat);
+};
+
+const handleSelectAll = () => {
+  emit("all-boats-selected", props.boats);
 };
 </script>
 <template>
   <div class="left-container-component">
     <div class="boat-list-container">
       <h3>Choose vessels to compare</h3>
+      <button class="select-all-button" @click="handleSelectAll">
+        Select All
+      </button>
       <div class="boat-list">
         <div
           :class="[
@@ -85,7 +92,7 @@ const handleBoatClick = (boat) => {
 }
 
 .left-div {
-  display: flex;  
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -122,5 +129,22 @@ const handleBoatClick = (boat) => {
   font-weight: bold;
   color: #005380;
   background-color: white;
+}
+
+.select-all-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: #005380;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.select-all-button:hover {
+  background-color: #003f61;
 }
 </style>

@@ -3,12 +3,12 @@ import { inject, ref, watchEffect, watch, nextTick } from "vue";
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
 
-const boatsTotal = inject("boats"); 
+const boatsTotal = inject("boats");
 const boats = ref(null);
 const loadingVessels = ref(true);
 
 const selectedBoats = ref([]);
-const pageIsLoading = ref(false); 
+const pageIsLoading = ref(false);
 
 watchEffect(() => {
   boats.value = boatsTotal.value.vessels;
@@ -19,19 +19,28 @@ const toggleBoatSelection = (boat) => {
   const idx = selectedBoats.value.findIndex((b) => b.id === boat.id);
 
   if (idx === -1) {
-    selectedBoats.value = [...selectedBoats.value, boat]; 
+    selectedBoats.value = [...selectedBoats.value, boat];
   } else {
-    selectedBoats.value = selectedBoats.value.filter((b) => b.id !== boat.id); 
+    selectedBoats.value = selectedBoats.value.filter((b) => b.id !== boat.id);
   }
 
   console.log("Selected boats:", selectedBoats.value);
 };
 
+const selectAllBoats = (allBoats) => {
+  selectedBoats.value = allBoats.filter(
+    (boat) => !selectedBoats.value.some((b) => b.id === boat.id)
+  ).length === 0
+    ? [] 
+    : [...allBoats]; 
+};
+
+
 watch(
   selectedBoats,
   async () => {
-    pageIsLoading.value = true; 
-    await nextTick(); 
+    pageIsLoading.value = true;
+    await nextTick();
     setTimeout(() => {
       pageIsLoading.value = false;
     }, 700);
@@ -53,6 +62,7 @@ watch(
             :boats="boats"
             :selectedBoats="selectedBoats"
             @boat-selected="toggleBoatSelection"
+            @all-boats-selected="selectAllBoats"
           />
         </div>
 
@@ -65,7 +75,6 @@ watch(
 </template>
 
 <style scoped>
-
 .main-container {
   height: calc(100vh - 50px);
   display: flex;
