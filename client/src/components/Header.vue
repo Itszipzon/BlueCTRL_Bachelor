@@ -126,32 +126,22 @@ onBeforeUnmount(() => {
                 <div class="map-container">
                   <div
                     :class="[
-                      'active-icon-bar',
-                      { active: router.history.current.fullPath === '/' },
-                    ]"
-                  />
-                  <div
-                    :class="[
                       'icon-wrapper clickable',
                       { active: router.history.current.fullPath === '/' },
                       { large: isSidebarHovered },
                     ]"
                     @click="onMapClick"
                   >
+                    <div
+                      class="active-indicator"
+                      v-if="router.history.current.fullPath === '/'"
+                    ></div>
                     <div class="icon"><MapIcon /></div>
                     <span v-if="isSidebarHovered" class="icon-label">Map</span>
                   </div>
                 </div>
 
                 <div class="vessel-container">
-                  <div
-                    :class="[
-                      'active-icon-bar',
-                      {
-                        active: router.history.current.fullPath === '/vessels',
-                      },
-                    ]"
-                  />
                   <div
                     :class="[
                       'icon-wrapper clickable',
@@ -162,6 +152,10 @@ onBeforeUnmount(() => {
                     ]"
                     @click="() => router.push('/vessels')"
                   >
+                    <div
+                      class="active-indicator"
+                      v-if="router.history.current.fullPath === '/vessels'"
+                    ></div>
                     <div class="icon"><BoatIcon /></div>
                     <span v-if="isSidebarHovered" class="icon-label"
                       >Vessels</span
@@ -169,15 +163,6 @@ onBeforeUnmount(() => {
                   </div>
                 </div>
                 <div class="compare-container">
-                  <div
-                    :class="[
-                      'active-icon-bar',
-                      {
-                        active:
-                          router.history.current.fullPath.includes('/compare'),
-                      },
-                    ]"
-                  />
                   <router-link
                     to="/compare"
                     :class="[
@@ -189,6 +174,10 @@ onBeforeUnmount(() => {
                       { large: isSidebarHovered },
                     ]"
                   >
+                    <div
+                      class="active-indicator"
+                      v-if="router.history.current.fullPath === '/compare'"
+                    ></div>
                     <div class="icon"><BoatCompare /></div>
                     <span v-if="isSidebarHovered" class="icon-label"
                       >Compare</span
@@ -535,17 +524,24 @@ onBeforeUnmount(() => {
   opacity: 1;
 }
 
+.active-indicator {
+  position: absolute;
+  left: -20px;
+  top: 5px;
+  height: 20px;
+  width: 3px;
+  background-color: white;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
 @media (max-width: 500px) {
-  
   .header-content {
     justify-content: space-between;
-    
   }
 
   .header-item-3 {
     width: 100%;
-    
-
   }
 
   .header-right {
