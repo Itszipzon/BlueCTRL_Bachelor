@@ -86,18 +86,19 @@ function getSignalId() {
 
 const vesselDimentions = computed(() => {
   if (props.type === "roll") {
+    const w = containerWidth.value * 0.25;
+    const h = containerHeight.value * 0.25;
     return {
-      pureWidth: containerWidth.value * 0.25,
-      pureHeight: 0,
-      width: containerWidth.value * 0.25 + "px",
-      marginBottom: "-5px",
+      width: `${w}px`,
+      maxHeight: `${h}px`,
+      marginBottom: "-20px",
     };
   } else if (props.type === "pitch") {
     return {
       pureWidth: 0,
       pureHeight: containerHeight.value * 0.25,
       height: containerHeight.value * 0.25 + "px",
-      marginBottom: "-8px",
+      marginBottom: "-20px",
     };
   }
 });
@@ -161,7 +162,7 @@ const backgroundStyle = computed(() => ({
 const styleTransform = computed(() => ({
   transform: `rotate(${
     sensorValue.value * (props.exagerate_values ? 3 : 1)
-  }deg)`,
+  }deg) scale(4.2)`,
   transition: "transform 0.2s ease-out",
 }));
 </script>
@@ -269,5 +270,9 @@ const styleTransform = computed(() => ({
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.boat-image {
+  object-fit: contain;
 }
 </style>
