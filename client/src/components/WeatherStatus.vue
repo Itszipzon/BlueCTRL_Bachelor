@@ -31,19 +31,19 @@ function getIconClass(code) {
 .wi-day-sunny {
   color: gold;
 }
-.cloudy {
+.wi-day-cloudy {
   color: #888;
 }
-.rain {
+.wi-rain {
   color: #0077be;
 }
-.snow {
+.wi-snow {
   color: #7fdbff;
 }
-.storm {
+.wi-day-storm-showers {
   color: #b22222;
 }
-.foggy {
+.wi-day-fog {
   color: #999;
 }
 </style>
