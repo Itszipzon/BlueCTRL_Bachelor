@@ -1,10 +1,45 @@
 <script setup>
+import { ref, watch } from "vue";
+import axios from "axios";
+import WeatherStatus from "./WeatherStatus.vue";
+
+const weatherData = ref(null);
+
 const props = defineProps({
   selectedMarker: {
     type: Object,
     required: false,
   },
 });
+
+watch(
+  () => props.selectedMarker?.gpsPosition,
+  async (position) => {
+    if (position?.latitude && position?.longitude) {
+      try {
+        const response = await axios.get(
+          "https://api.open-meteo.com/v1/forecast",
+          {
+            params: {
+              latitude: position.latitude,
+              longitude: position.longitude,
+              current: "temperature_2m,weather_code",
+              daily: "weather_code,temperature_2m_max,temperature_2m_min",
+              timezone: "Europe/Berlin",
+            },
+          }
+        );
+
+        console.log("Open-Meteo response:", response.data);
+        weatherData.value = response.data;
+      } catch (error) {
+        console.error("Failed to fetch weather:", error);
+        weatherData.value = null;
+      }
+    }
+  },
+  { immediate: true }
+);
 
 function getCountryCode(countryCode) {
   if (countryCode) {
@@ -65,19 +100,25 @@ function getCountryCode(countryCode) {
         </div>
       </div>
       <div class="vessel-data-inner-box">
-        <div class="vessel-data-container">
-          <h3>Vessel info</h3>
-          <div class="vessel-data-sub-container-values">
-            <p>ID:</p>
-            <p>{{ selectedMarker?.id }}</p>
+        <div class="weather-data-container">
+          <h3>Weather at location</h3>
+
+          <div v-if="weatherData?.current">
+            <div class="vessel-data-sub-container-values">
+              <p>Temperature now:</p>
+              <p>{{ weatherData.current.temperature_2m }}°C</p>
+            </div>
+            <div class="vessel-data-sub-container-values">
+              <p>Weather:</p>
+              <WeatherStatus
+                :weatherCode="weatherData.current.weather_code"
+                iconSize="32px"
+              />
+            </div>
           </div>
-          <div class="vessel-data-sub-container-values">
-            <p>LATITUDE:</p>
-            <p>{{ selectedMarker?.gpsPosition?.latitude }}</p>
-          </div>
-          <div class="vessel-data-sub-container-values">
-            <p>LONGITUDE:</p>
-            <p>{{ selectedMarker?.gpsPosition?.longitude }}</p>
+
+          <div v-else>
+            <p>Loading weather data...</p>
           </div>
         </div>
       </div>
@@ -130,6 +171,10 @@ function getCountryCode(countryCode) {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.weather-data-container {
   margin-left: 10px;
   margin-right: 10px;
 }
