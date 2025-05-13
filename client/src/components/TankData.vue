@@ -192,13 +192,14 @@ const shipTankVolumeStyle = (tank) => {
 const mouseDownTank = (event, tank, index, above) => {
   tankMovingIndex.value = index;
   tankMoving.value = true;
+  tankOverIndex.value = -1;
   currentAbove.value = above;
 
   startX = event.clientX;
   startY = event.clientY;
 };
 
-const mouseUpTank = () => {
+const mouseUpTank = (e, index) => {
   tankMovingIndex.value = -1;
   tankMoving.value = false;
 };
@@ -283,7 +284,7 @@ const mouseOutTank = () => {
 </script>
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
-    <div class="ship-tank-display" v-if="tankOverIndex >= 0 || tankMovingIndex >= 0" :style="tankDisplayStyle()">
+    <div class="ship-tank-display" v-if="tankOverIndex >= 0" :style="tankDisplayStyle()">
       <div class="ship-tank-display-element">
         <p>Content:</p>
         <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].content }}</p>
@@ -313,7 +314,7 @@ const mouseOutTank = () => {
       <div class="ship-drawing-container" ref="containerRef">
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`" :style="shipTankStyle(tank, true)"
-            @mousedown="(e) => mouseDownTank(e, tank, index, true)" @mouseup="mouseUpTank"
+            @mousedown="(e) => mouseDownTank(e, tank, index, true)" @mouseup="mouseUpTank(index)"
             @mouseover="mouseOverTank(index)" @mouseout="mouseOutTank()">
             <div class="ship-tank-volume" :style="shipTankVolumeStyle(tank)" />
           </div>
@@ -325,7 +326,7 @@ const mouseOutTank = () => {
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`"
             :style="shipTankStyle(tank, false)" @mousedown="(e) => mouseDownTank(e, tank, index, false)"
-            @mouseup="mouseUpTank" @mouseover="mouseOverTank(index)" @mouseout="mouseOutTank()">
+            @mouseup="mouseUpTank(index)" @mouseover="mouseOverTank(index)" @mouseout="mouseOutTank()">
             <div class="ship-tank-volume" :style="shipTankVolumeStyle(tank)" />
           </div>
         </div>
