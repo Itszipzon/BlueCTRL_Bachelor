@@ -6,6 +6,7 @@ import TankData from '../components/TankData.vue';
 import BoatTilt from '../components/BoatTilt.vue';
 import Fullscreen from '../components/icons/Fullscreen.svg';
 import Smallscreen from '../components/icons/Smallscreen.svg';
+import HelpIcon from '../components/HelpIcon.vue';
 
 const boats = inject('boats');
 const vessels = ref(null);
@@ -13,6 +14,8 @@ const loadingVessels = ref(true);
 const dummyData = ref(false);
 const selectedMarker = ref(null);
 const exagerateValues = ref(false);
+
+const exaggerateValuesText = ref('Exaggerate values');
 
 watchEffect(() => {
   vessels.value = boats.value.vessels;
@@ -116,6 +119,7 @@ onUnmounted(() => {
         <div class="marker-vessel-tilt-exagerate">
           <input type="checkbox" id="exagerate" v-model="exagerateValues" />
           <label for="exagerate">Exagerate values</label>
+          <HelpIcon :width="'250px'" :left="'20px'" :top="'-90px'" :help-text="'Resize the protractor to show from 0 - 30 instead of 0 - 90 degrees.'" :size="'15px'" />
         </div>
       </div>
       <div :class="['map', { small: !largeMap }]">

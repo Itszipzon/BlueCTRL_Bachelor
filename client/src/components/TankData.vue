@@ -4,6 +4,7 @@ import ShipOverview from "../assets/ShipOverview.vue";
 import ShipSideview from "../assets/ShipSideview.vue";
 import axios from "axios";
 import Revert from "../assets/icons/Revert.vue";
+import HelpIcon from "./HelpIcon.vue";
 
 const shipWidth = ref(0);
 const shipHeight = ref(0);
@@ -27,6 +28,8 @@ const tankMovingIndex = ref(-1);
 const tankMoving = ref(false);
 
 const tankOverIndex = ref(-1);
+
+const helpTextMove = "Click and drag to move the tanks.";
 
 const props = defineProps({
   vesselId: {
@@ -306,7 +309,7 @@ const mouseOutTank = () => {
       <button @click="handleSave">Save</button>
     </div>
     <div class="ship-drawings">
-      <p>Ship tank data overview</p>
+      <p>Ship tank data overview <HelpIcon :left="'20px'" :top="'20px'" :size="'24px'" :help-text="helpTextMove" /> </p>
       <div class="ship-drawing-container" ref="containerRef">
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`" :style="shipTankStyle(tank, true)"
@@ -317,7 +320,7 @@ const mouseOutTank = () => {
         </div>
         <ShipOverview :width="shipWidth" :height="shipHeight" />
       </div>
-      <p>Ship tank data side view</p>
+      <p>Ship tank data side view <HelpIcon :left="'20px'" :top="'20px'" :size="'24px'" :help-text="helpTextMove" /></p>
       <div class="ship-drawing-container">
         <div class="ship-tanks">
           <div class="ship-tank" v-for="(tank, index) in tanks" :key="`Tank${index}`"
@@ -411,6 +414,11 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.ship-drawings p {
+  display: flex;
+  gap: 10px;
 }
 
 .ship-drawing-container {
