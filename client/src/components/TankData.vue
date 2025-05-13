@@ -345,8 +345,6 @@ p {
 .ship-tank-data {
   display: flex;
   align-items: center;
-  max-height: 500px;
-  height: 500px;
 }
 
 .ship-tank-display {
@@ -423,6 +421,7 @@ p {
   font-weight: bolder;
   font-family: "Poppins", sans-serif;
   color: black;
+  padding: 0;
 }
 
 .ship-drawing-container {
