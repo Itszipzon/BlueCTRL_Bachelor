@@ -8,7 +8,7 @@ import axios from "axios";
 const isLoggedIn = ref(false);
 const boats = ref({
   loadingVessels: true,
-  dummyData: false,
+  dummyData: true,
   vessels: [],
 });
 

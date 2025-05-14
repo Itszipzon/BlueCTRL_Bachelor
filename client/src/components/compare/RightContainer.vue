@@ -23,11 +23,29 @@ const selectedTimePeriod = ref("lastWeek");
           </select>
         </div>
         <div v-if="selectedBoats && selectedBoats.length > 0">
-          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
+          <BarChart :vessels="selectedBoats" :dataType="'travelDistance'" :timePeriod="selectedTimePeriod" />
         </div>
         <div v-else class="empty-chart">
           <p>No boats selected</p>
-          <BarChart :vessels="selectedBoats" :timePeriod="selectedTimePeriod" />
+          <BarChart :vessels="selectedBoats" :dataType="'none'" :timePeriod="selectedTimePeriod" />
+        </div>
+      </div>
+      <div class="traveldistance-chart">
+        <h3>Fuel Efficiency</h3>
+        <div class="time-period-selector">
+          <label for="time-period">Select Time Period:</label>
+          <select id="time-period" v-model="selectedTimePeriod">
+            <option value="lastWeek">Last Week</option>
+            <option value="lastMonth">Last Month</option>
+            <option value="yesterday">Yesterday</option>
+          </select>
+        </div>
+        <div v-if="selectedBoats && selectedBoats.length > 0">
+          <BarChart :vessels="selectedBoats" :dataType="'fuelUsage'" :timePeriod="selectedTimePeriod" />
+        </div>
+        <div v-else class="empty-chart">
+          <p>No boats selected</p>
+          <BarChart :vessels="selectedBoats" :dataType="'none'" :timePeriod="selectedTimePeriod" />
         </div>
       </div>
     </div>
@@ -61,13 +79,17 @@ const selectedTimePeriod = ref("lastWeek");
 }
 
 .charts-container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: auto;
 }
 
 .traveldistance-chart {
   position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
 }
 
 .traveldistance-chart h3 {

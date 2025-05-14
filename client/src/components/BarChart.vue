@@ -1,25 +1,3 @@
-<template>
-  <div>
-    <div class="chart">
-      <div v-if="isLoading" class="spinner-overlay">
-        <div class="spinner"></div>
-      </div>
-      <div
-        v-for="(bar, index) in filteredBars"
-        :key="index"
-        class="bar"
-        :style="{ height: bar.height + '%' }"
-        :data-value="bar.formattedValue"
-      ></div>
-    </div>
-    <div class="labels">
-      <div v-for="(bar, index) in filteredBars" :key="index" class="label">
-        {{ bar.label }}
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import axios from "axios";
 
@@ -27,6 +5,7 @@ export default {
   props: {
     vessels: { type: Array, required: true },
     timePeriod: { type: String, default: "all" },
+    dataType: { type: String, required: true },
   },
 
   data() {
@@ -65,7 +44,9 @@ export default {
           label: v.vesselName,
           value: val,
           height: max ? (val / max) * 100 : 0,
-          formattedValue: `${Math.round(val)} km`,
+          formattedValue: `${Math.round(val)} ${
+            this.dataType === "travelDistance" ? "km" : "l/kWh"
+          }`,
         };
       });
     },
@@ -114,35 +95,70 @@ export default {
       }
 
       try {
-        const tasks = newVessels
-          .filter((v) => !this.processedIds.has(`${v.id}-${this.timePeriod}`))
-          .map(async (v) => {
-            try {
-              const { data } = await axios.get(
-                "http://localhost:8080/api/vessel-gps-positions",
-                {
-                  params: { vesselId: v.id, from, to },
-                  headers: {
-                    Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-                  },
+        if (this.dataType === "travelDistance") {
+          const tasks = newVessels
+            .filter((v) => !this.processedIds.has(`${v.id}-${this.timePeriod}`))
+            .map(async (v) => {
+              try {
+                const { data } = await axios.get(
+                  "http://localhost:8080/api/vessel-gps-positions",
+                  {
+                    params: { vesselId: v.id, from, to },
+                    headers: {
+                      Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+                    },
+                  }
+                );
+
+                const dist = this.totalDistance(data);
+                this.processedIds.add(`${v.id}-${this.timePeriod}`);
+                const idx = this.updatedVessels.findIndex((e) => e.id === v.id);
+                const record = { ...v, travelDistance: dist };
+
+                if (idx === -1) {
+                  this.updatedVessels.push(record);
+                } else {
+                  this.$set(this.updatedVessels, idx, record);
                 }
-              );
-
-              const dist = this.totalDistance(data);
-              this.processedIds.add(`${v.id}-${this.timePeriod}`);
-              const idx = this.updatedVessels.findIndex((e) => e.id === v.id);
-              const record = { ...v, travelDistance: dist };
-
-              if (idx === -1) {
-                this.updatedVessels.push(record);
-              } else {
-                this.$set(this.updatedVessels, idx, record);
+              } catch (err) {
+                console.error(`GPS request failed for vessel ${v.id}`, err);
               }
-            } catch (err) {
-              console.error(`GPS request failed for vessel ${v.id}`, err);
-            }
-          });
-        await Promise.all(tasks);
+            });
+          await Promise.all(tasks);
+        } else if (this.dataType === "fuelUsage") {
+          console.log("Fetching fuel usage for vessels:", newVessels);
+          const tasks = newVessels
+            .filter((v) => !this.processedIds.has(`${v.id}-${this.timePeriod}`))
+            .map(async (v) => {
+              try {
+                const { data } = await axios.get(
+                  "http://localhost:8080/api/bluebox-vessel/fuel-stats",
+                  {
+                    params: { vesselId: v.id, from, to },
+                    headers: {
+                      Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+                    },
+                  }
+                );
+
+                console.log(data);
+
+                const dist = data.totalFuel;
+                this.processedIds.add(`${v.id}-${this.timePeriod}`);
+                const idx = this.updatedVessels.findIndex((e) => e.id === v.id);
+                const record = { ...v, travelDistance: dist };
+
+                if (idx === -1) {
+                  this.updatedVessels.push(record);
+                } else {
+                  this.$set(this.updatedVessels, idx, record);
+                }
+              } catch (err) {
+                console.error(`GPS request failed for vessel ${v.id}`, err);
+              }
+            });
+          await Promise.all(tasks);
+        }
       } finally {
         this.isLoading = false;
       }
@@ -166,8 +182,8 @@ export default {
         const a =
           Math.sin(dLat / 2) ** 2 +
           Math.cos(rad(prev.latitude)) *
-            Math.cos(rad(cur.latitude)) *
-            Math.sin(dLon / 2) ** 2;
+          Math.cos(rad(cur.latitude)) *
+          Math.sin(dLon / 2) ** 2;
 
         return acc + 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       }, 0);
@@ -177,6 +193,23 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div>
+    <div class="chart">
+      <div v-if="isLoading" class="spinner-overlay">
+        <div class="spinner"></div>
+      </div>
+      <div v-for="(bar, index) in filteredBars" :key="index" class="bar" :style="{ height: bar.height + '%' }"
+        :data-value="bar.formattedValue"></div>
+    </div>
+    <div class="labels">
+      <div v-for="(bar, index) in filteredBars" :key="index" class="label">
+        {{ bar.label }}
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .chart {
@@ -237,6 +270,7 @@ export default {
   from {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(360deg);
   }
