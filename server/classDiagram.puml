@@ -1,0 +1,21 @@
+@startuml
+class Main {
+  +static void Main()
+  +static URL getResources(String resource)
+}
+
+class Tools {
+  +Tools()
+  +static Dotenv getEnv()
+  +static String getCorrectUrl(String url)
+}
+
+class Logger {
+  +static void error(String message)
+  +static void info(String message)
+  +static void warning(String message)
+  +static void log(String message)
+  +static logToFile(String message)
+}
+
+@enduml
