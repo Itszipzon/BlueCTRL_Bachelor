@@ -4,8 +4,8 @@ import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
 import TankData from '../components/TankData.vue';
 import BoatTilt from '../components/BoatTilt.vue';
-import Fullscreen from '../components/icons/Fullscreen.svg';
-import Smallscreen from '../components/icons/Smallscreen.svg';
+import Fullscreen from '../assets/icons/Fullscreen.svg';
+import Smallscreen from '../assets/icons/Smallscreen.svg';
 import HelpIcon from '../components/HelpIcon.vue';
 
 const boats = inject('boats');

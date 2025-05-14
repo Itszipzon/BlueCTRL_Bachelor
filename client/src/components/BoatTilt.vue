@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect } from "vue";
 import axios from "axios";
-import CurvedArrow from "./icons/CurvedArrow.vue";
+import CurvedArrow from "../assets/icons/CurvedArrow.vue";
 import protractor_non_exagerate from "@/assets/icons/protractor_non_exagerate.png";
 import protractor_exagerate from "@/assets/icons/protractor_exagerate.png";
 
