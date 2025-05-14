@@ -290,11 +290,11 @@ const mouseOutTank = () => {
       </div>
       <div class="ship-tank-display-element">
         <p>Capacity:</p>
-        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].capacity.toFixed(2) }}</p>
+        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].capacity.toFixed(2) }} l</p>
       </div>
       <div class="ship-tank-display-element">
         <p>Volume:</p>
-        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].volume.toFixed(2) }}</p>
+        <p>{{ tanks[tankOverIndex >= 0 ? tankOverIndex : 0].volume.toFixed(2) }} l</p>
       </div>
       <div class="ship-tank-display-element">
         <p>Filled:</p>
