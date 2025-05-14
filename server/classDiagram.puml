@@ -1,4 +1,7 @@
 @startuml
+
+interface JpaRepository
+
 class Main {
   +static void Main()
   +static URL getResources(String resource)
@@ -10,12 +13,58 @@ class Tools {
   +static String getCorrectUrl(String url)
 }
 
-class Logger {
-  +static void error(String message)
-  +static void info(String message)
-  +static void warning(String message)
-  +static void log(String message)
-  +static logToFile(String message)
+class BlueCtrlApi {
+  +BlueCtrlApi(WebClient.Builder webClientBuilder)
+  +WebClient webClient
+  +FuelRepo fuelRepo
+
+  +ResponseEntity<JsonNode> getVesselTanks(String vesselId, String authorizationHeader)
+  +ResponseEntity<JsonNode> getVesselMinimal(String authorizationHeader)
+  +ResponseEntity<JsonNode> getGpsPositions(HttpServletRequest request, String authorizationHeader, String vesselId)
+  +ResponseEntity<JsonNode> getData(HttpServletRequest request, String authorizationHeader, Map<String, String> queryParams)
+  
+  +ResponseEntity<Boolean> saveTankData(List<Map<String, Object>> tankData)
+  +ResponseEntity<String> getDataForPost(HttpServletRequest request, String authorizationHeader)
 }
+
+class Fuel {
+  +Long id
+  +LocalDateTime added
+  +Long vesselId
+  +Long tankId
+  +double x
+  +double y
+  +double z
+}
+
+class EnvConfig {
+  +EnvConfig(Environment environment)
+}
+
+class SecurityConfig {
+  +SecurityFilterChain securityFilterChain(HttpSecurity http)
+  +CorsConfigurationSource corsConfigurationSource()
+}
+
+class WebConfig {
+  +void addCorsMappings(CorsRegistry registry)
+}
+
+interface FuelRepo {
+  +Optional<List<Fuel>> findByVesselIdLatest(Long vesselId)
+}
+
+Fuel --|> FuelRepo
+FuelRepo ..|> JpaRepository
+FuelRepo --|> BlueCtrlApi
+Tools --|> EnvConfig
+
+Main --|> BlueCtrlApi
+Main --|> SecurityConfig
+Main --|> WebConfig
+Main --|> FuelRepo
+Main --|> Fuel
+Main --|> EnvConfig
+
 
 @enduml

@@ -53,7 +53,7 @@ public class BlueCtrlApi {
   }
 
   @GetMapping("/bluebox-vessel/{vesselId}/tanks")
-  public ResponseEntity<JsonNode> getMethodName(@PathVariable String vesselId,
+  public ResponseEntity<JsonNode> getVesselTanks(@PathVariable String vesselId,
       @RequestHeader("Authorization") String authorizationHeader) {
 
     JsonNode fuelCapacity = webClient.get().uri("api/bluebox-vessel/" + vesselId + "/tanks")
@@ -104,8 +104,7 @@ public class BlueCtrlApi {
 
 
   @GetMapping("/bluebox-vessels-minimal")
-  public ResponseEntity<JsonNode> getVesselMinimal(HttpServletRequest request,
-      @RequestHeader("Authorization") String authorizationHeader) {
+  public ResponseEntity<JsonNode> getVesselMinimal(@RequestHeader("Authorization") String authorizationHeader) {
 
     JsonNode data = webClient.get().uri("api/bluebox-vessels-minimal")
         .headers(headers -> headers.set("Authorization", authorizationHeader)).retrieve()
