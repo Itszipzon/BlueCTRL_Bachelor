@@ -55,7 +55,7 @@ interface FuelRepo {
 }
 
 Fuel --|> FuelRepo
-FuelRepo ..|> JpaRepository
+JpaRepository ..|> FuelRepo
 FuelRepo --|> BlueCtrlApi
 Tools --|> EnvConfig
 
