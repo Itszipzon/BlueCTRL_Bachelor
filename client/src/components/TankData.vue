@@ -348,7 +348,7 @@ p {
 }
 
 .ship-tank-display {
-  border: 1px solid black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 1);
   border-radius: 8px;
   display: flex;
