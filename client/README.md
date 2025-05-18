@@ -1,6 +1,19 @@
 # client
 
-This template should help get you started developing with Vue 3 in Vite. 
+This template should help get you started developing with Vue 2 in Vite.
+
+## About
+This is a website to help visualisation of boat roll, pitch, draft and fuel levels for different vessels for BlueCTRL.
+
+# Some imaged of the website
+
+## Map
+
+## Vessel's position in the water
+
+## Tanks
+
+## Compare
 
 ## Recommended IDE Setup
 
@@ -26,10 +39,4 @@ npm run dev
 
 ```sh
 npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
 ```
