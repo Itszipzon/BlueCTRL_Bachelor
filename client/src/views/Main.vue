@@ -112,6 +112,19 @@ onUnmounted(() => {
           <div class="marker-vessel-tilt">
             <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
           </div>
+          <div class="marker-vessel-tilt-draft"> <!--Draft, Remove if not happy.-->
+            <div class="marker-vessel-tilt-draft-bar" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+            <div class="marker-vessel-tilt-draft-line" />
+          </div>
           <div class="marker-vessel-tilt">
             <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
           </div>
@@ -260,11 +273,40 @@ onUnmounted(() => {
 }
 
 .marker-vessel-tilt {
-  width: calc(50% - 10px);
+  width: calc(50% - 50px); /* -10px if draft is removed */
   height: 100%;
   background: #f9f9f9;
   border-radius: 6px;
   border: 1px solid #ddd;
+}
+
+.marker-vessel-tilt-draft {
+  width: 80px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.marker-vessel-tilt-draft-line {
+  width: 60%;
+  height: 2px;
+  background: black;
+}
+
+.marker-vessel-tilt-draft-line:nth-child(2),
+.marker-vessel-tilt-draft-line:nth-child(6),
+.marker-vessel-tilt-draft-line:nth-child(11)  {
+  width: 100%;
+}
+
+.marker-vessel-tilt-draft-bar {
+  position: absolute;
+  bottom: 0px;
+  height: 100%;
+  width: 40%;
+  background-color: #3498db;
 }
 
 .map {
