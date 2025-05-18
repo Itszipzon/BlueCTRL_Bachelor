@@ -22,7 +22,6 @@ const selectBoat = (boat) => {
   if (window.location.pathname !== "/") {
     router.push("/");
     setTimeout(() => {
-      console.log("Boat selected:", boat);
       window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
     }, 250);
   } else {

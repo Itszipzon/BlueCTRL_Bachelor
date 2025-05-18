@@ -126,7 +126,6 @@ export default {
             });
           await Promise.all(tasks);
         } else if (this.dataType === "fuelUsage") {
-          console.log("Fetching fuel usage for vessels:", newVessels);
           const tasks = newVessels
             .filter((v) => !this.processedIds.has(`${v.id}-${this.timePeriod}`))
             .map(async (v) => {
@@ -140,8 +139,6 @@ export default {
                     },
                   }
                 );
-
-                console.log(data);
 
                 const dist = data.totalFuel;
                 this.processedIds.add(`${v.id}-${this.timePeriod}`);

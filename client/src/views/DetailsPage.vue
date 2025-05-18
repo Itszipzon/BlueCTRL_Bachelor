@@ -10,7 +10,6 @@ const leafletMapRef = ref(null);
 
 const toggleMapFullscreen = async () => {
 
-  console.log(leafletMapRef);
   isMapFullscreen.value = !isMapFullscreen.value;
 
   await nextTick();

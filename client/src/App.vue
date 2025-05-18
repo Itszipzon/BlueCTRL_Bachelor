@@ -44,7 +44,6 @@ const toggleLogin = () => {
 };
 
 function gatherBoats() {
-  console.log("Loading vessels:", boats.value.loadingVessels);
   axios
     .get("http://localhost:8080/api/bluebox-vessels-minimal", {
       headers: {
@@ -56,7 +55,6 @@ function gatherBoats() {
         console.error("Error fetching boats:", response.status);
       }
       boats.value.loadingVessels = false;
-      console.log("Loading vessels:", boats.value.loadingVessels);
       boats.value.vessels = response.data;
       if (boats.value.dummyData) {
         const dummyVesselNames = [
@@ -70,7 +68,6 @@ function gatherBoats() {
           "SS Oceanic Explorer",
         ];
         boats.value.vessels.forEach((vessel, index) => {
-          console.log("Vessel name:", vessel);
           vessel.vesselName = dummyVesselNames[index % dummyVesselNames.length];
         });
       }

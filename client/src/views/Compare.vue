@@ -24,7 +24,6 @@ const toggleBoatSelection = (boat) => {
     selectedBoats.value = selectedBoats.value.filter((b) => b.id !== boat.id);
   }
 
-  console.log("Selected boats:", selectedBoats.value);
 };
 
 const selectAllBoats = (allBoats) => {

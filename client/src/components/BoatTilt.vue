@@ -108,7 +108,6 @@ watchEffect(() => {
 });
 
 async function fetchSensorData() {
-  console.log("Fetching sensor data for vesselId:", props.dummyData);
   if (props.vesselId) {
     if (props.dummyData) {
       if (props.vesselId === 28) {

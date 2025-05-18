@@ -30,7 +30,6 @@ watch(
           }
         );
 
-        console.log("Open-Meteo response:", response.data);
         weatherData.value = response.data;
       } catch (error) {
         console.error("Failed to fetch weather:", error);

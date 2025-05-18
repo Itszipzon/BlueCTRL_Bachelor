@@ -25,7 +25,6 @@ const toggleActive = () => {
 };
 
 const clickHour = (e) => {
-  console.log(e);
   selectedTime.value = e;
 };
 

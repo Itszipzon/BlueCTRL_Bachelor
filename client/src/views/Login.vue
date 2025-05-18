@@ -71,7 +71,6 @@ const handleLogin = async () => {
     }
   })
   .catch((e) => {
-    console.log(e);
     errorMessage.value = "Login failed. Please try again.";
   });
 

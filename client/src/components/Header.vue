@@ -29,8 +29,6 @@ const selectBoat = (boat) => {
   }
 };
 
-console.log(router.history.current.fullPath);
-
 const logout = () => {
   window.dispatchEvent(new Event("logout"));
 };
