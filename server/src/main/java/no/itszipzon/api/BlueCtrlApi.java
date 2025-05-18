@@ -52,6 +52,13 @@ public class BlueCtrlApi {
         .clientConnector(new ReactorClientHttpConnector(HttpClient.create())).build();
   }
 
+  /**
+   * Fetches the tank data for a specific vessel from the external API and adds the current
+   * 
+   * @param vesselId The ID of the vessel for which to fetch tank data.
+   * @param authorizationHeader The Authorization header for authentication. requires a valid login
+   * @return A ResponseEntity containing the JSON response from the external API. - Returns 200 OK
+   */
   @GetMapping("/bluebox-vessel/{vesselId}/tanks")
   public ResponseEntity<JsonNode> getVesselTanks(@PathVariable String vesselId,
       @RequestHeader("Authorization") String authorizationHeader) {
@@ -101,8 +108,12 @@ public class BlueCtrlApi {
     return new ResponseEntity<>(fuelCapacity, HttpStatus.OK);
   }
 
-
-
+  /**
+   * Fetches the minimal vessel data from the external API and adds GPS positions to each vessel.
+   * 
+   * @param authorizationHeader The Authorization header for authentication. requires a valid login
+   * @return A ResponseEntity containing the JSON response from the external API. - Returns 200 OK
+   */
   @GetMapping("/bluebox-vessels-minimal")
   public ResponseEntity<JsonNode> getVesselMinimal(@RequestHeader("Authorization") String authorizationHeader) {
 
@@ -139,6 +150,14 @@ public class BlueCtrlApi {
 
   }
 
+  /**
+   * Fetches the GPS positions of a vessel by its ID.
+   *
+   * @param request The HttpServletRequest object containing request details.
+   * @param authorizationHeader The Authorization header for authentication. requires a valid login
+   * @param vesselId The ID of the vessel for which to fetch GPS positions.
+   * @return A ResponseEntity containing the JSON response from the external API. - Returns 200 OK
+   */
   @GetMapping("/vessel-gps-position")
   public ResponseEntity<JsonNode> getGpsPositions(HttpServletRequest request,
       @RequestHeader("Authorization") String authorizationHeader, @RequestParam String vesselId) {

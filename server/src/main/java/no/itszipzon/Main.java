@@ -1,6 +1,5 @@
 package no.itszipzon;
 
-import java.net.URL;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,12 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main {
 
+  /**
+   * Main method to run the springboot application.
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
     SpringApplication.run(Main.class, args);
-  }
-
-  public URL getResource(String resource) {
-    return this.getClass().getResource(resource);
   }
 
 }
