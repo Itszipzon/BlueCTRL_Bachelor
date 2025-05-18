@@ -3,9 +3,10 @@
 This template should help get you started developing with Vue 2 in Vite.
 
 ## About
-This is a website to help visualisation of boat roll, pitch, draft and fuel levels for different vessels for BlueCTRL.
 
-# Some imaged of the website
+This is a website to help visualization of boat roll, pitch, draft and fuel levels for different vessels for BlueCTRL.
+
+# Some images of the website
 
 ## Map
 
