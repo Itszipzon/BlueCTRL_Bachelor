@@ -3,8 +3,23 @@ import { ref, watch } from "vue";
 import axios from "axios";
 import WeatherStatus from "./WeatherStatus.vue";
 
+/**
+ * Reactive variable to store weather data fetched from the Open-Meteo API.
+ * @type {import('vue').Ref<null | object>}
+ */
 const weatherData = ref(null);
 
+/**
+ * Props passed into the component.
+ * @type {{
+ *   selectedMarker?: {
+ *     id?: string|number,
+ *     vesselName?: string,
+ *     gpsPosition?: { latitude?: number, longitude?: number },
+ *     countryCode?: string
+ *   }
+ * }}
+ */
 const props = defineProps({
   selectedMarker: {
     type: Object,
@@ -12,8 +27,17 @@ const props = defineProps({
   },
 });
 
+/**
+ * Watches for changes in the selected marker's GPS position.
+ * If valid latitude and longitude are found, it fetches weather data.
+ */
 watch(
   () => props.selectedMarker?.gpsPosition,
+  /**
+   * Fetches weather data from the Open-Meteo API based on provided GPS coordinates.
+   * @param {{ latitude?: number, longitude?: number }} position - GPS position from the selected marker.
+   * @returns {Promise<void>}
+   */
   async (position) => {
     if (position?.latitude && position?.longitude) {
       try {
@@ -40,6 +64,13 @@ watch(
   { immediate: true }
 );
 
+/**
+ * Returns the lowercase version of the given country code, or a placeholder if not provided.
+ * Used for building flag image URLs.
+ *
+ * @param {string | undefined} countryCode - The ISO country code (e.g., "DE", "US").
+ * @returns {string} Lowercase country code or "placeholder".
+ */
 function getCountryCode(countryCode) {
   if (countryCode) {
     return countryCode.toLowerCase();

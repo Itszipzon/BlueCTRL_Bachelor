@@ -9,7 +9,9 @@ import Smallscreen from '../assets/icons/Smallscreen.svg';
 import HelpIcon from '../components/HelpIcon.vue';
 import axios from 'axios';
 
+// Injecting shared boat state from parent or global context
 const boats = inject('boats');
+
 const vessels = ref(null);
 const loadingVessels = ref(true);
 const dummyData = ref(false);
@@ -19,22 +21,25 @@ const draft = ref(-1);
 
 const mouseX = ref(0);
 const mouseY = ref(0);
-
 const mouseAboveDraft = ref(false);
 
+/**
+ * Computes the style for the draft bar based on the draft value.
+ */
 const draftBarStyle = computed(() => {
   return {
     height: draft.value > 0 ? `${draft.value * 10}px` : '1px',
   };
-})
+});
 
 const exaggerateValuesText = ref('Exaggerate values');
 
+// Update vessel-related refs when boat data changes
 watchEffect(() => {
   vessels.value = boats.value.vessels;
   loadingVessels.value = boats.value.loadingVessels;
   dummyData.value = boats.value.dummyData;
-})
+});
 
 const largeMap = ref(true);
 let mapObject = null;
@@ -44,20 +49,26 @@ const center = ref({
   lng: 6.15492,
 });
 
-const resizeStyle = ref(getResizeStyle());
-
+/**
+ * Returns dynamic style for the resize button based on map size and window width.
+ * @returns {Object} CSS style object
+ */
 function getResizeStyle() {
   return window.innerWidth < 1615 && !largeMap.value
     ? { right: (window.innerWidth / 2) - 75 - (750 / 2 - 15 / 2 - 35) + "px" }
     : {};
 }
 
+const resizeStyle = ref(getResizeStyle());
+
+/**
+ * Toggles the map between large and small view, preserving center and zoom.
+ */
 function toggleMapSize() {
   largeMap.value = !largeMap.value;
 
   if (mapObject) {
     const currentCenter = mapObject.getCenter();
-
     setTimeout(() => {
       mapObject.invalidateSize();
       mapObject.setView(currentCenter, mapObject.getZoom());
@@ -65,20 +76,36 @@ function toggleMapSize() {
   }
 }
 
+/**
+ * Callback for when the map is ready.
+ * @param {Object} map - The map instance
+ */
 function onMapReady(map) {
   mapObject = map;
 }
 
+/**
+ * Sets the center of the map.
+ * @param {number} lat
+ * @param {number} lng
+ */
 function setCenter(lat, lng) {
   center.value = { lat, lng };
 }
 
+/**
+ * Sets the zoom level of the map.
+ * @param {number} value
+ */
 function zoomInMap(value) {
   mapObject.setZoom(value);
 }
 
+/**
+ * Called when a marker is selected. Updates selected marker, zooms, and centers map.
+ * @param {Object} values
+ */
 function setValues(values) {
-
   selectedMarker.value = values;
   setTimeout(() => {
     zoomInMap(10);
@@ -86,19 +113,24 @@ function setValues(values) {
   setCenter(values.gpsPosition.latitude, values.gpsPosition.longitude);
 }
 
+/**
+ * Handles custom map resizing logic on window resize event.
+ */
 function handleResize() {
   if (!largeMap.value && selectedMarker.value) {
     toggleMapSize();
-    zoomInMap(5)
+    zoomInMap(5);
   }
 }
 
+/**
+ * Maps vessel ID to a specific drift signal ID.
+ * @returns {number|null}
+ */
 function getDriftId() {
-  if (selectedMarker.value.id === 2) { //fpp brukes. App brukes ikke.
+  if (selectedMarker.value.id === 2 || selectedMarker.value.id === 24) {
     return 25137;
-  } else if (selectedMarker.value.id === 24) {
-    return 25137;
-  } else if (selectedMarker.value.id === 28) { //fwd. Skal være samme som Fpp
+  } else if (selectedMarker.value.id === 28) {
     return 98;
   } else if (selectedMarker.value.id === 7234904) {
     return 432;
@@ -107,16 +139,17 @@ function getDriftId() {
   } else if (selectedMarker.value.id === 11912972) {
     return 446;
   }
-
   return null;
 }
 
+/**
+ * Watcher for selectedMarker. Fetches draft data when a marker is selected.
+ */
 watch(() => selectedMarker.value, (newValue) => {
   if (newValue) {
     const driftId = getDriftId();
     if (driftId) {
       const url = `http://localhost:8080/api/signal?signalId=${driftId}&vesselId=${newValue.id}`;
-
       axios
         .get(url, {
           headers: {
@@ -128,28 +161,34 @@ watch(() => selectedMarker.value, (newValue) => {
             console.error('Error fetching drift data:', r.status);
           }
           console.log('Drift data:', r.data);
-          draft.value = 8.39;//r.data.signalEvents[0].doubleValue;
-        })
+          draft.value = 8.39; // Example value
+        });
     }
   }
 }, { immediate: true });
 
+/**
+ * Determines if mouse is over the draft bar.
+ * @param {MouseEvent} e
+ */
 const mouseOverDraft = (e) => {
   const rect = e.target.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
-    mouseAboveDraft.value = true;
-  } else {
-    mouseAboveDraft.value = false;
-  }
-}
+  mouseAboveDraft.value = x > 0 && x < rect.width && y > 0 && y < rect.height;
+};
 
+/**
+ * Handler for mouse leaving the draft area.
+ */
 const handleMouseLeave = () => {
   mouseAboveDraft.value = false;
-}
+};
 
+/**
+ * Computes position for the floating draft tooltip.
+ */
 const draftContainerStyle = computed(() => {
   const offset = 10;
   const tooltipWidth = 200;
@@ -158,7 +197,6 @@ const draftContainerStyle = computed(() => {
   let left = mouseX.value + offset;
   let top = mouseY.value + offset;
 
-  // Adjust if tooltip would overflow screen
   if (left + tooltipWidth > window.innerWidth) {
     left = mouseX.value - tooltipWidth - offset;
   }
@@ -172,11 +210,16 @@ const draftContainerStyle = computed(() => {
   };
 });
 
+/**
+ * Tracks the global mouse position for tooltip placement.
+ * @param {MouseEvent} event
+ */
 const handleMouseMove = (event) => {
   mouseX.value = event.clientX;
   mouseY.value = event.clientY;
 };
 
+// Lifecycle hooks
 onMounted(() => {
   window.addEventListener('resizeMap', handleResize);
   window.addEventListener("mousemove", handleMouseMove);
@@ -189,7 +232,6 @@ onUnmounted(() => {
     mapObject.off();
   }
 });
-
 </script>
 
 <template>

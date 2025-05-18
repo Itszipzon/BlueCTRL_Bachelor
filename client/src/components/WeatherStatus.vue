@@ -1,8 +1,16 @@
 <script setup>
 import { ref } from "vue";
 
+/**
+ * Reactive flag to control display of weather status text.
+ * @type {import('vue').Ref<boolean>}
+ */
 const displayStatus = ref(false);
 
+/**
+ * Props passed to the component.
+ * @type {{ weatherCode: number, iconSize?: string }}
+ */
 const props = defineProps({
   weatherCode: Number,
   iconSize: {
@@ -11,6 +19,11 @@ const props = defineProps({
   },
 });
 
+/**
+ * Returns the icon class name for a given weather code.
+ * @param {number} code - Weather code.
+ * @returns {string} Icon class for the weather.
+ */
 function getIconClass(code) {
   if (code === 0) return "wi-day-sunny";
   if ([1, 2, 3].includes(code)) return "wi-day-cloudy";
@@ -22,6 +35,11 @@ function getIconClass(code) {
   return "wi-day-sunny";
 }
 
+/**
+ * Returns the weather status description for a given weather code.
+ * @param {number} code - Weather code.
+ * @returns {string} Human-readable weather status.
+ */
 function getWeatherStatus(code) {
   if (code === 0) return "Sunny";
   if ([1, 2, 3].includes(code)) return "Cloudy";
@@ -33,10 +51,16 @@ function getWeatherStatus(code) {
   return "Unknown Weather";
 }
 
+/**
+ * Handler to show the weather status text on mouse over.
+ */
 const mouseOver = () => {
   displayStatus.value = true;
 };
 
+/**
+ * Handler to hide the weather status text on mouse leave.
+ */
 const mouseLeave = () => {
   displayStatus.value = false;
 };

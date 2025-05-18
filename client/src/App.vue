@@ -1,17 +1,36 @@
 <script setup>
+/**
+ * Imports Vue Composition API functions, components, router, and Axios.
+ */
 import { onMounted, provide, ref } from "vue";
 import Header from "./components/Header.vue";
 import Login from "./views/Login.vue";
 import router from "./router";
 import axios from "axios";
 
+/**
+ * Reactive boolean to track if the user is logged in.
+ * Initialized to false by default.
+ */
 const isLoggedIn = ref(false);
+
+/**
+ * Reactive object to store boats (vessels) data and loading state.
+ * - loadingVessels: tracks if the API call is in progress.
+ * - dummyData: toggles fake vessel names.
+ * - vessels: array to store fetched vessel data.
+ */
 const boats = ref({
   loadingVessels: true,
   dummyData: true,
   vessels: [],
 });
 
+/**
+ * onMounted lifecycle hook:
+ * - Checks for a saved session in localStorage.
+ * - If session exists, sets user as logged in and fetches boats.
+ */
 onMounted(() => {
   if (localStorage.getItem("SESSION")) {
     isLoggedIn.value = true;
@@ -19,6 +38,12 @@ onMounted(() => {
   }
 });
 
+/**
+ * Event listener for global "logout" events.
+ * - Clears session from localStorage.
+ * - Redirects to homepage.
+ * - Resets login and boat state.
+ */
 window.addEventListener("logout", () => {
   localStorage.removeItem("SESSION");
   router.push("/");
@@ -29,10 +54,19 @@ window.addEventListener("logout", () => {
   };
 });
 
+/**
+ * Event listener for global "login" events.
+ * - Sets the user login state to true.
+ */
 window.addEventListener("login", () => {
   isLoggedIn.value = true;
 });
 
+/**
+ * Toggles login state.
+ * - If logging in, fetch boats.
+ * - If logging out, clear session and redirect.
+ */
 const toggleLogin = () => {
   isLoggedIn.value = !isLoggedIn.value;
   if (isLoggedIn.value) {
@@ -43,6 +77,11 @@ const toggleLogin = () => {
   }
 };
 
+/**
+ * Fetches boat (vessel) data from backend API.
+ * Adds dummy vessel names if dummyData is enabled.
+ * Handles errors by logging out the user.
+ */
 function gatherBoats() {
   axios
     .get("http://localhost:8080/api/bluebox-vessels-minimal", {
@@ -54,8 +93,11 @@ function gatherBoats() {
       if (response.status !== 200) {
         console.error("Error fetching boats:", response.status);
       }
+
       boats.value.loadingVessels = false;
       boats.value.vessels = response.data;
+
+      // If dummyData flag is on, override vessel names for testing/demo purposes
       if (boats.value.dummyData) {
         const dummyVesselNames = [
           "SS Viking",
@@ -80,6 +122,9 @@ function gatherBoats() {
     });
 }
 
+/**
+ * Provides the boats data to child components using Vue's dependency injection.
+ */
 provide("boats", boats);
 </script>
 

@@ -1,26 +1,48 @@
 <script setup>
+/**
+ * Import necessary utilities from Vue and the router.
+ */
 import { inject, ref, watchEffect } from "vue";
 import router from "../router";
 
+/**
+ * Inject the shared `boats` reactive object provided from the root component.
+ */
 const boatsTotal = inject("boats");
 
+/**
+ * Local reactive references for vessel list and loading state.
+ */
 const boats = ref(null);
 const loadingVessels = ref(true);
 
+/**
+ * Watches the injected boats object and keeps local state in sync.
+ * Updates `boats` and `loadingVessels` when the injected values change.
+ */
 watchEffect(() => {
   boats.value = boatsTotal.value.vessels;
   loadingVessels.value = boatsTotal.value.loadingVessels;
 });
 
+/**
+ * Props definition (even though it's not used in this component logic).
+ * This prop can be used to pass boats directly, if needed.
+ */
 const props = defineProps({
   boats: Object,
 });
 
-const isLoggedIn = ref(true);
-
+/**
+ * Emits a global `selectBoat` event when a boat is selected.
+ * If not already on the homepage ("/"), navigates to it first before dispatching the event.
+ *
+ * @param {Object} boat - The boat object selected by the user.
+ */
 const selectBoat = (boat) => {
   if (window.location.pathname !== "/") {
     router.push("/");
+    // Slight delay to ensure router has completed navigation before dispatching event
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent("selectBoat", { detail: boat }));
     }, 250);

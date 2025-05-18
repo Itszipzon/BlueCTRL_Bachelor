@@ -1,20 +1,49 @@
 <script setup>
+/**
+ * Imports from Vue and child components used in the compare view.
+ */
 import { inject, ref, watchEffect, watch, nextTick } from "vue";
 import LeftContainer from "../components/compare/LeftContainer.vue";
 import RightContainer from "../components/compare/RightContainer.vue";
 
+/**
+ * Inject the shared reactive boats data from the global context.
+ * @type {Ref<{ vessels: Array<Object>, loadingVessels: boolean }>}
+ */
 const boatsTotal = inject("boats");
+
+/**
+ * Local state to hold vessel data and loading indicator.
+ */
 const boats = ref(null);
 const loadingVessels = ref(true);
 
+/**
+ * An array of currently selected boats.
+ * @type {Ref<Array<Object>>}
+ */
 const selectedBoats = ref([]);
+
+/**
+ * Indicates whether the page is loading (e.g., after a boat selection change).
+ * @type {Ref<boolean>}
+ */
 const pageIsLoading = ref(false);
 
+/**
+ * Watches the injected `boatsTotal` and syncs its values locally.
+ */
 watchEffect(() => {
   boats.value = boatsTotal.value.vessels;
   loadingVessels.value = boatsTotal.value.loadingVessels;
 });
 
+/**
+ * Toggles selection state of a boat.
+ * Adds the boat to selectedBoats if not selected, otherwise removes it.
+ *
+ * @param {Object} boat - The boat object to toggle.
+ */
 const toggleBoatSelection = (boat) => {
   const idx = selectedBoats.value.findIndex((b) => b.id === boat.id);
 
@@ -23,26 +52,35 @@ const toggleBoatSelection = (boat) => {
   } else {
     selectedBoats.value = selectedBoats.value.filter((b) => b.id !== boat.id);
   }
-
 };
 
+/**
+ * Selects or deselects all boats.
+ * If all boats are already selected, it clears the selection.
+ * Otherwise, selects all.
+ *
+ * @param {Array<Object>} allBoats - The complete list of boats to potentially select.
+ */
 const selectAllBoats = (allBoats) => {
   selectedBoats.value = allBoats.filter(
     (boat) => !selectedBoats.value.some((b) => b.id === boat.id)
   ).length === 0
-    ? [] 
-    : [...allBoats]; 
+    ? []
+    : [...allBoats];
 };
 
-
+/**
+ * Watcher on selectedBoats to simulate a brief loading state whenever the selection changes.
+ * Helps indicate to the user that comparison data might be updating.
+ */
 watch(
   selectedBoats,
   async () => {
     pageIsLoading.value = true;
-    await nextTick();
+    await nextTick(); // Wait for DOM updates
     setTimeout(() => {
       pageIsLoading.value = false;
-    }, 700);
+    }, 700); // Simulated loading duration
   },
   { deep: true }
 );

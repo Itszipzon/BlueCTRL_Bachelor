@@ -39,23 +39,49 @@
 </template>
 
 <script setup>
+/**
+ * Import Vue's Composition API and Axios for HTTP requests.
+ */
 import { ref } from "vue";
 import axios from "axios";
 
+/**
+ * Props
+ * @prop {Function} doLogin - Callback function triggered after successful login.
+ */
 const props = defineProps({
   doLogin: Function,
 });
 
+/**
+ * State variables
+ * @var {Ref<boolean>} isLoading - Indicates whether the login request is in progress.
+ * @var {Ref<string>} errorMessage - Stores any error message to be displayed.
+ * @var {Ref<string>} successMessage - Stores a success message when login is successful.
+ */
 const isLoading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 
+/**
+ * Local state for form inputs.
+ * These should be added to bind input values.
+ */
+const username = ref("");
+const password = ref("");
+
+/**
+ * Handles the login form submission.
+ * Encodes the username and password in base64, sends it to the login endpoint,
+ * and stores the session token in localStorage on success.
+ * Calls the `doLogin` function from props on success.
+ */
 const handleLogin = async () => {
   isLoading.value = true;
   errorMessage.value = "";
   successMessage.value = "";
-  const credentials = btoa(`${username.value}:${password.value}`);
 
+  const credentials = btoa(`${username.value}:${password.value}`);
   const url = "http://localhost:8080/api/login";
 
   axios.post(url, {}, {
@@ -65,19 +91,19 @@ const handleLogin = async () => {
   })
   .then((r) => {
     if (r.status === 200) {
+      // Save session token and notify parent
       localStorage.setItem("SESSION", credentials);
       props.doLogin();
       successMessage.value = "Login successful!";
     }
   })
   .catch((e) => {
+    // Show error message if request fails
     errorMessage.value = "Login failed. Please try again.";
   });
 
   isLoading.value = false;
-
 };
-
 </script>
 
 <style scoped>
