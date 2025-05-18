@@ -6,15 +6,25 @@ This template should help get you started developing with Vue 2 in Vite.
 
 This is a website to help visualization of boat roll, pitch, draft and fuel levels for different vessels for BlueCTRL.
 
+# Disclaimer
+The data used in this README about vessels is purely dummy data. No real data about the vessels is disclosed.
+
 # Some images of the website
 
+## General view on multiple platforms
+![GeneralView](./images/GeneralView.png)
+
 ## Map
+![MapView](./images/MapView.png)
 
 ## Vessel's position in the water
+![TiltView](./images/TiltView.png)
 
 ## Tanks
+![TankView](./images/TanksView.png)
 
 ## Compare
+![CompareView](./images/CompareView.png)
 
 ## Recommended IDE Setup
 
