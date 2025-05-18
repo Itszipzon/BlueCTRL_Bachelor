@@ -173,9 +173,9 @@ const shipTankVolumeStyle = (tank) => {
 
   if (percent > 75) {
     background = "green";
-  } else if (percent > 50) {
+  } else if (percent >= 50) {
     background = "yellow";
-  } else if (percent > 25) {
+  } else if (percent >= 25) {
     background = "orange";
   } else {
     background = "red";
