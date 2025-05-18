@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, inject, watchEffect } from 'vue';
+import { ref, onMounted, onUnmounted, inject, watchEffect, watch, computed } from 'vue';
 import Map from '../components/Map.vue';
 import VesselData from '../components/VesselData.vue';
 import TankData from '../components/TankData.vue';
@@ -7,6 +7,7 @@ import BoatTilt from '../components/BoatTilt.vue';
 import Fullscreen from '../assets/icons/Fullscreen.svg';
 import Smallscreen from '../assets/icons/Smallscreen.svg';
 import HelpIcon from '../components/HelpIcon.vue';
+import axios from 'axios';
 
 const boats = inject('boats');
 const vessels = ref(null);
@@ -14,6 +15,18 @@ const loadingVessels = ref(true);
 const dummyData = ref(false);
 const selectedMarker = ref(null);
 const exagerateValues = ref(false);
+const draft = ref(-1);
+
+const mouseX = ref(0);
+const mouseY = ref(0);
+
+const mouseAboveDraft = ref(false);
+
+const draftBarStyle = computed(() => {
+  return {
+    height: draft.value > 0 ? `${draft.value * 10}px` : '1px',
+  };
+})
 
 const exaggerateValuesText = ref('Exaggerate values');
 
@@ -80,13 +93,98 @@ function handleResize() {
   }
 }
 
+function getDriftId() {
+  if (selectedMarker.value.id === 2) { //fpp brukes. App brukes ikke.
+    return 25137;
+  } else if (selectedMarker.value.id === 24) {
+    return 25137;
+  } else if (selectedMarker.value.id === 28) { //fwd. Skal være samme som Fpp
+    return 98;
+  } else if (selectedMarker.value.id === 7234904) {
+    return 432;
+  } else if (selectedMarker.value.id === 10226293) {
+    return 356;
+  } else if (selectedMarker.value.id === 11912972) {
+    return 446;
+  }
+
+  return null;
+}
+
+watch(() => selectedMarker.value, (newValue) => {
+  if (newValue) {
+    const driftId = getDriftId();
+    if (driftId) {
+      const url = `http://localhost:8080/api/signal?signalId=${driftId}&vesselId=${newValue.id}`;
+
+      axios
+        .get(url, {
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+          },
+        })
+        .then((r) => {
+          if (r.status !== 200) {
+            console.error('Error fetching drift data:', r.status);
+          }
+          console.log('Drift data:', r.data);
+          draft.value = r.data.signalEvents[0].doubleValue;
+        })
+    }
+  }
+}, { immediate: true });
+
+const mouseOverDraft = (e) => {
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+    mouseAboveDraft.value = true;
+  } else {
+    mouseAboveDraft.value = false;
+  }
+}
+
+const handleMouseLeave = () => {
+  mouseAboveDraft.value = false;
+}
+
+const draftContainerStyle = computed(() => {
+  const offset = 10;
+  const tooltipWidth = 200;
+  const tooltipHeight = 50;
+
+  let left = mouseX.value + offset;
+  let top = mouseY.value + offset;
+
+  // Adjust if tooltip would overflow screen
+  if (left + tooltipWidth > window.innerWidth) {
+    left = mouseX.value - tooltipWidth - offset;
+  }
+  if (top + tooltipHeight > window.innerHeight) {
+    top = mouseY.value - tooltipHeight - offset;
+  }
+
+  return {
+    left: `${left}px`,
+    top: `${top}px`,
+  };
+});
+
+const handleMouseMove = (event) => {
+  mouseX.value = event.clientX;
+  mouseY.value = event.clientY;
+};
 
 onMounted(() => {
   window.addEventListener('resizeMap', handleResize);
+  window.addEventListener("mousemove", handleMouseMove);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resizeMap', handleResize);
+  window.removeEventListener("mousemove", handleMouseMove);
   if (mapObject) {
     mapObject.off();
   }
@@ -96,6 +194,12 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container">
+    <div class="draft-information-container" v-if="mouseAboveDraft" :style="draftContainerStyle">
+      <div class="draft-information">
+        <p>Draft: {{ draft >= 0 ? draft.toFixed(2) + " Meters" : 'No data' }}</p>
+      </div>
+    </div>
+
     <div :class="['loading-vessels', { display: loadingVessels }]">
       <div class="loading-vessels-text">Loading vessels...</div>
     </div>
@@ -110,29 +214,35 @@ onUnmounted(() => {
         <div class="marker-vessel-tilt-holder">
 
           <div class="marker-vessel-tilt">
-            <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
+            <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
+              :vesselId="selectedMarker?.id" />
           </div>
-          <div class="marker-vessel-tilt-draft"> <!--Draft, Remove if not happy.-->
-            <div class="marker-vessel-tilt-draft-bar" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
-            <div class="marker-vessel-tilt-draft-line" />
+          <div class="marker-vessel-tilt-draft-container">
+            <div class="marker-vessel-tilt-draft" @mouseenter="mouseOverDraft" @mouseleave="handleMouseLeave"> <!--Draft, Remove if not happy.-->
+              <div class="marker-vessel-tilt-draft-bar" :style="draftBarStyle" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+              <div class="marker-vessel-tilt-draft-line" />
+            </div>
+            <p>Draft</p>
           </div>
           <div class="marker-vessel-tilt">
-            <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75" :vesselId="selectedMarker?.id" />
+            <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
+              :vesselId="selectedMarker?.id" />
           </div>
         </div>
         <div class="marker-vessel-tilt-exagerate">
           <input type="checkbox" id="exagerate" v-model="exagerateValues" />
           <label for="exagerate">Exagerate values</label>
-          <HelpIcon :width="'250px'" :left="'20px'" :top="'-90px'" :help-text="'Resize the protractor to show from 0 - 30 instead of 0 - 90 degrees.'" :size="'15px'" />
+          <HelpIcon :width="'250px'" :left="'20px'" :top="'-90px'"
+            :help-text="'Resize the protractor to show from 0 - 30 instead of 0 - 90 degrees.'" :size="'15px'" />
         </div>
       </div>
       <div :class="['map', { small: !largeMap }]">
@@ -154,6 +264,18 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: space-between;
+}
+
+.draft-information-container {
+  position: fixed;
+  z-index: 100000;
+  width: 200px;
+  height: 50px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 5px;
+  color: black;
 }
 
 .loading-vessels {
@@ -230,7 +352,7 @@ onUnmounted(() => {
 .marker-vessel-tilt-container.small {
   margin: 20px 20px 0 20px;
   width: calc(50% - 10px);
-  height: calc((50vw - 75px - 20px)/2 - 10px);
+  height: calc((50vw - 75px - 20px)/2 - 10px - 40px);
   padding: 20px;
 }
 
@@ -273,11 +395,24 @@ onUnmounted(() => {
 }
 
 .marker-vessel-tilt {
-  width: calc(50% - 50px); /* -10px if draft is removed */
+  width: calc(50% - 50px);
+  /* -10px if draft is removed */
   height: 100%;
   background: #f9f9f9;
   border-radius: 6px;
   border: 1px solid #ddd;
+}
+
+.marker-vessel-tilt-draft-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.marker-vessel-tilt-draft-container p {
+  font-weight: 500;
 }
 
 .marker-vessel-tilt-draft {
@@ -297,16 +432,20 @@ onUnmounted(() => {
 
 .marker-vessel-tilt-draft-line:nth-child(2),
 .marker-vessel-tilt-draft-line:nth-child(6),
-.marker-vessel-tilt-draft-line:nth-child(11)  {
+.marker-vessel-tilt-draft-line:nth-child(11) {
   width: 100%;
 }
 
 .marker-vessel-tilt-draft-bar {
   position: absolute;
   bottom: 0px;
-  height: 100%;
   width: 40%;
   background-color: #3498db;
+  max-height: 100% !important;
+}
+
+.marker-vessel-tilt-draft-bar:hover {
+  background-color: #2980b9;
 }
 
 .map {
@@ -319,7 +458,7 @@ onUnmounted(() => {
 
 .map.small {
   margin: 20px 20px 0 0;
-  height: calc((50vw - 75px - 20px) / 2 - 10px);
+  height: calc((50vw - 75px - 20px) / 2 - 10px - 40px);
   width: calc(50% - 10px);
 }
 
