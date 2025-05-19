@@ -161,7 +161,7 @@ watch(() => selectedMarker.value, (newValue) => {
             console.error('Error fetching drift data:', r.status);
           }
           console.log('Drift data:', r.data);
-          draft.value = 8.39; // Example value
+          draft.value = 8.39; //r.data.signalEvents[0].doubleValue;
         });
     }
   }

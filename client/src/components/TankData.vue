@@ -6,47 +6,82 @@ import axios from "axios";
 import Revert from "../assets/icons/Revert.vue";
 import HelpIcon from "./HelpIcon.vue";
 
+/**
+ * @typedef {Object} Tank
+ * @property {number} id
+ * @property {string} content
+ * @property {number} volume
+ * @property {number} capacity
+ * @property {number} [x]
+ * @property {number} [y]
+ * @property {number} [z]
+ */
+
+/** @type {import('vue').Ref<number>} */
 const shipWidth = ref(0);
+
+/** @type {import('vue').Ref<number>} */
 const shipHeight = ref(0);
 
+/** @type {import('vue').Ref<number>} */
 const mouseX = ref(0);
 const mouseY = ref(0);
 
+/** @type {import('vue').Ref<HTMLElement|null>} */
 const containerRef = ref(null);
+
+/** @type {import('vue').Ref<Tank[]>} */
 const originalTanks = ref([]);
+
+/** @type {import('vue').Ref<Tank[]>} */
 const tanks = ref([]);
+
+/** @type {import('vue').Ref<boolean>} */
 const foundTanks = ref(false);
+
+/** @type {import('vue').Ref<boolean>} */
 const currentAbove = ref(true);
 
+/** @type {import('vue').Ref<boolean>} */
 const tanksMoved = ref(false);
 
 let resizeObserver;
 let startX = 0;
 let startY = 0;
 
+/** @type {import('vue').Ref<number>} */
 const tankMovingIndex = ref(-1);
+
+/** @type {import('vue').Ref<boolean>} */
 const tankMoving = ref(false);
 
+/** @type {import('vue').Ref<number>} */
 const tankOverIndex = ref(-1);
 
+/** @type {string} */
 const helpTextMove = "Click and drag to move the tanks.";
 
 const props = defineProps({
+  /** @type {string} Vessel ID */
   vesselId: {
-    type: String | "",
+    type: String || "",
     required: true,
   },
+  /** @type {boolean} Load dummy data for development */
   dummy: {
     type: Boolean,
     default: false,
   },
 });
 
+/**
+ * Fetch tank data from API or use dummy data
+ * @param {string} vesselId
+ */
 const fetchTankData = async (vesselId) => {
   foundTanks.value = false;
-  if (!vesselId) {
-    return;
-  }
+  if (!vesselId) return;
+
   if (props.dummy) {
     if (vesselId === 28) {
       tanks.value = [
@@ -60,26 +95,24 @@ const fetchTankData = async (vesselId) => {
     }
     return;
   }
+
   try {
-    axios
-      .get(
-        `http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks?fromProject=True`,
-        {
-          headers: {
-            Authorization: `Basic ${localStorage.getItem("SESSION")}`,
-          },
-        }
+    const r = await axios.get(
+      `http://localhost:8080/api/bluebox-vessel/${vesselId}/tanks?fromProject=True`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("SESSION")}`,
+        },
+      }
+    );
+    const newTemp = r.data.filter((tank) =>
+      ["fuel", "fresh water"].some((k) =>
+        tank.content.toLowerCase().includes(k)
       )
-      .then((r) => {
-        const newTemp = r.data.filter(
-          (tank) =>
-            tank.content.toLowerCase().includes("fuel") ||
-            tank.content.toLowerCase().includes("fresh water")
-        );
-        tanks.value = newTemp;
-        originalTanks.value = JSON.parse(JSON.stringify(newTemp));
-        foundTanks.value = true;
-      });
+    );
+    tanks.value = newTemp;
+    originalTanks.value = JSON.parse(JSON.stringify(newTemp));
+    foundTanks.value = true;
   } catch (error) {
     console.error("Failed to fetch tank data:", error);
   }
@@ -100,7 +133,6 @@ onMounted(() => {
     resizeObserver.observe(containerRef.value);
   }
 
-  // Initial fetch
   fetchTankData(props.vesselId);
 
   window.addEventListener("mousemove", handleMouseMove);
@@ -136,17 +168,21 @@ watch(
 );
 
 onUnmounted(() => {
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-  }
+  if (resizeObserver) resizeObserver.disconnect();
   containerRef.value = null;
 
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", mouseUpTank);
 });
 
+/**
+ * Returns tank positioning and sizing style for rendering.
+ * @param {Tank} tank
+ * @param {boolean} above - True for top view, false for side view
+ * @returns {Object}
+ */
 const shipTankStyle = (tank, above) => {
-  const maxCapacity = Math.max(...tanks.value.map(t => t.capacity || 1));
+  const maxCapacity = Math.max(...tanks.value.map((t) => t.capacity || 1));
 
   const maxTankSize = {
     width: shipWidth.value * 0.2,
@@ -158,37 +194,43 @@ const shipTankStyle = (tank, above) => {
   const height = Math.max(20, maxTankSize.height * sizeScale);
 
   return {
-    position: tank.x != null && tank.y != null && tank.z != null ? "relative" : "relative",
+    position: "relative",
     left: `${(tank.x || 0) * shipWidth.value}px`,
-    top: `${(above ? (tank.y || 0) : (tank.z || 0)) * shipHeight.value}px`,
+    top: `${(above ? tank.y || 0 : tank.z || 0) * shipHeight.value}px`,
     width: `${width}px`,
     height: `${height}px`,
     cursor: "move",
   };
 };
 
+/**
+ * Returns styling for volume fill level inside tank.
+ * @param {Tank} tank
+ * @returns {Object}
+ */
 const shipTankVolumeStyle = (tank) => {
   const percent = (tank.volume / tank.capacity) * 100;
   let background = "red";
 
-  if (percent > 75) {
-    background = "green";
-  } else if (percent >= 50) {
-    background = "yellow";
-  } else if (percent >= 25) {
-    background = "orange";
-  } else {
-    background = "red";
-  }
+  if (percent > 75) background = "green";
+  else if (percent >= 50) background = "yellow";
+  else if (percent >= 25) background = "orange";
 
   return {
     width: "100%",
     height: `${percent}%`,
     backgroundColor: background,
-    position: `${tank.x !== null && tank.y !== null && tank.z !== null ? "absolute" : "relative"}`
+    position: "absolute",
   };
 };
 
+/**
+ * Handles mouse down to begin tank drag.
+ * @param {MouseEvent} event
+ * @param {Tank} tank
+ * @param {number} index
+ * @param {boolean} above
+ */
 const mouseDownTank = (event, tank, index, above) => {
   tankMovingIndex.value = index;
   tankMoving.value = true;
@@ -198,11 +240,18 @@ const mouseDownTank = (event, tank, index, above) => {
   startY = event.clientY;
 };
 
+/**
+ * Handles mouse up to stop tank drag.
+ */
 const mouseUpTank = () => {
   tankMovingIndex.value = -1;
   tankMoving.value = false;
 };
 
+/**
+ * Handles dragging logic during mouse move.
+ * @param {MouseEvent} event
+ */
 const handleMouseMove = (event) => {
   mouseX.value = event.clientX;
   mouseY.value = event.clientY;
@@ -220,34 +269,31 @@ const handleMouseMove = (event) => {
   const dxRel = dx / shipWidth.value;
   const dyRel = dy / shipHeight.value;
 
-  // Check if the tank is in the top view or side view
   if (currentAbove.value) {
-    // Top view: move in x/y plane
     tank.x = (tank.x || 0) + dxRel;
     tank.y = (tank.y || 0) + dyRel;
-    tank.z = tank.z || 0; // Reset z to 0 for top view
+    tank.z = tank.z || 0;
   } else {
-    // Side view: move in x/z plane
     tank.x = (tank.x || 0) + dxRel;
     tank.z = (tank.z || 0) + dyRel;
-    tank.y = tank.y || 0; // Reset y to 0 for side view
+    tank.y = tank.y || 0;
   }
 };
 
+/**
+ * Save tank layout to backend.
+ */
 const handleSave = () => {
-  const data = []
+  const data = tanks.value.map((tank) => ({
+    vesselId: props.vesselId,
+    tankId: tank.id,
+    x: tank.x,
+    y: tank.y,
+    z: tank.z,
+  }));
 
-  for (let i = 0; i < tanks.value.length; i++) {
-    data.push({
-      vesselId: props.vesselId,
-      tankId: tanks.value[i].id,
-      x: tanks.value[i].x,
-      y: tanks.value[i].y,
-      z: tanks.value[i].z,
-    })
-  }
-
-  axios.post("http://localhost:8080/api/savetanks", data)
+  axios
+    .post("http://localhost:8080/api/savetanks", data)
     .then((r) => {
       alert(r.data ? "Tank data saved successfully!" : "Failed to save tank data.");
     })
@@ -255,16 +301,22 @@ const handleSave = () => {
       console.error("Error saving tank data:", error);
       alert("Failed to save tank data.");
     });
-}
+};
 
+/**
+ * Revert tanks to original layout.
+ */
 const revertTanks = () => {
   tanks.value = JSON.parse(JSON.stringify(originalTanks.value));
   tanksMoved.value = false;
 };
 
+/**
+ * Tooltip style near cursor
+ * @returns {Object}
+ */
 const tankDisplayStyle = () => {
   const activeIndex = tankOverIndex.value >= 0 ? tankOverIndex.value : tankMovingIndex.value;
-
   if (activeIndex === -1) return { display: "none" };
 
   return {
@@ -273,14 +325,22 @@ const tankDisplayStyle = () => {
   };
 };
 
+/**
+ * Set hovered tank index.
+ * @param {number} index
+ */
 const mouseOverTank = (index) => {
   tankOverIndex.value = index;
-}
+};
 
+/**
+ * Clear hovered tank index.
+ */
 const mouseOutTank = () => {
   tankOverIndex.value = -1;
-}
+};
 </script>
+
 <template>
   <div class="ship-tank-data" id="ship-tank-data" v-if="foundTanks">
     <div class="ship-tank-display" v-if="tankOverIndex >= 0 || tankMovingIndex >= 0" :style="tankDisplayStyle()">
