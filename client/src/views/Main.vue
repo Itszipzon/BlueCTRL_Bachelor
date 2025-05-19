@@ -160,7 +160,8 @@ watch(() => selectedMarker.value, (newValue) => {
           if (r.status !== 200) {
             console.error('Error fetching drift data:', r.status);
           }
-          draft.value = 8.39; //r.data.signalEvents[0].doubleValue;
+          console.log('Drift data:', r.data);
+          draft.value = 8.39; // Example value
         });
     }
   }
@@ -256,7 +257,7 @@ onUnmounted(() => {
 
           <div class="marker-vessel-tilt">
             <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
-              :vesselId="selectedMarker?.id.toString()" />
+              :vesselId="selectedMarker?.id" />
           </div>
           <div class="marker-vessel-tilt-draft-container">
             <div class="marker-vessel-tilt-draft" @mouseenter="mouseOverDraft" @mouseleave="handleMouseLeave"> <!--Draft, Remove if not happy.-->
@@ -276,7 +277,7 @@ onUnmounted(() => {
           </div>
           <div class="marker-vessel-tilt">
             <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
-              :vesselId="selectedMarker?.id.toString()" />
+              :vesselId="selectedMarker?.id" />
           </div>
         </div>
         <div class="marker-vessel-tilt-exagerate">
@@ -295,7 +296,7 @@ onUnmounted(() => {
       <VesselData :selectedMarker="selectedMarker" />
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
-      <TankData :vesselId="selectedMarker?.id.toString()" :dummy="dummyData" />
+      <TankData :vesselId="selectedMarker?.id" :dummy="dummyData" />
     </div>
   </div>
 </template>
