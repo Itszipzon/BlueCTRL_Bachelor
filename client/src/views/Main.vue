@@ -257,7 +257,7 @@ onUnmounted(() => {
 
           <div class="marker-vessel-tilt">
             <BoatTilt type="roll" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
-              :vesselId="selectedMarker?.id" />
+              :vesselId="selectedMarker?.id.toString()" />
           </div>
           <div class="marker-vessel-tilt-draft-container">
             <div class="marker-vessel-tilt-draft" @mouseenter="mouseOverDraft" @mouseleave="handleMouseLeave"> <!--Draft, Remove if not happy.-->
@@ -277,7 +277,7 @@ onUnmounted(() => {
           </div>
           <div class="marker-vessel-tilt">
             <BoatTilt type="pitch" :exagerate_values="exagerateValues" :dummyData="dummyData" background-offset="75"
-              :vesselId="selectedMarker?.id" />
+              :vesselId="selectedMarker?.id.toString()" />
           </div>
         </div>
         <div class="marker-vessel-tilt-exagerate">
@@ -296,7 +296,7 @@ onUnmounted(() => {
       <VesselData :selectedMarker="selectedMarker" />
     </div>
     <div :class="['vessel-data-container', { small: !largeMap }]">
-      <TankData :vesselId="selectedMarker?.id" :dummy="dummyData" />
+      <TankData :vesselId="selectedMarker?.id.toString()" :dummy="dummyData" />
     </div>
   </div>
 </template>

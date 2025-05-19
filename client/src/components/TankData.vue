@@ -64,7 +64,7 @@ const helpTextMove = "Click and drag to move the tanks.";
 const props = defineProps({
   /** @type {string} Vessel ID */
   vesselId: {
-    type: String || "",
+    type: String | "",
     required: true,
   },
   /** @type {boolean} Load dummy data for development */
