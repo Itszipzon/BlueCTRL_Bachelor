@@ -1,43 +1,3 @@
-<template>
-  <div class="login-container">
-    <form @submit.prevent="handleLogin" class="login-form">
-      <h2>X-connect Login</h2>
-
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          placeholder="Enter username"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter password"
-          required
-        />
-      </div>
-
-      <div v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-
-      <div v-if="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-
-      <button type="submit" class="login-button" :disabled="isLoading">
-        {{ isLoading ? "Logging in..." : "Login" }}
-      </button>
-    </form>
-  </div>
-</template>
-
 <script setup>
 /**
  * Import Vue's Composition API and Axios for HTTP requests.
@@ -105,6 +65,48 @@ const handleLogin = async () => {
   isLoading.value = false;
 };
 </script>
+<template>
+  <div class="login-container">
+    <form @submit.prevent="handleLogin" class="login-form">
+      <h2>X-connect Login</h2>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter username"
+          required
+          v-model="username"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter password"
+          required
+          v-model="password"
+        />
+      </div>
+
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit" class="login-button" :disabled="isLoading">
+        {{ isLoading ? "Logging in..." : "Login" }}
+      </button>
+    </form>
+  </div>
+</template>
+
 
 <style scoped>
 .login-container,
