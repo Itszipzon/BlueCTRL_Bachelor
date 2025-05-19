@@ -160,7 +160,6 @@ watch(() => selectedMarker.value, (newValue) => {
           if (r.status !== 200) {
             console.error('Error fetching drift data:', r.status);
           }
-          console.log('Drift data:', r.data);
           draft.value = 8.39; // Example value
         });
     }
