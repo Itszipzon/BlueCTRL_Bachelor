@@ -28,7 +28,7 @@ const mouseAboveDraft = ref(false);
  */
 const draftBarStyle = computed(() => {
   return {
-    height: draft.value > 0 ? `${draft.value * 10}px` : '1px',
+    height: draft.value > 0 ? `${draft.value * 5}%` : '1px',
   };
 });
 
